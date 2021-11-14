@@ -60,6 +60,7 @@ function App() {
             exact
             path="/user"
           >
+            {/* Depending on the user's role, the "home" page = dashboard differs */}
             {user.role === 'student' ? (
               <StudentDashboard />
             ) : (
