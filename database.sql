@@ -109,11 +109,11 @@ ALTER TABLE "student_class_card" ADD CONSTRAINT "student_class_card_fk1" FOREIGN
 -- This data is for testing purposes, hence the unimaginative names :)
 
 INSERT INTO "user" (username, password, first_name, last_name, role)
-VALUES ('student1', '$2a$10$nW737QZb2uSev6dJy6Wk8u2VZCgtVxpZa8c.6D/J6Q7jWlz8bgd06', 'student1', 'student1', 'student1'),
-('student2', '$2a$10$9sSDRXPhbq.ZcTdULB3jB.8k4j2UxT31YCt.f3odHfHA/jM.6j4De', 'student2', 'student2', 'student2'),
-('student3', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'student3', 'student3', 'student3'),
-('teacher1', '$2a$10$U1gdTJCEbf0fUQI83BtL..FZV8v1jT4bVLsNAKWCtxyjfeLWGwyAS', 'teacher1', 'teacher1', 'teacher1'),
-('teacher2', '$2a$10$aHciqCl3B6re32prqgr2Huo4hvgr8C.mBqfTyRZM7rxzSQ.IHW/Na', 'teacher2', 'teacher2', 'teacher2');
+VALUES ('student1', '$2a$10$nW737QZb2uSev6dJy6Wk8u2VZCgtVxpZa8c.6D/J6Q7jWlz8bgd06', 'student1', 'student1', 'student'),
+('student2', '$2a$10$9sSDRXPhbq.ZcTdULB3jB.8k4j2UxT31YCt.f3odHfHA/jM.6j4De', 'student2', 'student2', 'student'),
+('student3', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'student3', 'student3', 'student'),
+('teacher1', '$2a$10$U1gdTJCEbf0fUQI83BtL..FZV8v1jT4bVLsNAKWCtxyjfeLWGwyAS', 'teacher1', 'teacher1', 'teacher'),
+('teacher2', '$2a$10$aHciqCl3B6re32prqgr2Huo4hvgr8C.mBqfTyRZM7rxzSQ.IHW/Na', 'teacher2', 'teacher2', 'teacher');
 
 INSERT INTO "stack" (stack_name, user_id) 
 VALUES ('stack1_belonging_to_teacher1', 4),
