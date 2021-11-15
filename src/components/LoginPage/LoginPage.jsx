@@ -2,7 +2,7 @@ import React from 'react';
 import LoginForm from '../LoginForm/LoginForm';
 import { useHistory } from 'react-router-dom';
 // import mui
-import { Box, Paper } from '@mui/material';
+import { Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 // set up the mui styles
@@ -19,6 +19,7 @@ function LoginPage() {
   const history = useHistory();
 
   // get the mui styles
+
   const { registrationBox } = useStyles();
 
   return (

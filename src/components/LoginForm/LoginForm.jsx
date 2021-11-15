@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 // import mui
 import { makeStyles } from '@mui/styles';
-import {
-  FormControl,
-  Typography,
-  Input,
-  Button,
-  TextField,
-} from '@mui/material';
+import { FormControl, Typography, Button, TextField } from '@mui/material';
 
 // styling for mui
 const useStyles = makeStyles(() => ({
@@ -34,6 +29,9 @@ function LoginForm() {
   const [password, setPassword] = useState('');
   const errors = useSelector((store) => store.errors);
   const dispatch = useDispatch();
+
+  // set up the useHistory hook
+  const history = useHistory();
 
   // set up the mui style
   const { form, input } = useStyles();
