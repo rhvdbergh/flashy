@@ -6,12 +6,12 @@ const {
 } = require('../modules/authentication-middleware');
 const { onlyAllowTeacher } = require('../modules/authorization-middleware');
 
-// GET /api/class
-// fetches all the classes belonging to a logged in teacher
+// GET /api/stack
+// fetches all the stacks belonging to a logged in teacher
 router.get('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
   // build the sql query
   const query = `
-    SELECT * FROM "class"
+    SELECT * FROM "stack"
     WHERE "user_id" = $1;
   `;
 
@@ -24,37 +24,37 @@ router.get('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
     })
     .catch((err) => {
       console.log(
-        `There was an error retrieving the class list from the server:`,
+        `There was an error retrieving the stack list from the server:`,
         err
       );
       res.sendStatus(500);
     });
 });
 
-// delete a specific class for a logged in teacher
-// DELETE /api/class/:class_id
+// delete a specific stack for a logged in teacher
+// DELETE /api/stack/:stack_id
 router.delete(
-  '/:class_id',
+  '/:stack_id',
   rejectUnauthenticated,
   onlyAllowTeacher,
   (req, res) => {
-    // only the teacher who made this class can delete it
+    // only the teacher who made this stack can delete it
     // so we check if user_id is the same as the logged in teacher
     // build the SQL query
     const query = `
-  DELETE FROM "class" CASCADE
+  DELETE FROM "stack" CASCADE
   WHERE "id" = $1 AND "user_id" = $2;
   `;
 
     // run the SQL query
     pool
-      .query(query, [req.params.class_id, req.user.id])
+      .query(query, [req.params.stack_id, req.user.id])
       .then((response) => {
         res.sendStatus(204); // the delete was successful
       })
       .catch((err) => {
         console.log(
-          `There was an error deleting the class from the server:`,
+          `There was an error deleting the stack from the server:`,
           err
         );
         res.sendStatus(500);
