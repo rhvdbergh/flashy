@@ -5,6 +5,7 @@ const {
   rejectUnauthenticated,
 } = require('../modules/authentication-middleware');
 const { onlyAllowTeacher } = require('../modules/authorization-middleware');
+const { response } = require('express');
 
 // GET /api/class
 // fetches all the classes belonging to a logged in teacher
@@ -30,6 +31,36 @@ router.get('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
       res.sendStatus(500);
     });
 });
+
+// delete a specific class for a logged in teacher
+router.delete(
+  '/:class_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // only the teacher who made this class can delete it
+    // build the SQL query
+    const query = `
+  DELETE FROM "class"
+  WHERE "id" = $1 AND "user_id" = $2
+  RETURNING "user_id" = $2;
+  `;
+
+    // run the SQL query
+    pool
+      .query(query, [req.params.class_id, req.user.id])
+      .then((response) => {
+        res.sendStatus(204); // the delete was successful
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error deleting the class from the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
 
 /**
  * POST route template
