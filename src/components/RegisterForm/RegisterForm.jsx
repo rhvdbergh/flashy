@@ -53,6 +53,9 @@ function RegisterForm() {
       payload: {
         username: username,
         password: password,
+        first_name: firstName,
+        last_name: lastName,
+        role: isTeacher ? 'teacher' : 'student',
       },
     });
   }; // end registerUser
