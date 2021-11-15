@@ -13,8 +13,22 @@ function* fetchClasses(action) {
   }
 }
 
+function* deleteClass(action) {
+  try {
+    yield axios.delete(`/api/class/${action.payload}`);
+    // refresh the redux store and the DOM
+    yield put({ type: 'GET_CLASSES' });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga deleting the class from the server:`,
+      err
+    );
+  }
+}
+
 function* classSaga() {
   yield takeLatest('GET_CLASSES', fetchClasses);
+  yield takeLatest('DELETE_CLASS', deleteClass);
 }
 
 export default classSaga;
