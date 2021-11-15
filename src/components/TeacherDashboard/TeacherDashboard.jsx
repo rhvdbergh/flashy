@@ -101,7 +101,7 @@ function TeacherDashboard() {
           <Table aria-label="Stacks">
             <TableHead>
               <TableRow>
-                <TableCell>Card Stack</TableCell>
+                <TableCell>Card Stack Name</TableCell>
                 <TableCell align="center">Delete</TableCell>
                 <TableCell align="center">Edit Stack</TableCell>
               </TableRow>

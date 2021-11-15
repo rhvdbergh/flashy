@@ -20,6 +20,7 @@ function* deleteStack(action) {
     yield axios.delete(`/api/stack/${action.payload}`);
     // refresh the redux store and the DOM
     yield put({ type: 'GET_STACKS' });
+    yield put({ type: 'GET_CLASSES' });
   } catch (err) {
     console.log(
       `There was an error in the redux saga deleting the stack from the server:`,

@@ -38,26 +38,47 @@ router.delete(
   rejectUnauthenticated,
   onlyAllowTeacher,
   (req, res) => {
-    // only the teacher who made this stack can delete it
-    // so we check if user_id is the same as the logged in teacher
-    // build the SQL query
+    // if this stack is assigned to any classes, we should set their assigned
+    // stacks to null
     const query = `
-  DELETE FROM "stack" CASCADE
-  WHERE "id" = $1 AND "user_id" = $2;
-  `;
+      UPDATE "class"
+      SET "stack_id" = NULL 
+      WHERE "stack_id" = $1;
+    `;
 
-    // run the SQL query
+    // remove the stack from user lists
     pool
-      .query(query, [req.params.stack_id, req.user.id])
+      .query(query, [req.params.stack_id])
       .then((response) => {
-        res.sendStatus(204); // the delete was successful
+        // only the teacher who made this stack can delete it
+        // so we check if user_id is the same as the logged in teacher
+        // build the SQL query
+        const query = `
+      DELETE FROM "stack" CASCADE
+      WHERE "id" = $1 AND "user_id" = $2;
+      `;
+
+        // run the SQL query
+        pool
+          .query(query, [req.params.stack_id, req.user.id])
+          .then((response) => {
+            res.sendStatus(204); // the delete was successful
+          })
+          .catch((err) => {
+            // error block for second pool query
+            console.log(
+              `There was an error deleting the stack from the server:`,
+              err
+            );
+            res.sendStatus(500);
+          });
       })
       .catch((err) => {
+        // error block for first pool query
         console.log(
           `There was an error deleting the stack from the server:`,
           err
         );
-        res.sendStatus(500);
       });
   }
 );
