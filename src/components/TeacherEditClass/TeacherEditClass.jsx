@@ -10,7 +10,10 @@ function TeacherEditClass() {
 
   // on page load, set nav bar title
   useEffect(() => {
+    // set the nav bar title
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Editing Class: ' });
+    // ensure that the back button is displayd on this page
+    dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
   }, []);
 
   return <p>TeacherEditClass Component</p>;

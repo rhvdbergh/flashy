@@ -23,7 +23,10 @@ const useStyles = makeStyles(() => ({
 
 function Nav() {
   const user = useSelector((store) => store.user);
-  const navTitle = useSelector((store) => store.navTitle);
+  const navTitle = useSelector((store) => store.utils.navTitle);
+  const displayBackButton = useSelector(
+    (store) => store.utils.displayBackButton
+  );
 
   // set up redux dispatch
   const dispatch = useDispatch();
@@ -74,15 +77,18 @@ function Nav() {
                 Home
               </Button>
             )}
+            {/* Show the back button if utils.displayBackButton is true */}
 
-            <Button
-              className="navLink"
-              key="Back"
-              color="inherit"
-              onClick={() => history.goBack()}
-            >
-              Back
-            </Button>
+            {displayBackButton && (
+              <Button
+                className="navLink"
+                key="Back"
+                color="inherit"
+                onClick={() => history.goBack()}
+              >
+                Back
+              </Button>
+            )}
 
             {/* For the moment, there is no about page  */}
             {/* <Button

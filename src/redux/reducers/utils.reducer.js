@@ -1,3 +1,5 @@
+import { combineReducers } from 'redux';
+
 // sets the nav bar title
 const navTitle = (state = '', action) => {
   switch (action.type) {
@@ -14,4 +16,22 @@ const navTitle = (state = '', action) => {
   }
 };
 
-export default navTitle;
+// tells the nav bar whether to display the back button or not
+// default is true, yes it's displaying
+const displayBackButton = (state = true, action) => {
+  switch (action.type) {
+    case 'SET_DISPLAY_BACK_BUTTON':
+      return action.payload;
+    case 'LOGOUT':
+      return true;
+    default:
+      return state;
+  }
+};
+
+const utils = combineReducers({
+  navTitle,
+  displayBackButton,
+});
+
+export default utils;
