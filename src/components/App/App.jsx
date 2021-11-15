@@ -20,6 +20,7 @@ import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import StudentDashboard from '../StudentDashboard/StudentDashboard';
 import TeacherDashboard from '../TeacherDashboard/TeacherDashboard';
+import TeacherEditClass from '../TeacherEditClass/TeacherEditClass';
 
 import './App.css';
 
@@ -108,6 +109,13 @@ function App() {
               <LandingPage />
             )}
           </Route>
+
+          <ProtectedRoute
+            // logged in edit class page else shows login
+            path="/editclass"
+          >
+            <TeacherEditClass />
+          </ProtectedRoute>
 
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>
