@@ -157,6 +157,7 @@ VALUES (2, 3, 1),
 (3, 6, 2),
 (8, 1, 3);
 
+-- cards with default dates, created with default now()
 INSERT INTO "student_class_card" (familiarity, student_class_id, card_id)
 VALUES (0, 1, 1), -- card1 in class2 with teacher 1
 (0, 1, 2), -- card2 in class2 with teacher 1 for student 1
@@ -164,11 +165,7 @@ VALUES (0, 1, 1), -- card1 in class2 with teacher 1
 (0, 1, 4), -- card4 in class2 with teacher 1 for student 1
 (1, 1, 5), -- card5 in class2 with teacher 1 for student 1
 (1, 1, 6), -- card6 in class2 with teacher 1 for student 1
-(1, 1, 7),
 (2, 1, 8),
-(2, 1, 9),
-(2, 1, 9),
-(3, 1, 10),
 (0, 2, 11), -- card11 in class4 with teacher 2 for student 1
 (0, 2, 12),
 (2, 2, 13),
@@ -180,11 +177,19 @@ VALUES (0, 1, 1), -- card1 in class2 with teacher 1
 (0, 3, 9),
 (0, 4, 12), -- card12 in class4 with teacher 2 for student 3
 (0, 4, 13),
-(1, 4, 14),
-(1, 4, 15),
-(1, 4, 16),
-(2, 4, 17);
+(1, 4, 14);
 
+-- some cards with older dates, so they should be reviewed
+INSERT INTO "student_class_card" (familiarity, student_class_id, card_id, time_reviewed)
+VALUES (1, 1, 7, '11-01-2021'),
+(2, 1, 9, '11-01-2021'),
+(2, 1, 9, '11-01-2021'),
+(1, 4, 15, '11-01-2021'),
+(1, 4, 16, '11-01-2021'),
+(2, 4, 17, '11-01-2021'),
+(2, 1, 9, '11-01-2021'),
+(2, 1, 9, '11-01-2021'),
+(3, 1, 10, '11-01-2021');
 
 -- WARNING!!!
 -- THIS SQL BELOW WILL DROP ALL THE TABLES! 
