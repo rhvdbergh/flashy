@@ -55,7 +55,10 @@ function TeacherDashboard() {
   // on page load, set nav bar title
   // also retrieve all the classes for this teacher
   useEffect(() => {
+    // set the nav bar title
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Dashboard' });
+    // don't display the back button on this page
+    dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: false });
     dispatch({ type: 'GET_CLASSES' });
     dispatch({ type: 'GET_STACKS' });
   }, []);

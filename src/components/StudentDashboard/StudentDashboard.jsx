@@ -13,6 +13,8 @@ function StudentDashboard() {
   // on page load, set nav bar title
   useEffect(() => {
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Dashboard' });
+    // ensure that the back button is displayd on this page
+    dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
   }, []);
   return <p>StudentDashboard Component</p>;
 }
