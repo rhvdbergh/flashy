@@ -20,13 +20,9 @@ import {
   TableRow,
   Paper,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DonutLargeIcon from '@mui/icons-material/DonutLarge';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import CancelIcon from '@mui/icons-material/Cancel';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { makeStyles } from '@mui/styles';
 import { useSelector } from 'react-redux';
+import TeacherClassTableRow from '../TeacherClassTableRow/TeacherClassTableRow';
 
 // set up the mui styles
 const useStyles = makeStyles(() => ({
@@ -86,24 +82,7 @@ function TeacherDashboard() {
           </TableHead>
           <TableBody>
             {classes.map((cl) => {
-              return (
-                <TableRow>
-                  <TableCell>{cl.class_name}</TableCell>
-                  <TableCell align="center">
-                    <DeleteIcon />
-                  </TableCell>
-                  <TableCell align="center">
-                    <DonutLargeIcon />
-                  </TableCell>
-                  <TableCell align="center">
-                    <FormatListBulletedIcon />
-                  </TableCell>
-                  {/* Conditional render based on whether a stack is assigned or not */}
-                  <TableCell align="center">
-                    {cl.stack_id ? <CheckCircleIcon /> : <CancelIcon />}
-                  </TableCell>
-                </TableRow>
-              );
+              return <TeacherClassTableRow key={cl.id} cl={cl} />;
             })}
           </TableBody>
         </Table>

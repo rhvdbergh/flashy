@@ -28,7 +28,7 @@ function* deleteClass(action) {
 
 function* classSaga() {
   yield takeLatest('GET_CLASSES', fetchClasses);
-  yield takeLatest('DELETE_CLASS');
+  yield takeLatest('DELETE_CLASS', deleteClass);
 }
 
 export default classSaga;

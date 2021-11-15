@@ -20,7 +20,7 @@ router.get('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
   pool
     .query(query, [req.user.id])
     .then((response) => {
-      console.log('this was the response', response.rows);
+      // send the rows, which contain the sql rows fetched by the query
       res.send(response.rows);
     })
     .catch((err) => {
@@ -39,6 +39,7 @@ router.delete(
   onlyAllowTeacher,
   (req, res) => {
     // only the teacher who made this class can delete it
+    // so we check if user_id is the same as the logged in teacher
     // build the SQL query
     const query = `
   DELETE FROM "class"
