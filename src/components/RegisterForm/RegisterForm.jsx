@@ -17,13 +17,13 @@ import {
 // styling for mui
 const useStyles = makeStyles(() => ({
   form: {
-    marginTop: '100px',
+    marginTop: '70px',
     marginBottom: '30px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: '400px',
+    height: '550px',
     width: '300px',
     textAlign: 'center',
   },
