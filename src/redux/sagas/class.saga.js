@@ -1,6 +1,7 @@
 import { put, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
 
+// fetches classes belonging to the logged in teacher from the server
 function* fetchClasses(action) {
   try {
     const response = yield axios.get('/api/class');
@@ -13,6 +14,7 @@ function* fetchClasses(action) {
   }
 }
 
+// deletes a specific class on the server belonging to the logged in teacher
 function* deleteClass(action) {
   try {
     yield axios.delete(`/api/class/${action.payload}`);

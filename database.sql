@@ -90,7 +90,7 @@ CREATE TABLE "student_class_card" (
 );
 
 ALTER TABLE "class" ADD CONSTRAINT "class_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE;
-ALTER TABLE "class" ADD CONSTRAINT "class_fk1" FOREIGN KEY ("stack_id") REFERENCES "stack"("id") ON DELETE CASCADE;
+ALTER TABLE "class" ADD CONSTRAINT "class_fk1" FOREIGN KEY ("stack_id") REFERENCES "stack"("id");
 
 ALTER TABLE "student_class" ADD CONSTRAINT "student_class_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE;
 ALTER TABLE "student_class" ADD CONSTRAINT "student_class_fk1" FOREIGN KEY ("class_id") REFERENCES "class"("id") ON DELETE CASCADE;

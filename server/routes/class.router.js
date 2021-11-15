@@ -5,7 +5,6 @@ const {
   rejectUnauthenticated,
 } = require('../modules/authentication-middleware');
 const { onlyAllowTeacher } = require('../modules/authorization-middleware');
-const { response } = require('express');
 
 // GET /api/class
 // fetches all the classes belonging to a logged in teacher
@@ -33,6 +32,7 @@ router.get('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
 });
 
 // delete a specific class for a logged in teacher
+// DELETE /api/class/:class_id
 router.delete(
   '/:class_id',
   rejectUnauthenticated,
@@ -43,8 +43,7 @@ router.delete(
     // build the SQL query
     const query = `
   DELETE FROM "class" CASCADE
-  WHERE "id" = $1 AND "user_id" = $2
-  RETURNING "user_id" = $2;
+  WHERE "id" = $1 AND "user_id" = $2;
   `;
 
     // run the SQL query

@@ -23,6 +23,7 @@ import {
 import { makeStyles } from '@mui/styles';
 import { useSelector } from 'react-redux';
 import TeacherClassTableRow from '../TeacherClassTableRow/TeacherClassTableRow';
+import TeacherStackTableRow from '../TeacherStackTableRow/TeacherStackTableRow';
 
 // set up the mui styles
 const useStyles = makeStyles(() => ({
@@ -32,11 +33,8 @@ const useStyles = makeStyles(() => ({
   table: {
     marginTop: '30px',
   },
-  cell: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
+  addStackBox: {
+    marginTop: '50px',
   },
 }));
 
@@ -46,47 +44,76 @@ function TeacherDashboard() {
 
   // get state from the redux store
   const classes = useSelector((store) => store.classes);
+  const stacks = useSelector((store) => store.stacks);
 
   // set up the useHistory hook
   const history = useHistory();
 
   // get the mui styles
-  const { container, table, cell } = useStyles();
+  const { container, table, addStackBox } = useStyles();
 
   // on page load, set nav bar title
   // also retrieve all the classes for this teacher
   useEffect(() => {
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Dashboard' });
     dispatch({ type: 'GET_CLASSES' });
+    dispatch({ type: 'GET_STACKS' });
   }, []);
 
   return (
     <Container className={container}>
-      <Button
-        variant="contained"
-        value="add_class"
-        onClick={() => history.push('/editclass')}
-      >
-        Add Class
-      </Button>
-      <TableContainer component={Paper} className={table}>
-        <Table aria-label="Classes">
-          <TableHead>
-            <TableRow>
-              <TableCell>Class Name</TableCell>
-              <TableCell align="center">Delete</TableCell>
-              <TableCell align="center">View Progress</TableCell>
-              <TableCell align="center">Settings</TableCell>
-              <TableCell align="center">Card Assigned</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {classes.map((cl) => {
-              return <TeacherClassTableRow key={cl.id} cl={cl} />;
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Box>
+        <Button
+          variant="contained"
+          value="add_class"
+          onClick={() => history.push('/editclass')}
+        >
+          Add Class
+        </Button>
+        <TableContainer component={Paper} className={table}>
+          <Table aria-label="Classes">
+            <TableHead>
+              <TableRow>
+                <TableCell>Class Name</TableCell>
+                <TableCell align="center">Delete</TableCell>
+                <TableCell align="center">View Progress</TableCell>
+                <TableCell align="center">Settings</TableCell>
+                <TableCell align="center">Card Assigned</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {classes.map((cl) => {
+                return <TeacherClassTableRow key={cl.id} cl={cl} />;
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+      <Box className={addStackBox}>
+        <Button
+          variant="contained"
+          value="add_stack"
+          onClick={() => history.push('/editstack')}
+        >
+          Add Stack
+        </Button>
+        <TableContainer component={Paper} className={table}>
+          <Table aria-label="Stacks">
+            <TableHead>
+              <TableRow>
+                <TableCell>Card Stack Name</TableCell>
+                <TableCell align="center">Delete</TableCell>
+                <TableCell align="center">Edit Stack</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {stacks.map((stack) => {
+                return <TeacherStackTableRow key={stack.id} stack={stack} />;
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
     </Container>
   );
 }
