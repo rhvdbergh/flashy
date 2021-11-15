@@ -10,7 +10,24 @@ const { onlyAllowTeacher } = require('../modules/authorization-middleware');
 // fetches all the classes belonging to a logged in teacher
 router.get('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
   console.log(`this is the user`, req.user);
-  // GET route code here
+  // build the sql query
+  const query = `
+    SELECT * FROM "class"
+    WHERE "user_id" = $1;
+  `;
+
+  // run the query
+  pool
+    .query(query, [req.user.id])
+    .then((response) => {
+      console.log('this was the response', response.rows);
+    })
+    .catch((err) => {
+      console.log(
+        `There was an error retrieving the class list from the server:`,
+        err
+      );
+    });
   res.sendStatus(200);
 });
 
