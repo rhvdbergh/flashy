@@ -3,8 +3,8 @@ const pool = require('../modules/pool');
 const router = express.Router();
 const {
   rejectUnauthenticated,
-  onlyAllowTeacher,
 } = require('../modules/authentication-middleware');
+const { onlyAllowTeacher } = require('../modules/authorization-middleware');
 
 // GET /api/class
 // fetches all the classes belonging to a logged in teacher
