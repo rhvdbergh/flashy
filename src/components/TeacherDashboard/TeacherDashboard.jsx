@@ -10,6 +10,7 @@ import { useHistory } from 'react-router-dom';
 // import mui
 import { Box, Button, Container } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { useSelector } from 'react-redux';
 
 // set up the mui styles
 const useStyles = makeStyles(() => ({
@@ -22,6 +23,9 @@ function TeacherDashboard() {
   // set up the redux dispatch
   const dispatch = useDispatch();
 
+  // get state from the redux store
+  const classes = useSelector((store) => store.classes);
+
   // set up the useHistory hook
   const history = useHistory();
 
@@ -29,8 +33,10 @@ function TeacherDashboard() {
   const { container } = useStyles();
 
   // on page load, set nav bar title
+  // also retrieve all the classes for this teacher
   useEffect(() => {
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Dashboard' });
+    dispatch({ type: 'GET_CLASSES' });
   }, []);
 
   return (
