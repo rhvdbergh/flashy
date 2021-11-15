@@ -32,11 +32,8 @@ const useStyles = makeStyles(() => ({
   table: {
     marginTop: '30px',
   },
-  cell: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
+  addStackBox: {
+    marginTop: '50px',
   },
 }));
 
@@ -51,7 +48,7 @@ function TeacherDashboard() {
   const history = useHistory();
 
   // get the mui styles
-  const { container, table, cell } = useStyles();
+  const { container, table, addStackBox } = useStyles();
 
   // on page load, set nav bar title
   // also retrieve all the classes for this teacher
@@ -62,31 +59,42 @@ function TeacherDashboard() {
 
   return (
     <Container className={container}>
-      <Button
-        variant="contained"
-        value="add_class"
-        onClick={() => history.push('/editclass')}
-      >
-        Add Class
-      </Button>
-      <TableContainer component={Paper} className={table}>
-        <Table aria-label="Classes">
-          <TableHead>
-            <TableRow>
-              <TableCell>Class Name</TableCell>
-              <TableCell align="center">Delete</TableCell>
-              <TableCell align="center">View Progress</TableCell>
-              <TableCell align="center">Settings</TableCell>
-              <TableCell align="center">Card Assigned</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {classes.map((cl) => {
-              return <TeacherClassTableRow key={cl.id} cl={cl} />;
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Box>
+        <Button
+          variant="contained"
+          value="add_class"
+          onClick={() => history.push('/editclass')}
+        >
+          Add Class
+        </Button>
+        <TableContainer component={Paper} className={table}>
+          <Table aria-label="Classes">
+            <TableHead>
+              <TableRow>
+                <TableCell>Class Name</TableCell>
+                <TableCell align="center">Delete</TableCell>
+                <TableCell align="center">View Progress</TableCell>
+                <TableCell align="center">Settings</TableCell>
+                <TableCell align="center">Card Assigned</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {classes.map((cl) => {
+                return <TeacherClassTableRow key={cl.id} cl={cl} />;
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+      <Box className={addStackBox}>
+        <Button
+          variant="contained"
+          value="add_stack"
+          onClick={() => history.push('/editstack')}
+        >
+          Add Stack
+        </Button>
+      </Box>
     </Container>
   );
 }
