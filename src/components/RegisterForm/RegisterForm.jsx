@@ -22,7 +22,6 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    alignItems: 'center',
     height: '550px',
     width: '300px',
     textAlign: 'center',
@@ -30,6 +29,9 @@ const useStyles = makeStyles(() => ({
   input: {
     margin: '20px',
     width: '100%',
+  },
+  checkbox: {
+    alignSelf: 'center',
   },
 }));
 
@@ -56,7 +58,7 @@ function RegisterForm() {
   }; // end registerUser
 
   // set up the mui style
-  const { form, input } = useStyles();
+  const { form, input, checkbox } = useStyles();
 
   return (
     <FormControl>
@@ -103,9 +105,14 @@ function RegisterForm() {
           value={lastName}
           onChange={(event) => setLastName(event.target.value)}
         />
-        <FormGroup>
+        <FormGroup className={checkbox}>
           <FormControlLabel
-            control={<Checkbox checked={isTeacher} />}
+            control={
+              <Checkbox
+                checked={isTeacher}
+                onClick={() => setIsTeacher(!isTeacher)}
+              />
+            }
             label="I am a teacher"
           />
         </FormGroup>
