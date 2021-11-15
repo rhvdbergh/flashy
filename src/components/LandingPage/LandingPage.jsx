@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import './LandingPage.css';
 
-// import mui
-import { Box, Button } from '@mui/material';
-
 // CUSTOM COMPONENTS
-import RegisterForm from '../RegisterForm/RegisterForm';
+import LoginPage from '../LoginPage/LoginPage';
 
 function LandingPage() {
   const history = useHistory();
@@ -15,15 +12,7 @@ function LandingPage() {
     history.push('/login');
   };
 
-  return (
-    <Box className="container">
-      <RegisterForm />
-
-      <Button variant="contained" className="btn btn_sizeSm" onClick={onLogin}>
-        Login
-      </Button>
-    </Box>
-  );
+  return <LoginPage />;
 }
 
 export default LandingPage;
