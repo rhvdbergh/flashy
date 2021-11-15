@@ -8,7 +8,23 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 // import mui
-import { Box, Button, Container } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DonutLargeIcon from '@mui/icons-material/DonutLarge';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { makeStyles } from '@mui/styles';
 import { useSelector } from 'react-redux';
 
@@ -16,6 +32,15 @@ import { useSelector } from 'react-redux';
 const useStyles = makeStyles(() => ({
   container: {
     marginTop: '100px',
+  },
+  table: {
+    marginTop: '30px',
+  },
+  cell: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
   },
 }));
 
@@ -30,7 +55,7 @@ function TeacherDashboard() {
   const history = useHistory();
 
   // get the mui styles
-  const { container } = useStyles();
+  const { container, table, cell } = useStyles();
 
   // on page load, set nav bar title
   // also retrieve all the classes for this teacher
@@ -48,6 +73,41 @@ function TeacherDashboard() {
       >
         Add Class
       </Button>
+      <TableContainer component={Paper} className={table}>
+        <Table aria-label="Classes">
+          <TableHead>
+            <TableRow>
+              <TableCell>Class Name</TableCell>
+              <TableCell align="center">Delete</TableCell>
+              <TableCell align="center">View Progress</TableCell>
+              <TableCell align="center">Settings</TableCell>
+              <TableCell align="center">Card Assigned</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {classes.map((cl) => {
+              return (
+                <TableRow>
+                  <TableCell>{cl.class_name}</TableCell>
+                  <TableCell align="center">
+                    <DeleteIcon />
+                  </TableCell>
+                  <TableCell align="center">
+                    <DonutLargeIcon />
+                  </TableCell>
+                  <TableCell align="center">
+                    <FormatListBulletedIcon />
+                  </TableCell>
+                  {/* Conditional render based on whether a stack is assigned or not */}
+                  <TableCell align="center">
+                    {cl.stack_id ? <CheckCircleIcon /> : <CancelIcon />}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 }
