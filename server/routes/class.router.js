@@ -42,7 +42,7 @@ router.delete(
     // so we check if user_id is the same as the logged in teacher
     // build the SQL query
     const query = `
-  DELETE FROM "class"
+  DELETE FROM "class" CASCADE
   WHERE "id" = $1 AND "user_id" = $2
   RETURNING "user_id" = $2;
   `;
