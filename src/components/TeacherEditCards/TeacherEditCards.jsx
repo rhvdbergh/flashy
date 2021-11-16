@@ -102,7 +102,6 @@ function TeacherEditCards() {
         // this will select the text in the name box when selected
         onFocus={(event) => {
           event.currentTarget.select();
-          console.log('focus achieved');
         }}
         // this will send a dispatch whenever the TextField loses focus
         onBlur={() => {
