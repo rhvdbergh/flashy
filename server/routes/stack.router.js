@@ -112,4 +112,33 @@ router.post('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
     });
 });
 
+// updates a specific stack
+// /api/stack/:stack_id
+router.put(
+  '/:stack_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the sql query
+    const query = `
+      UPDATE "stack"
+      WHERE "id" = $1 AND "user_id" = $2;
+    `;
+
+    // run the sql query
+    pool
+      .query(query, [req.params.stack_id, req.user.id])
+      .then((response) => {
+        res.sendStatus(200); // the stack was updated
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error updating the stack on the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
 module.exports = router;
