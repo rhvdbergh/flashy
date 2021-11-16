@@ -73,12 +73,26 @@ function* fetchStack(action) {
   }
 }
 
+function* fetchCards(action) {
+  try {
+    // the id is the stack id of the cards to be fetched
+    const response = yield axios.get(`/api/stack/cards/${action.payload}`);
+    yield put({ type: 'SET_CARDS', payload: response.data });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga fetching the stack on the server:`,
+      err
+    );
+  }
+}
+
 function* stackSaga() {
   yield takeLatest('GET_STACKS', fetchStacks);
   yield takeLatest('DELETE_STACK', deleteStack);
   yield takeLatest('CREATE_STACK', createStack);
   yield takeLatest('UPDATE_STACK', updateStack);
   yield takeLatest('FETCH_STACK', fetchStack);
+  yield takeLatest('FETCH_CARDS', fetchCards);
 }
 
 export default stackSaga;

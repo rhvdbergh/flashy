@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
+import { useSelector } from 'react-redux';
 
 //import mui
 import {
@@ -20,7 +21,9 @@ import {
   TextField,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { useSelector } from 'react-redux';
+
+// import components
+import TeacherEditCardsTableRow from '../TeacherEditCardsTableRow/TeacherEditCardsTableRow';
 
 // set up the mui styles
 const useStyles = makeStyles(() => ({
@@ -41,6 +44,7 @@ function TeacherEditCards() {
 
   // get the current stack to be edited from the redux store
   const editStack = useSelector((store) => store.stackStore.editStack);
+  const cards = useSelector((store) => store.stackStore.cards);
 
   // set up the local state
   const [stackName, setStackName] = useState('');
@@ -59,6 +63,8 @@ function TeacherEditCards() {
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
     // get the current stack that's being edited
     dispatch({ type: 'FETCH_STACK', payload: stack_id });
+    // get all the cards in this stack
+    dispatch({ type: 'FETCH_CARDS', payload: stack_id });
   }, []);
 
   // every time the stack name changes, do a dispatch to set the nav title
@@ -110,6 +116,22 @@ function TeacherEditCards() {
             });
         }}
       />
+      <TableContainer component={Paper} className={table}>
+        <Table aria-label="Classes">
+          <TableHead>
+            <TableRow>
+              <TableCell>Front</TableCell>
+              <TableCell>Back</TableCell>
+              <TableCell align="center">Delete</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {cards.map((card) => (
+              <TeacherEditCardsTableRow key={card.id} card={card} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 }
