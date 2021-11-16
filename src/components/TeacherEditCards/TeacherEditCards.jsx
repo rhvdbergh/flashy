@@ -89,7 +89,6 @@ function TeacherEditCards() {
         type="text"
         label="Card Stack Name"
         size="small"
-        autoFocus
         required
         className={textfield}
         value={
@@ -126,18 +125,16 @@ function TeacherEditCards() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {cards.map((card) => (
-              <TeacherEditCardsTableRow key={card.id} card={card} />
-            ))}
-            {/* This final row is for adding new cards */}
+            {/* We add a final row for adding new cards */}
             {/* it has an id of -1, which means that this card */}
             {/* doesn't exist yet on the db */}
-            {/* cards are returned in order, so cards[cards.length - 1] + 1
-             will be a unique key */}
-            <TeacherEditCardsTableRow
-              key={cards[cards.length - 1] + 1}
-              card={{ front: '', back: '', id: -1 }}
-            />
+            {cards.map((card) => (
+              <TeacherEditCardsTableRow
+                key={card.id}
+                card={card}
+                stack_id={stack_id}
+              />
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

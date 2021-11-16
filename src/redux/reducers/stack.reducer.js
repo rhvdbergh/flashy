@@ -26,7 +26,10 @@ const editStack = (state = {}, action) => {
 const cards = (state = [], action) => {
   switch (action.type) {
     case 'SET_CARDS':
-      return action.payload;
+      // we add an extra card with empty information
+      // the card.id of -1 shows that it doesn't come from the db
+      // this is to help keep track of new cards
+      return [...action.payload, { id: -1, front: '', back: '' }];
     case 'LOGOUT':
       return [];
     default:

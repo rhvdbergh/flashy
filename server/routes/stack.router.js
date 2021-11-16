@@ -256,4 +256,62 @@ router.put(
   }
 );
 
+// creates a new card in a specific stack
+// /api/stack/card/:stack_id
+router.post(
+  '/card/:stack_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    console.log(`req.body in /api/stack/card/:stack_id`, req.body);
+
+    // build the sql query
+    const query = `
+      INSERT INTO "card" ("front", "back", "stack_id")
+      VALUES ($1, $2, $3)
+    `;
+
+    // run the sql query
+    pool
+      .query(query, [req.body.front, req.body.back, req.params.stack_id])
+      .then((response) => {
+        res.sendStatus(201); // the card was created
+      })
+      .catch((err) => {
+        console.log(`There was an error updating the card on the server:`, err);
+        res.sendStatus(500);
+      });
+  }
+);
+
+// delete a specific stack for a logged in teacher
+// DELETE /api/stack/card/:card_id
+router.delete(
+  '/card/:card_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the SQL query
+    const query = `
+      DELETE FROM "card" CASCADE
+      WHERE "id" = $1;
+      `;
+
+    // run the SQL query
+    pool
+      .query(query, [req.params.card_id])
+      .then((response) => {
+        res.sendStatus(204); // the delete was successful
+      })
+      .catch((err) => {
+        // error block for second pool query
+        console.log(
+          `There was an error deleting the card from the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
 module.exports = router;
