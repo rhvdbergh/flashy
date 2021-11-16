@@ -174,14 +174,13 @@ router.get(
     // build the SQL query
     const query = `
       SELECT * FROM "stack"
-      JOIN "card" ON "card".stack_id = "stack".id
-      WHERE "stack".id = $1;
+      WHERE id = $1;
     `;
 
     pool
       .query(query, [req.params.stack_id])
       .then((response) => {
-        res.send(response.rows); // send back the stack and the cards
+        res.send(response.rows[0]); // send back the stack and the cards
       })
       .catch((err) => {
         console.log(

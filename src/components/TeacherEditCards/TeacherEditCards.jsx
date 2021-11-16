@@ -39,11 +39,11 @@ function TeacherEditCards() {
   // set up the redux dispatch
   const dispatch = useDispatch();
 
-  // set up the local state
-  const [stackName, setStackName] = useState();
-
   // get the current stack to be edited from the redux store
   const editStack = useSelector((store) => store.stackStore.editStack);
+
+  // set up the local state
+  const [stackName, setStackName] = useState('');
 
   // set up the mui styles
   const { container, table, textfield } = useStyles();
@@ -55,7 +55,7 @@ function TeacherEditCards() {
   useEffect(() => {
     // set the nav bar title
     dispatch({ type: 'SET_NAV_TITLE', payload: `Editing Stack` });
-    // ensure that the back button is displayd on this page
+    // ensure that the back button is displayed on this page
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
     // get the current stack that's being edited
     dispatch({ type: 'FETCH_STACK', payload: stack_id });
@@ -71,9 +71,10 @@ function TeacherEditCards() {
 
   useEffect(() => {
     // set the stackName to the name of the stack in the redux store
-    setStackName(editStack[0]?.stack_name);
+    setStackName(editStack.stack_name);
   }, [editStack]);
 
+  console.log(`this is stackName`, stackName);
   console.log('this is editStack', editStack);
 
   return (
@@ -85,14 +86,24 @@ function TeacherEditCards() {
         autoFocus
         required
         className={textfield}
-        value={stackName}
+        value={
+          stackName !== '' && stackName !== null
+            ? stackName
+            : `New Card Stack ${stack_id}`
+        }
         onChange={(event) => {
           setStackName(event.target.value);
+        }}
+        // this will select the text in the name box when selected
+        onFocus={(event) => {
+          event.currentTarget.select();
+          console.log('focus achieved');
         }}
         // this will send a dispatch whenever the TextField loses focus
         onBlur={() => {
           // if the stackName is empty, we do not want to update the name
-          stackName !== '' &&
+          stackName &&
+            stackName !== '' &&
             dispatch({
               type: 'UPDATE_STACK',
               payload: { id: stack_id, name: stackName },
