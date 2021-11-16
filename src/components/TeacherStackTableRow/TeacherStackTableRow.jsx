@@ -1,6 +1,7 @@
 // a row in the stack table on the teacher dashboard
 
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 
 // import mui
 import { TableCell, TableRow } from '@mui/material';
@@ -11,6 +12,9 @@ function TeacherStackTableRow({ stack }) {
   // set up the redux dispatch
   const dispatch = useDispatch();
 
+  // set up the history hook
+  const history = useHistory();
+
   return (
     <TableRow>
       <TableCell>{stack.stack_name}</TableCell>
@@ -20,7 +24,7 @@ function TeacherStackTableRow({ stack }) {
         />
       </TableCell>
       <TableCell align="center">
-        <CreateIcon />
+        <CreateIcon onClick={() => history.push(`/editstack/${stack.id}`)} />
       </TableCell>
     </TableRow>
   );
