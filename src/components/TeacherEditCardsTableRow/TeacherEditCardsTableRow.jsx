@@ -14,9 +14,6 @@ function TeacherEditCardsTableRow({ card, stack_id }) {
   // set up local state for each cell
   const [front, setFront] = useState(card.front);
   const [back, setBack] = useState(card.back);
-  // this will be used to keep track if a new card was created
-  // in this case, the focus must again be on the final input box in the table
-  const [recentlyPostedCard, setRecentlyPostedCard] = useState(false);
 
   // we're monitoring cards so we can trigger the front and back to be
   // empty again
@@ -32,12 +29,6 @@ function TeacherEditCardsTableRow({ card, stack_id }) {
     if (card.id === -1) {
       setFront('');
       setBack('');
-    }
-    if (recentlyPostedCard) {
-      // set focus on input box using useRef
-      // textFieldElement.current.focus();
-      // reset the tracker
-      setRecentlyPostedCard(false);
     }
   }, [cards]);
 
@@ -67,8 +58,6 @@ function TeacherEditCardsTableRow({ card, stack_id }) {
           stack_id: stack_id,
         },
       });
-      // set the tracker so we know where the focus goes
-      setRecentlyPostedCard(true);
     }
   };
 
