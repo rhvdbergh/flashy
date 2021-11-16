@@ -114,7 +114,7 @@ router.post('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
         .query(updateQuery)
         .then((updateResponse) => {
           // send the status that the stack was created, returning the new id
-          res.status(201).send(newStackId); // the stack was created
+          res.status(201).send({ id: newStackId }); // the stack was created
         })
         .catch((err) => {
           // catch block for updateQuery pool

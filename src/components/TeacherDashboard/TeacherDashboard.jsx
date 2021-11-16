@@ -46,7 +46,7 @@ function TeacherDashboard() {
 
   // get state from the redux store
   const classes = useSelector((store) => store.classes);
-  const stacks = useSelector((store) => store.stacks);
+  const stacks = useSelector((store) => store.stackStore.stacks);
 
   // set up the useHistory hook
   const history = useHistory();

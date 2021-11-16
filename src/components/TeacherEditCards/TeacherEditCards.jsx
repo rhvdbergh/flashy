@@ -53,6 +53,8 @@ function TeacherEditCards() {
     dispatch({ type: 'SET_NAV_TITLE', payload: `Editing Stack` });
     // ensure that the back button is displayd on this page
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
+    // get the current stack that's being edited
+    dispatch({ type: 'FETCH_STACK' });
   }, []);
 
   // every time the stack name changes, do a dispatch to set the nav title
@@ -77,12 +79,14 @@ function TeacherEditCards() {
           setStackName(event.target.value);
         }}
         // this will send a dispatch whenever the TextField loses focus
-        onBlur={() =>
-          dispatch({
-            type: 'UPDATE_STACK',
-            payload: { id: stack_id, name: stackName },
-          })
-        }
+        onBlur={() => {
+          // if the stackName is empty, we do not want to update the name
+          stackName !== '' &&
+            dispatch({
+              type: 'UPDATE_STACK',
+              payload: { id: stack_id, name: stackName },
+            });
+        }}
       />
     </Container>
   );
