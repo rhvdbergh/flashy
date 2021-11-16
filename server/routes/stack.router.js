@@ -202,7 +202,8 @@ router.get(
     // build the SQL query
     const query = `
       SELECT * FROM "card"
-      WHERE "stack_id" = $1;
+      WHERE "stack_id" = $1
+      ORDER BY "id";
     `;
 
     // run the sql query
@@ -216,6 +217,39 @@ router.get(
           `There was an error retrieving the cards from the server:`,
           err
         );
+        res.sendStatus(500);
+      });
+  }
+);
+
+// updates a specific card
+// /api/stack/card/:card_id
+router.put(
+  '/card/:card_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    console.log(`in /api/stack/card/:card_id, req.body =`, req.body);
+    // build the sql query
+    const query = `
+      UPDATE "card"
+      SET "front" = $1, "back" = $2, "batch" = $3
+      WHERE "id" = $4;
+    `;
+
+    // run the sql query
+    pool
+      .query(query, [
+        req.body.front,
+        req.body.back,
+        req.body.batch,
+        req.params.card_id,
+      ])
+      .then((response) => {
+        res.sendStatus(200); // the card was updated
+      })
+      .catch((err) => {
+        console.log(`There was an error updating the card on the server:`, err);
         res.sendStatus(500);
       });
   }

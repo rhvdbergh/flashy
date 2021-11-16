@@ -86,6 +86,21 @@ function* fetchCards(action) {
   }
 }
 
+// updates a specific card
+function* updateCard(action) {
+  try {
+    // the id is the id of the card to be updated
+    // payload is a card object, shaped as in db
+    yield axios.put(`/api/stack/card/${action.payload.id}`, action.payload);
+    yield put({ type: 'FETCH_CARDS', payload: action.payload });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga creating the stack on the server:`,
+      err
+    );
+  }
+}
+
 function* stackSaga() {
   yield takeLatest('GET_STACKS', fetchStacks);
   yield takeLatest('DELETE_STACK', deleteStack);
@@ -93,6 +108,7 @@ function* stackSaga() {
   yield takeLatest('UPDATE_STACK', updateStack);
   yield takeLatest('FETCH_STACK', fetchStack);
   yield takeLatest('FETCH_CARDS', fetchCards);
+  yield takeLatest('UPDATE_CARD', updateCard);
 }
 
 export default stackSaga;
