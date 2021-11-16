@@ -64,8 +64,9 @@ function TeacherEditCards() {
     <Container className={container}>
       <TextField
         type="text"
-        label="Stack Name"
+        label="Card Stack Name"
         size="small"
+        autoFocus
         required
         value={stackName}
         onChange={(event) => {
