@@ -71,7 +71,7 @@ CREATE TABLE "card" (
 
 CREATE TABLE "stack" (
 	"id" serial NOT NULL,
-	"stack_name" varchar(127) NOT NULL,
+	"stack_name" varchar(127),
 	"user_id" int NOT NULL,
 	CONSTRAINT "stack_pk" PRIMARY KEY ("id")
 ) WITH (
