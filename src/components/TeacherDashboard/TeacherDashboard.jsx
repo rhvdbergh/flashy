@@ -6,6 +6,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 // import mui
 import {
@@ -21,7 +22,8 @@ import {
   Paper,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { useSelector } from 'react-redux';
+
+// import custom components
 import TeacherClassTableRow from '../TeacherClassTableRow/TeacherClassTableRow';
 import TeacherStackTableRow from '../TeacherStackTableRow/TeacherStackTableRow';
 
@@ -96,7 +98,9 @@ function TeacherDashboard() {
         <Button
           variant="contained"
           value="add_stack"
-          onClick={() => history.push('/editstack')}
+          onClick={() =>
+            dispatch({ type: 'CREATE_STACK', payload: { history: history } })
+          }
         >
           Add Stack
         </Button>

@@ -29,9 +29,24 @@ function* deleteStack(action) {
   }
 }
 
+// creates a new stack on the server, and returns it's id
+function* createStack(action) {
+  try {
+    const response = yield axios.post('/api/stack');
+    // move the view to the edit card stack view with the
+    // history that's sent through payload
+    yield action.payload.history.push(`/editstack/${response.data.id}`);
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga creating the stack on the server:`,
+      err
+    );
+  }
+}
 function* stackSaga() {
   yield takeLatest('GET_STACKS', fetchStacks);
   yield takeLatest('DELETE_STACK', deleteStack);
+  yield takeLatest('CREATE_STACK', createStack);
 }
 
 export default stackSaga;

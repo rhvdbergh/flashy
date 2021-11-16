@@ -113,6 +113,7 @@ function App() {
 
           <ProtectedRoute
             // logged in edit class page else shows login
+            exact
             path="/editclass"
           >
             <TeacherEditClass />
@@ -120,7 +121,7 @@ function App() {
 
           <ProtectedRoute
             // logged in edit class page else shows login
-            path="/editstack"
+            path="/editstack/:stack_id"
           >
             <TeacherEditCards />
           </ProtectedRoute>
