@@ -49,9 +49,12 @@ function TeacherEditCardsTableRow({ card }) {
         />
       </TableCell>
       <TableCell align="center">
-        <DeleteIcon
-          onClick={() => dispatch({ type: 'DELETE_CARD', payload: card.id })}
-        />
+        {/* only display the delete icon if this is an actual card */}
+        {card.id !== -1 && (
+          <DeleteIcon
+            onClick={() => dispatch({ type: 'DELETE_CARD', payload: card.id })}
+          />
+        )}
       </TableCell>
     </TableRow>
   );

@@ -230,7 +230,7 @@ router.put(
   rejectUnauthenticated,
   onlyAllowTeacher,
   (req, res) => {
-    console.log(`in /api/stack/card/:card_id, req.body =`, req.body);
+    console.log(`in PUT /api/stack/card/:card_id, req.body =`, req.body);
     // build the sql query
     const query = `
       UPDATE "card"
