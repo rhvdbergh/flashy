@@ -12,7 +12,8 @@ router.get('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
   // build the sql query
   const query = `
     SELECT * FROM "stack"
-    WHERE "user_id" = $1;
+    WHERE "user_id" = $1
+    ORDER BY "id";
   `;
 
   // run the query
