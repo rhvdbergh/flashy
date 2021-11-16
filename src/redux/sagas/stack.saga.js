@@ -63,8 +63,8 @@ function* updateStack(action) {
 function* fetchStack(action) {
   try {
     // the id is the stack id to be fetched
-    yield axios.get(`/api/stack/${action.payload}`);
-    yield put({ type: 'SET_EDIT_STACK', payload: action.payload });
+    const response = yield axios.get(`/api/stack/${action.payload}`);
+    yield put({ type: 'SET_EDIT_STACK', payload: response.data });
   } catch (err) {
     console.log(
       `There was an error in the redux saga fetching the stack on the server:`,

@@ -165,4 +165,32 @@ router.put(
   }
 );
 
+// gets the stack (it's name) and all associated cards
+router.get(
+  '/:stack_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the SQL query
+    const query = `
+      SELECT * FROM "stack"
+      JOIN "card" ON "card".stack_id = "stack".id
+      WHERE "stack".id = $1;
+    `;
+
+    pool
+      .query(query, [req.params.stack_id])
+      .then((response) => {
+        res.send(response.rows); // send back the stack and the cards
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error retrieving the stack from the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
 module.exports = router;
