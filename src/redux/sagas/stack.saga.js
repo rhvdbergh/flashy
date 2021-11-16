@@ -29,7 +29,7 @@ function* deleteStack(action) {
   }
 }
 
-// creates a new stack on the server, and returns it's id
+// creates a new stack on the server, and returns its id
 function* createStack(action) {
   try {
     const response = yield axios.post('/api/stack');
@@ -86,6 +86,54 @@ function* fetchCards(action) {
   }
 }
 
+// updates a specific card
+function* updateCard(action) {
+  try {
+    // the id is the id of the card to be updated
+    // payload is a card object, shaped as in db
+    yield axios.put(`/api/stack/card/${action.payload.id}`, action.payload);
+    yield put({ type: 'FETCH_CARDS', payload: action.payload.stack_id });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga creating the stack on the server:`,
+      err
+    );
+  }
+}
+
+// creates a new card on the server, and returns its id
+function* createCard(action) {
+  console.log(`in createCard, action.payload = `, action.payload);
+  try {
+    const response = yield axios.post(
+      `/api/stack/card/${action.payload.stack_id}`,
+      action.payload
+    );
+    // refresh the cards
+    yield put({ type: 'FETCH_CARDS', payload: action.payload.stack_id });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga creating the stack on the server:`,
+      err
+    );
+  }
+}
+
+// deletes a specific card on the server
+function* deleteCard(action) {
+  try {
+    // the payload is a card object
+    yield axios.delete(`/api/stack/card/${action.payload.id}`);
+    // refresh the redux store and the DOM
+    yield put({ type: 'FETCH_CARDS', payload: action.payload.stack_id });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga deleting the card from the server:`,
+      err
+    );
+  }
+}
+
 function* stackSaga() {
   yield takeLatest('GET_STACKS', fetchStacks);
   yield takeLatest('DELETE_STACK', deleteStack);
@@ -93,6 +141,9 @@ function* stackSaga() {
   yield takeLatest('UPDATE_STACK', updateStack);
   yield takeLatest('FETCH_STACK', fetchStack);
   yield takeLatest('FETCH_CARDS', fetchCards);
+  yield takeLatest('UPDATE_CARD', updateCard);
+  yield takeLatest('CREATE_CARD', createCard);
+  yield takeLatest('DELETE_CARD', deleteCard);
 }
 
 export default stackSaga;
