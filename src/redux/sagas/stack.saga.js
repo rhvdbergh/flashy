@@ -43,10 +43,28 @@ function* createStack(action) {
     );
   }
 }
+
+// updates a specific stack
+function* updateStack(action) {
+  try {
+    // the id is the stack id to be updated; payload.stackName
+    yield axios.put(`/api/stack/${action.payload.id}`, {
+      stack_name: action.payload.name,
+    });
+    yield put({ type: 'FETCH_STACK', payload: action.payload });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga creating the stack on the server:`,
+      err
+    );
+  }
+}
+
 function* stackSaga() {
   yield takeLatest('GET_STACKS', fetchStacks);
   yield takeLatest('DELETE_STACK', deleteStack);
   yield takeLatest('CREATE_STACK', createStack);
+  yield takeLatest('UPDATE_STACK', updateStack);
 }
 
 export default stackSaga;

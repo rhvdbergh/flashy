@@ -68,7 +68,16 @@ function TeacherEditCards() {
         size="small"
         required
         value={stackName}
-        onChange={(event) => setStackName(event.target.value)}
+        onChange={(event) => {
+          setStackName(event.target.value);
+        }}
+        // this will send a dispatch whenever the TextField loses focus
+        onBlur={() =>
+          dispatch({
+            type: 'UPDATE_STACK',
+            payload: { id: stack_id, name: stackName },
+          })
+        }
       />
     </Container>
   );

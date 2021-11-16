@@ -122,12 +122,13 @@ router.put(
     // build the sql query
     const query = `
       UPDATE "stack"
+      SET "stack_name" = $3
       WHERE "id" = $1 AND "user_id" = $2;
     `;
 
     // run the sql query
     pool
-      .query(query, [req.params.stack_id, req.user.id])
+      .query(query, [req.params.stack_id, req.user.id, req.body.stack_name])
       .then((response) => {
         res.sendStatus(200); // the stack was updated
       })
