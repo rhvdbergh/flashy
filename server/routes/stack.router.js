@@ -101,9 +101,32 @@ router.post('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
     .then((response) => {
       // response.rows[0] contains an object {id: ?}
       // with the newly created stack
-      res.status(201).send(response.rows[0]); // the stack was created
+      const newStackId = response.rows[0].id;
+
+      // build a new query to update the name of this stack,
+      // which will be generic and based on the id so it is unique
+      const updateQuery = `
+        UPDATE "stack"
+        SET "stack_name" = 'New Card Stack ${newStackId}'
+        WHERE "id" = ${newStackId};
+      `;
+      pool
+        .query(updateQuery)
+        .then((updateResponse) => {
+          // send the status that the stack was created, returning the new id
+          res.status(201).send(newStackId); // the stack was created
+        })
+        .catch((err) => {
+          // catch block for updateQuery pool
+          console.log(
+            `There was an error creating a new stack on the server:`,
+            err
+          );
+          res.sendStatus(500);
+        });
     })
     .catch((err) => {
+      // catch block for the Insert Into query
       console.log(
         `There was an error creating a new stack on the server:`,
         err

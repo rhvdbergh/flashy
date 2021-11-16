@@ -29,6 +29,9 @@ const useStyles = makeStyles(() => ({
   table: {
     marginTop: '30px',
   },
+  textfield: {
+    width: '250px',
+  },
 }));
 
 function TeacherEditCards() {
@@ -39,7 +42,7 @@ function TeacherEditCards() {
   const [stackName, setStackName] = useState('');
 
   // set up the mui styles
-  const { container, table } = useStyles();
+  const { container, table, textfield } = useStyles();
 
   // fetch the id for this stack from the useParams hook
   const { stack_id } = useParams();
@@ -68,6 +71,7 @@ function TeacherEditCards() {
         size="small"
         autoFocus
         required
+        className={textfield}
         value={stackName}
         onChange={(event) => {
           setStackName(event.target.value);
