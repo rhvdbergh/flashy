@@ -83,11 +83,33 @@ router.delete(
   }
 );
 
-/**
- * POST route template
- */
-router.post('/', (req, res) => {
+// post
+router.post('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
   // POST route code here
+  console.log(`POST /api/stack`);
+  // build the SQL query
+  // the query is empty except for the user_id because the stack
+  // has not been named yet, this will happen with a PUT
+  const query = `
+    INSERT INTO "stack" (user_id) 
+    VALUES ($1)
+    RETURNING "id";
+  `;
+  // run the SQL query
+  pool
+    .query(query, [req.user.id])
+    .then((response) => {
+      // response.rows[0] contains an object {id: ?}
+      // with the newly created stack
+      res.status(201).send(response.rows[0]); // the stack was created
+    })
+    .catch((err) => {
+      console.log(
+        `There was an error creating a new stack on the server:`,
+        err
+      );
+      res.sendStatus(500);
+    });
 });
 
 module.exports = router;
