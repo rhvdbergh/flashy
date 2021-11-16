@@ -80,9 +80,6 @@ function TeacherEditCards() {
     setStackName(editStack.stack_name);
   }, [editStack]);
 
-  console.log(`this is stackName`, stackName);
-  console.log('this is editStack', editStack);
-
   return (
     <Container className={container}>
       <TextField

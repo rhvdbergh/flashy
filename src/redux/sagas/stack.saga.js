@@ -60,6 +60,7 @@ function* updateStack(action) {
   }
 }
 
+// fetches a single stack from the server
 function* fetchStack(action) {
   try {
     // the id is the stack id to be fetched

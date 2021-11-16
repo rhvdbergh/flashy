@@ -86,7 +86,6 @@ router.delete(
 
 // post
 router.post('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
-  // POST route code here
   console.log(`POST /api/stack`);
   // build the SQL query
   // the query is empty except for the user_id because the stack
@@ -166,7 +165,7 @@ router.put(
   }
 );
 
-// gets the stack (it's name) and all associated cards
+// gets a specific stack from the server
 router.get(
   '/:stack_id',
   rejectUnauthenticated,
@@ -181,7 +180,7 @@ router.get(
     pool
       .query(query, [req.params.stack_id])
       .then((response) => {
-        res.send(response.rows[0]); // send back the stack and the cards
+        res.send(response.rows[0]); // send back the stack
       })
       .catch((err) => {
         console.log(

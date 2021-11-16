@@ -2,7 +2,8 @@
 // teachers can add or edit classes on this screen
 
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
 
 //import mui
 import {
@@ -35,18 +36,42 @@ function TeacherEditClass() {
   const dispatch = useDispatch();
 
   // set up local state to track inputs
-  const [clName, setClName] = useState();
+  const [clName, setClName] = useState('');
 
   // draw in the mui styles
   const { container, textfield } = useStyles();
 
+  // get the class_id with the useParams hook
+  const { class_id } = useParams();
+
+  // get the class being edited from the redux store
+  const editClass = useSelector((store) => store.classStore.editClass);
+
   // on page load, set nav bar title
   useEffect(() => {
     // set the nav bar title
-    dispatch({ type: 'SET_NAV_TITLE', payload: 'Editing Class: ' });
+    dispatch({ type: 'SET_NAV_TITLE', payload: 'Editing Class' });
     // ensure that the back button is displayd on this page
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
+    // get the current stack that's being edited
+    dispatch({ type: 'FETCH_CLASS', payload: class_id });
+    // get all the cards in this stack
   }, []);
+
+  // every time the class name changes, do a dispatch to set the nav title
+  useEffect(() => {
+    dispatch({
+      type: 'SET_NAV_TITLE',
+      payload: `Editing Class${clName !== '' ? ': ' + clName : ''}`,
+    });
+  }, [clName]);
+
+  useEffect(() => {
+    // set the class name to the name of the class in the redux store
+    setClName(editClass.class_name);
+  }, [editClass]);
+
+  console.log(`this is clName`, clName);
 
   return (
     <Container className={container}>

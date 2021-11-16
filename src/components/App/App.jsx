@@ -114,7 +114,7 @@ function App() {
           <ProtectedRoute
             // logged in edit class page else shows login
             exact
-            path="/editclass"
+            path="/editclass/:class_id"
           >
             <TeacherEditClass />
           </ProtectedRoute>
