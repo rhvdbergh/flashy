@@ -38,10 +38,22 @@ const cards = (state = [], action) => {
   }
 };
 
+const cardsToReview = (state = [], action) => {
+  switch (action.type) {
+    case 'FETCH_CARDS_TO_REVIEW':
+      return action.payload;
+    case 'LOGOUT':
+      return [];
+    default:
+      return state;
+  }
+};
+
 const stackStore = combineReducers({
   stacks,
   editStack,
   cards,
+  cardsToReview,
 });
 
 export default stackStore;

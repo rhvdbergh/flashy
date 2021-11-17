@@ -22,6 +22,7 @@ import StudentDashboard from '../StudentDashboard/StudentDashboard';
 import TeacherDashboard from '../TeacherDashboard/TeacherDashboard';
 import TeacherEditClass from '../TeacherEditClass/TeacherEditClass';
 import TeacherEditCards from '../TeacherEditCards/TeacherEditCards';
+import StudentReviewCards from '../StudentReviewCards/StudentReviewCards';
 
 import './App.css';
 
@@ -120,10 +121,18 @@ function App() {
           </ProtectedRoute>
 
           <ProtectedRoute
-            // logged in edit class page else shows login
+            // logged in edit stack page else shows login
             path="/editstack/:stack_id"
           >
             <TeacherEditCards />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            // logged in learn cards screen
+            exact
+            path="/cards/:class_id"
+          >
+            <StudentReviewCards />
           </ProtectedRoute>
 
           {/* If none of the other routes matched, we will show a 404. */}
