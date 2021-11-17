@@ -92,15 +92,17 @@ function StudentReviewCards() {
     setCardsToReview(cards.filter((card) => card.familiarity !== 0));
   }, [cards]);
 
-  // whenever newCards or cardsToReview changes, pick a new random card
+  // whenever any of the state "boxes" of cards changes, pick a new random card
   // to display to the user
   useEffect(() => {
     console.log(`things changed`);
     // if there are older cards to review, review them first
     if (cardsToReview.length > 0) {
       setCurrentCard(pickRandomCardFrom(cardsToReview));
+    } else if (currentStage === 'new' && newCards.length > 0) {
+      setCurrentCard(pickRandomCardFrom(newCards));
     }
-  }, [newCards, cardsToReview]);
+  }, [newCards, cardsToReview, cardsSeen, cardsShortTerm]);
 
   const pickRandomCardFrom = (cardsArray) => {
     // if there's only one card left, return it
@@ -121,8 +123,23 @@ function StudentReviewCards() {
     // set it back in the new cards to learn box
     // the current stage is "review"
     if (currentStage === 'review') {
-      console.log('currentCardIndex', currentCardIndex);
-      console.log('is this your card?', cardsToReview[currentCardIndex]);
+      // if this is the final card in the box
+      if (cardsToReview.length === 1) {
+        // this box is now empty
+        setCardsToReview([]);
+        // and we're moving into the new card learning stage
+        setCurrentStage('new');
+      } else {
+        // remove this card from the cardsToReview box
+        const beginArr = cardsToReview.slice(0, currentCardIndex);
+        const endArr = cardsToReview.slice(currentCardIndex + 1);
+        setCardsToReview([...beginArr, ...endArr]);
+      }
+      // change the card's familiarity back to 0
+      currentCard.familiarity = 0;
+      // and add it to the newCards box
+      setNewCards([...newCards, currentCard]);
+      // the useEffect will trigger a new random card pick
     }
   };
 
