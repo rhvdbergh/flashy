@@ -89,13 +89,17 @@ function StudentReviewCards() {
     setNewCards(cards.filter((card) => card.familiarity === 0));
     // these are all cards that the student has previously learned
     // and now needs to review
-    setCardsToReview(cards.filter((card) => card.familiarity !== 0));
+    const tempArr = cards.filter((card) => card.familiarity !== 0);
+    setCardsToReview(tempArr);
+    // if there are no cards to review, move to the new stage
+    if (tempArr.length === 0) {
+      setCurrentStage('new');
+    }
   }, [cards]);
 
   // whenever any of the state "boxes" of cards changes, pick a new random card
   // to display to the user
   useEffect(() => {
-    console.log(`things changed`);
     // if there are older cards to review, review them first
     if (cardsToReview.length > 0) {
       setCurrentCard(pickRandomCardFrom(cardsToReview));
@@ -123,18 +127,7 @@ function StudentReviewCards() {
     // set it back in the new cards to learn box
     // the current stage is "review"
     if (currentStage === 'review') {
-      // if this is the final card in the box
-      if (cardsToReview.length === 1) {
-        // this box is now empty
-        setCardsToReview([]);
-        // and we're moving into the new card learning stage
-        setCurrentStage('new');
-      } else {
-        // remove this card from the cardsToReview box
-        const beginArr = cardsToReview.slice(0, currentCardIndex);
-        const endArr = cardsToReview.slice(currentCardIndex + 1);
-        setCardsToReview([...beginArr, ...endArr]);
-      }
+      removeCardFromReview();
       // change the card's familiarity back to 0
       currentCard.familiarity = 0;
       // and add it to the newCards box
@@ -147,13 +140,35 @@ function StudentReviewCards() {
   const handleYes = () => {
     // if this is in the review stage, we have to send a dispatch
     if (currentStage === 'review') {
-      dispatch({ type: '' });
+      dispatch({
+        type: 'UPGRADE_CARD_FAMILIARITY',
+        payload: currentCard.student_class_card_id,
+      });
+      removeCardFromReview();
+    }
+  };
+
+  // removes cards from the cardsToReview box
+  // will move to the next stage if this is the last card
+  const removeCardFromReview = () => {
+    // if this is the final card in the box
+    if (cardsToReview.length === 1) {
+      // this box is now empty
+      setCardsToReview([]);
+      // and we're moving into the new card learning stage
+      setCurrentStage('new');
+    } else {
+      // remove this card from the cardsToReview box
+      const beginArr = cardsToReview.slice(0, currentCardIndex);
+      const endArr = cardsToReview.slice(currentCardIndex + 1);
+      setCardsToReview([...beginArr, ...endArr]);
     }
   };
 
   console.log(`here are your cards to learn`, newCards);
   console.log(`here are your cards to review`, cardsToReview);
   console.log(`here is your random card`, currentCard);
+  console.log(`we are in stage`, currentStage);
 
   return (
     <Container className={container}>
