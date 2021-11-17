@@ -2,7 +2,7 @@
 // it is used for students to learn new cards
 // and to review cards that have previously been learned
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
@@ -31,6 +31,10 @@ function StudentReviewCards() {
   // grab the cards to review from the redux store
   const cards = useSelector((store) => store.stackStore.cardsToReview);
 
+  // local state to keep track of the two sets of cards that we have
+  const [newCards, setNewCards] = useState([]);
+  const [cardsToReview, setCardsToReview] = useState([]);
+
   // on page load
   useEffect(() => {
     //set nav bar title
@@ -41,7 +45,18 @@ function StudentReviewCards() {
     dispatch({ type: 'FETCH_CARDS_TO_REVIEW', payload: class_id });
   }, []);
 
-  console.log(`here are your cards`, cards);
+  // when the cards get set, update the local stat
+  useEffect(() => {
+    // these are all new cards that the student has to learn
+    setNewCards(cards.filter((card) => card.familiarity === 0));
+    // these are all cards that the student has previously learned
+    // and now needs to review
+    setCardsToReview(cards.filter((card) => card.familiarity !== 0));
+  }, [cards]);
+
+  console.log(`here are your cards to learn`, newCards);
+  console.log(`here are your cards to review`, cardsToReview);
+
   return <p>StudentReviewCards Component</p>;
 }
 
