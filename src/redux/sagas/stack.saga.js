@@ -19,8 +19,8 @@ function* deleteStack(action) {
   try {
     yield axios.delete(`/api/stack/${action.payload}`);
     // refresh the redux store and the DOM
-    yield put({ type: 'GET_STACKS' });
-    yield put({ type: 'GET_CLASSES' });
+    yield put({ type: 'FETCH_STACKS' });
+    yield put({ type: 'FETCH_CLASSES' });
   } catch (err) {
     console.log(
       `There was an error in the redux saga deleting the stack from the server:`,
@@ -136,7 +136,7 @@ function* deleteCard(action) {
 }
 
 function* stackSaga() {
-  yield takeLatest('GET_STACKS', fetchStacks);
+  yield takeLatest('FETCH_STACKS', fetchStacks);
   yield takeLatest('DELETE_STACK', deleteStack);
   yield takeLatest('CREATE_STACK', createStack);
   yield takeLatest('UPDATE_STACK', updateStack);

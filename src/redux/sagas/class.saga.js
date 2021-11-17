@@ -19,7 +19,7 @@ function* deleteClass(action) {
   try {
     yield axios.delete(`/api/class/${action.payload}`);
     // refresh the redux store and the DOM
-    yield put({ type: 'GET_CLASSES' });
+    yield put({ type: 'FETCH_CLASSES' });
   } catch (err) {
     console.log(
       `There was an error in the redux saga deleting the class from the server:`,
@@ -72,7 +72,7 @@ function* updateClass(action) {
 }
 
 function* classSaga() {
-  yield takeLatest('GET_CLASSES', fetchClasses);
+  yield takeLatest('FETCH_CLASSES', fetchClasses);
   yield takeLatest('DELETE_CLASS', deleteClass);
   yield takeLatest('CREATE_CLASS', createClass);
   yield takeLatest('FETCH_CLASS', fetchClass);

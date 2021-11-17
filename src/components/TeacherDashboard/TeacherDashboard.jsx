@@ -61,8 +61,8 @@ function TeacherDashboard() {
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Dashboard' });
     // don't display the back button on this page
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: false });
-    dispatch({ type: 'GET_CLASSES' });
-    dispatch({ type: 'GET_STACKS' });
+    dispatch({ type: 'FETCH_CLASSES' });
+    dispatch({ type: 'FETCH_STACKS' });
   }, []);
 
   return (
