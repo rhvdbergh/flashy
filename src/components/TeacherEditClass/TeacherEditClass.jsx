@@ -10,6 +10,7 @@ import {
   Box,
   Button,
   Container,
+  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -19,6 +20,8 @@ import {
   Paper,
   TextField,
   FormControl,
+  FormControlLabel,
+  FormGroup,
   Select,
   MenuItem,
   InputLabel,
@@ -36,6 +39,9 @@ const useStyles = makeStyles(() => ({
   select: {
     width: '250px',
   },
+  checkbox: {
+    alignSelf: 'center',
+  },
 }));
 
 function TeacherEditClass() {
@@ -47,7 +53,7 @@ function TeacherEditClass() {
   const [assignedStack, setAssignedStack] = useState('');
 
   // draw in the mui styles
-  const { container, textfield, select } = useStyles();
+  const { container, textfield, select, checkbox } = useStyles();
 
   // get the class_id with the useParams hook
   const { class_id } = useParams();
@@ -125,6 +131,7 @@ function TeacherEditClass() {
             });
           }}
         >
+          <MenuItem value={null}>No Assigned Stack</MenuItem>
           {stacks.map((stack) => (
             <MenuItem key={stack.id} value={stack.id}>
               {stack.stack_name}
@@ -132,6 +139,25 @@ function TeacherEditClass() {
           ))}
         </Select>
       </FormControl>
+      <FormGroup className={checkbox}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={editClass.available_to_students}
+              onClick={() =>
+                dispatch({
+                  type: 'UPDATE_CLASS',
+                  payload: {
+                    ...editClass,
+                    available_to_students: !editClass.available_to_students,
+                  },
+                })
+              }
+            />
+          }
+          label="Make class available to students."
+        />
+      </FormGroup>
     </Container>
   );
 }

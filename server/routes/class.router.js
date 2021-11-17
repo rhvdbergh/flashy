@@ -12,7 +12,8 @@ router.get('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
   // build the sql query
   const query = `
     SELECT * FROM "class"
-    WHERE "user_id" = $1;
+    WHERE "user_id" = $1
+    ORDER BY "class_name";
   `;
 
   // run the query
@@ -152,7 +153,7 @@ router.put(
     // build the sql query
     const query = `
       UPDATE "class"
-      SET "class_name" = $3, "stack_id" = $4
+      SET "class_name" = $3, "stack_id" = $4, "available_to_students" = $5
       WHERE "id" = $1 AND "user_id" = $2;
     `;
 
@@ -163,6 +164,7 @@ router.put(
         req.user.id,
         req.body.class_name,
         req.body.stack_id,
+        req.body.available_to_students,
       ])
       .then((response) => {
         res.sendStatus(200); // the class was updated
