@@ -26,7 +26,9 @@ router.get(
     pool
       .query(query, [req.user.id, req.params.class_id])
       .then((response) => {
-        res.send(response.rows); // send back the cards
+        // filter out the cards - only those that should be reviewed should be returned
+        const cards = response.rows.filter((card) => needsReview(card));
+        res.send(cards); // send back the cards
       })
       .catch((err) => {
         console.log(
@@ -37,4 +39,56 @@ router.get(
       });
   }
 );
+
+/* UTILITY FUNCTIONS */
+const needsReview = (card) => {
+  console.log(`in needsReview, card is:`, card);
+
+  // all cards with a familiarity of 0 should be returned -
+  // they are new cards or cards that are "not seen"
+  // cards with a familiarity of 1 should be returned if they are 1 day old
+  // cards with a fam of 2 should be returned if 3 days old
+  // fam 3 -> 7 days old
+  // fam 4 -> 14 days old
+  // fam 5 -> 21 days old
+  // fam 6 -> 30 days old
+  // fam 7 -> 45 days old
+  // fam 8 -> 90 days old
+  // fam 9 -> 180 days old
+  // the numbers above are the days plugged into the calcOverdueDate function
+
+  switch (card.familiarity) {
+    case 0:
+      return true;
+    case 1:
+      return card.time_reviewed < calcOverdueDate(1);
+    case 2:
+      return card.time_reviewed < calcOverdueDate(3);
+    case 3:
+      return card.time_reviewed < calcOverdueDate(7);
+    case 4:
+      return card.time_reviewed < calcOverdueDate(14);
+    case 5:
+      return card.time_reviewed < calcOverdueDate(21);
+    case 6:
+      return card.time_reviewed < calcOverdueDate(30);
+    case 7:
+      return card.time_reviewed < calcOverdueDate(45);
+    case 8:
+      return card.time_reviewed < calcOverdueDate(90);
+    case 9:
+      return card.time_reviewed < calcOverdueDate(180);
+    default:
+      return false;
+  }
+};
+
+// calculates a date against which the card.time_reviewed can be measured
+const calcOverdueDate = (daysUntilOverdue) => {
+  const today = new Date();
+  const pastDate = new Date();
+  pastDate.setDate(today.getDate() - daysUntilOverdue);
+  return pastDate;
+};
+
 module.exports = router;
