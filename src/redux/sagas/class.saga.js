@@ -57,11 +57,26 @@ function* fetchClass(action) {
   }
 }
 
+// updates a specific class
+function* updateClass(action) {
+  try {
+    // the id is the class id to be updated;
+    yield axios.put(`/api/class/${action.payload.id}`, action.payload);
+    yield put({ type: 'FETCH_CLASS', payload: action.payload.id });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga creating the stack on the server:`,
+      err
+    );
+  }
+}
+
 function* classSaga() {
   yield takeLatest('GET_CLASSES', fetchClasses);
   yield takeLatest('DELETE_CLASS', deleteClass);
   yield takeLatest('CREATE_CLASS', createClass);
   yield takeLatest('FETCH_CLASS', fetchClass);
+  yield takeLatest('UPDATE_CLASS', updateClass);
 }
 
 export default classSaga;

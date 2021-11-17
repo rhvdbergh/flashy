@@ -1,6 +1,7 @@
 // a row in the class table on the teacher dashboard
 
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 
 // import mui
 import { TableCell, TableRow } from '@mui/material';
@@ -15,6 +16,9 @@ function TeacherClassTableRow({ cl }) {
   // set up the redux dispatch
   const dispatch = useDispatch();
 
+  // set up the history hook
+  const history = useHistory();
+
   return (
     <TableRow>
       <TableCell>{cl.class_name}</TableCell>
@@ -27,7 +31,9 @@ function TeacherClassTableRow({ cl }) {
         <DonutLargeIcon />
       </TableCell>
       <TableCell align="center">
-        <FormatListBulletedIcon />
+        <FormatListBulletedIcon
+          onClick={() => history.push(`/editclass/${cl.id}`)}
+        />
       </TableCell>
       {/* Conditional render based on whether a stack is assigned or not */}
       <TableCell align="center">

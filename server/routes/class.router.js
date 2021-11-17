@@ -141,4 +141,35 @@ router.get(
   }
 );
 
+// updates a specific class
+// /api/class/:class_id
+router.put(
+  '/:class_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    console.log(`in /api/class/:class_id, req.body=`, req.body);
+    // build the sql query
+    const query = `
+      UPDATE "class"
+      SET "class_name" = $3
+      WHERE "id" = $1 AND "user_id" = $2;
+    `;
+
+    // run the sql query
+    pool
+      .query(query, [req.params.class_id, req.user.id, req.body.class_name])
+      .then((response) => {
+        res.sendStatus(200); // the class was updated
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error updating the class on the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
 module.exports = router;

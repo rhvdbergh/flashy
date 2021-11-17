@@ -91,11 +91,12 @@ function TeacherEditClass() {
         }}
         // this will send a dispatch whenever the TextField loses focus
         onBlur={() => {
-          // if the stackName is empty, we do not want to update the name
-          dispatch({
-            type: 'UPDATE_CLASS',
-            payload: { id: user_id, name: clName },
-          });
+          // if the clName is empty, we do not want to update the name
+          clName !== '' &&
+            dispatch({
+              type: 'UPDATE_CLASS',
+              payload: { ...editClass, class_name: clName },
+            });
         }}
       />
     </Container>
