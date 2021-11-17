@@ -40,6 +40,8 @@ router.get(
 );
 
 // PUT /api/student/cards/:student_class_card_id
+// this endpoint upgrades the familiarity of a specific card
+// for a specific student in a specific class by 1 point.
 router.put(
   '/cards/:student_class_card_id',
   rejectUnauthenticated,
@@ -50,7 +52,7 @@ router.put(
     // but only until it reaches level 9
     const query = `
       UPDATE "student_class_card"
-      SET "familiarity" = "familiarity" + 1
+      SET "familiarity" = "familiarity" + 1, "time_reviewed" = NOW()
       WHERE "id" = $1 AND "familiarity" < 10;
     `;
 
