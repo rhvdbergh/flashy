@@ -112,6 +112,8 @@ function StudentReviewCards() {
       setCurrentCard(pickRandomCardFrom(cardsToReview));
     } else if (currentStage === 'new' && newCards.length > 0) {
       setCurrentCard(pickRandomCardFrom(newCards));
+    } else if (currentStage === 'seen' && cardsSeen.length > 0) {
+      setCurrentCard(pickRandomCardFrom(cardsSeen));
     }
   }, [newCards, cardsToReview, cardsSeen, cardsShortTerm]);
 
@@ -151,11 +153,20 @@ function StudentReviewCards() {
       // change the card's familiarity back to 0
       currentCard.familiarity = 0;
       // and add it to the newCards box
-      setNewCards([...newCards, currentCard]);
-      // make sure the next card is not revealed!
-      setIsRevealed(false);
-      // the useEffect will trigger a new random card pick
+      resetCardToNew();
+    } else if (currentStage === 'seen') {
+      // remove the card
+      removeCardFromSeen();
+      // place this card in the newCard box
+      resetCardToNew();
     }
+  };
+
+  const resetCardToNew = () => {
+    setNewCards([...newCards, currentCard]);
+    // make sure the next card is not revealed!
+    setIsRevealed(false);
+    // the useEffect will trigger a new random card pick
   };
 
   // the user has clicked yes
@@ -167,6 +178,9 @@ function StudentReviewCards() {
         payload: currentCard.student_class_card_id,
       });
       removeCardFromReview();
+    } else if (currentStage === 'seen') {
+      moveToShortTermBox();
+      removeCardFromSeen();
     }
   };
 
@@ -184,6 +198,28 @@ function StudentReviewCards() {
       const beginArr = cardsToReview.slice(0, currentCardIndex);
       const endArr = cardsToReview.slice(currentCardIndex + 1);
       setCardsToReview([...beginArr, ...endArr]);
+    }
+  };
+
+  // removes the card from the seen box
+  const removeCardFromSeen = () => {
+    // if this is the final card in the box
+    if (cardsSeen.length === 1) {
+      // this box is now empty
+      setCardsSeen([]);
+      // and we're moving into a different stage
+      if (newCards.length > 0) {
+        // there's still more new cards to learn
+        setCurrentStage('new');
+      } else {
+        // we're moving to the shortTerm review stage
+        setCurrentStage('shortTerm');
+      } // end if newCards.length
+    } else {
+      // remove this card from the cardsSeen box
+      const beginArr = cardsSeen.slice(0, currentCardIndex);
+      const endArr = cardsSeen.slice(currentCardIndex + 1);
+      setCardsSeen([...beginArr, ...endArr]);
     }
   };
 
