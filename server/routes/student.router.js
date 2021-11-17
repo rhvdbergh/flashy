@@ -15,7 +15,6 @@ router.get(
   onlyAllowStudent,
   (req, res) => {
     // build the sql query
-    // TODO: we're just sending all the cards at the moment
     const query = `
       SELECT "card".id, "card".front, "card".back, "card".batch, "card".stack_id, "student_class_card".familiarity, "student_class_card".time_reviewed, "student_class_card".id as "student_class_card_id", "student_class_card".student_class_id FROM "student_class_card"
       JOIN "card" ON "card".id = "student_class_card".card_id

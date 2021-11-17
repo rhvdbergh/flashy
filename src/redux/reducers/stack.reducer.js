@@ -40,7 +40,9 @@ const cards = (state = [], action) => {
 
 const cardsToReview = (state = [], action) => {
   switch (action.type) {
-    case 'FETCH_CARDS_TO_REVIEW':
+    case 'SET_CARDS_TO_REVIEW':
+      // in this array, we want to store the cards to review
+      // thus, not the cards that haven't been seen yet
       return action.payload;
     case 'LOGOUT':
       return [];

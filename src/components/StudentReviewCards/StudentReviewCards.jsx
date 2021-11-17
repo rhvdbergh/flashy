@@ -3,7 +3,7 @@
 // and to review cards that have previously been learned
 
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
 // import mui
@@ -28,6 +28,9 @@ function StudentReviewCards() {
   // grab the class id from the params
   const { class_id } = useParams();
 
+  // grab the cards to review from the redux store
+  const cards = useSelector((store) => store.stackStore.cardsToReview);
+
   // on page load
   useEffect(() => {
     //set nav bar title
@@ -37,6 +40,8 @@ function StudentReviewCards() {
     // fetch the cards to review for this student in this class
     dispatch({ type: 'FETCH_CARDS_TO_REVIEW', payload: class_id });
   }, []);
+
+  console.log(`here are your cards`, cards);
   return <p>StudentReviewCards Component</p>;
 }
 
