@@ -39,6 +39,37 @@ router.get(
   }
 );
 
+// PUT /api/student/cards/:student_class_card_id
+router.put(
+  '/cards/:student_class_card_id',
+  rejectUnauthenticated,
+  onlyAllowStudent,
+  (req, res) => {
+    // build the sql query
+    // we're updating the familiarity of this card,
+    // but only until it reaches level 9
+    const query = `
+      UPDATE "student_class_card"
+      SET "familiarity" = "familiarity" + 1
+      WHERE "id" = $1 AND "familiarity" < 10;
+    `;
+
+    // run the sql query
+    pool
+      .query(query, [req.params.student_class_card_id])
+      .then((response) => {
+        res.sendStatus(204); // show that it's updated
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error updating the card familiarity for this student on the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
 /* UTILITY FUNCTIONS */
 const needsReview = (card) => {
   console.log(`in needsReview, card is:`, card);

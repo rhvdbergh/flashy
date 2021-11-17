@@ -144,7 +144,12 @@ function StudentReviewCards() {
   };
 
   // the user has clicked yes
-  const handleYes = () => {};
+  const handleYes = () => {
+    // if this is in the review stage, we have to send a dispatch
+    if (currentStage === 'review') {
+      dispatch({ type: '' });
+    }
+  };
 
   console.log(`here are your cards to learn`, newCards);
   console.log(`here are your cards to review`, cardsToReview);
