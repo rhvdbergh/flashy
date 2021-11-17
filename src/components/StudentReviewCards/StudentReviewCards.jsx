@@ -25,7 +25,7 @@ import { makeStyles } from '@mui/styles';
 // set up the mui styles
 const useStyles = makeStyles(() => ({
   container: {
-    marginTop: '150px',
+    marginTop: '130px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -39,6 +39,12 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     backgroundColor: 'text.primary',
   },
+  revealButton: {
+    width: '100%',
+  },
+  yesNoButtons: {
+    width: '40%',
+  },
 }));
 
 function StudentReviewCards() {
@@ -49,7 +55,7 @@ function StudentReviewCards() {
   const { class_id } = useParams();
 
   // get the mui styles
-  const { container, cardStyle } = useStyles();
+  const { container, cardStyle, revealButton, yesNoButtons } = useStyles();
 
   // grab the cards to review from the redux store
   const cards = useSelector((store) => store.stackStore.cardsToReview);
@@ -60,6 +66,12 @@ function StudentReviewCards() {
   const [cardsSeen, setCardsSeen] = useState([]);
   const [cardsShortTerm, setCardsShortTerm] = useState([]);
   const [currentCard, setCurrentCard] = useState({});
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  // keeps track of whether the card is revealed or not
+  const [isRevealed, setIsRevealed] = useState(false);
+  // keeps track of what stage the screen is in
+  // options are review, new, seen, shortTer
+  const [currentStage, setCurrentStage] = useState('review');
 
   // on page load
   useEffect(() => {
@@ -98,9 +110,24 @@ function StudentReviewCards() {
     // else pick a random card
     // this will find a random index between 0 and the array length,
     // not including the number of the length (so 0 - length-1)
-    const randomIndex = Math.floor(Math.random() * cardsArray.length);
-    return cardsArray[randomIndex];
+    const index = Math.floor(Math.random() * cardsArray.length);
+    setCurrentCardIndex(index);
+    return cardsArray[index];
   };
+
+  // the user has clicked no
+  const handleNo = () => {
+    // if this is an old card being reviewed,
+    // set it back in the new cards to learn box
+    // the current stage is "review"
+    if (currentStage === 'review') {
+      console.log('currentCardIndex', currentCardIndex);
+      console.log('is this your card?', cardsToReview[currentCardIndex]);
+    }
+  };
+
+  // the user has clicked yes
+  const handleYes = () => {};
 
   console.log(`here are your cards to learn`, newCards);
   console.log(`here are your cards to review`, cardsToReview);
@@ -113,9 +140,24 @@ function StudentReviewCards() {
           <Typography>{currentCard.front}</Typography>
         </Box>
       </Paper>
-      <Box className={cardStyle}>
-        <Typography>{currentCard.back}</Typography>
-      </Box>
+      <Paper>
+        <Box className={cardStyle}>
+          {isRevealed && <Typography>{currentCard.back}</Typography>}
+        </Box>
+      </Paper>
+      <Button
+        variant="contained"
+        className={revealButton}
+        onClick={() => setIsRevealed(true)}
+      >
+        Reveal Card
+      </Button>
+      <Button variant="contained" className={yesNoButtons} onClick={handleNo}>
+        No
+      </Button>
+      <Button variant="contained" className={yesNoButtons} onClick={handleYes}>
+        Yes
+      </Button>
     </Container>
   );
 }
