@@ -31,7 +31,7 @@ import { makeStyles } from '@mui/styles';
 // set up the mui styles
 const useStyles = makeStyles(() => ({
   container: {
-    marginTop: '100px',
+    marginTop: '150px',
   },
   textfield: {
     width: '250px',
@@ -41,6 +41,9 @@ const useStyles = makeStyles(() => ({
   },
   checkbox: {
     alignSelf: 'center',
+  },
+  spacing: {
+    margin: '20px',
   },
 }));
 
@@ -53,7 +56,7 @@ function TeacherEditClass() {
   const [assignedStack, setAssignedStack] = useState('');
 
   // draw in the mui styles
-  const { container, textfield, select, checkbox } = useStyles();
+  const { container, textfield, select, checkbox, spacing } = useStyles();
 
   // get the class_id with the useParams hook
   const { class_id } = useParams();
@@ -93,71 +96,78 @@ function TeacherEditClass() {
 
   return (
     <Container className={container}>
-      <TextField
-        type="text"
-        label="Class Name"
-        required
-        className={textfield}
-        value={clName}
-        onChange={(event) => {
-          setClName(event.target.value);
-        }}
-        // this will select the text in the name box when selected
-        onFocus={(event) => {
-          event.currentTarget.select();
-        }}
-        // this will send a dispatch whenever the TextField loses focus
-        onBlur={() => {
-          // if the clName is empty, we do not want to update the name
-          clName !== '' &&
-            dispatch({
-              type: 'UPDATE_CLASS',
-              payload: { ...editClass, class_name: clName },
-            });
-        }}
-      />
-      <FormControl>
-        <InputLabel id="select-card-stack">Select Card Stack</InputLabel>
-        <Select
-          labelId="select-card-stack"
-          label="Select Card Stack"
-          value={assignedStack}
-          className={select}
-          onChange={(event) => setAssignedStack(event.target.value)}
-          onBlur={() => {
-            dispatch({
-              type: 'UPDATE_CLASS',
-              payload: { ...editClass, stack_id: assignedStack },
-            });
-          }}
-        >
-          <MenuItem value={null}>No Assigned Stack</MenuItem>
-          {stacks.map((stack) => (
-            <MenuItem key={stack.id} value={stack.id}>
-              {stack.stack_name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <FormGroup className={checkbox}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={editClass.available_to_students}
-              onClick={() =>
+      <Box className={spacing}>
+        <FormControl className={textfield}>
+          <TextField
+            type="text"
+            label="Class Name"
+            required
+            value={clName}
+            onChange={(event) => {
+              setClName(event.target.value);
+            }}
+            // this will select the text in the name box when selected
+            onFocus={(event) => {
+              event.currentTarget.select();
+            }}
+            // this will send a dispatch whenever the TextField loses focus
+            onBlur={() => {
+              // if the clName is empty, we do not want to update the name
+              clName !== '' &&
                 dispatch({
                   type: 'UPDATE_CLASS',
-                  payload: {
-                    ...editClass,
-                    available_to_students: !editClass.available_to_students,
-                  },
-                })
-              }
-            />
-          }
-          label="Make class available to students."
-        />
-      </FormGroup>
+                  payload: { ...editClass, class_name: clName },
+                });
+            }}
+          />
+        </FormControl>
+      </Box>
+      <Box className={spacing}>
+        <FormControl>
+          <InputLabel id="select-card-stack">Select Card Stack</InputLabel>
+          <Select
+            labelId="select-card-stack"
+            label="Select Card Stack"
+            value={assignedStack}
+            className={select}
+            onChange={(event) => setAssignedStack(event.target.value)}
+            onBlur={() => {
+              dispatch({
+                type: 'UPDATE_CLASS',
+                payload: { ...editClass, stack_id: assignedStack },
+              });
+            }}
+          >
+            <MenuItem value={null}>No Assigned Stack</MenuItem>
+            {stacks.map((stack) => (
+              <MenuItem key={stack.id} value={stack.id}>
+                {stack.stack_name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+      <Box className={spacing}>
+        <FormGroup className={checkbox}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={editClass.available_to_students}
+                onClick={() =>
+                  dispatch({
+                    type: 'UPDATE_CLASS',
+                    payload: {
+                      ...editClass,
+                      available_to_students: !editClass.available_to_students,
+                    },
+                  })
+                }
+              />
+            }
+            label="Make class available to students."
+          />
+        </FormGroup>
+      </Box>
     </Container>
   );
 }
