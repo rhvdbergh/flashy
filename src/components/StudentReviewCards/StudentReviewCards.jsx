@@ -45,6 +45,10 @@ const useStyles = makeStyles(() => ({
   yesNoButtons: {
     width: '40%',
   },
+  feedback: {
+    height: '200px',
+    width: '100%',
+  },
 }));
 
 function StudentReviewCards() {
@@ -55,7 +59,8 @@ function StudentReviewCards() {
   const { class_id } = useParams();
 
   // get the mui styles
-  const { container, cardStyle, revealButton, yesNoButtons } = useStyles();
+  const { container, cardStyle, revealButton, yesNoButtons, feedback } =
+    useStyles();
 
   // grab the cards to review from the redux store
   const cards = useSelector((store) => store.stackStore.cardsToReview);
@@ -70,7 +75,7 @@ function StudentReviewCards() {
   // keeps track of whether the card is revealed or not
   const [isRevealed, setIsRevealed] = useState(false);
   // keeps track of what stage the screen is in
-  // options are review, new, seen, shortTer
+  // options are review, new, seen, shortTerm
   const [currentStage, setCurrentStage] = useState('review');
 
   // on page load
@@ -94,6 +99,8 @@ function StudentReviewCards() {
     // if there are no cards to review, move to the new stage
     if (tempArr.length === 0) {
       setCurrentStage('new');
+    } else {
+      setCurrentStage('review');
     }
   }, [cards]);
 
@@ -107,6 +114,19 @@ function StudentReviewCards() {
       setCurrentCard(pickRandomCardFrom(newCards));
     }
   }, [newCards, cardsToReview, cardsSeen, cardsShortTerm]);
+
+  // things to change when the currentStage changes
+  useEffect(() => {
+    // if we're entering the new cards stage, the student
+    // should see both sides of the cards for all the cards
+    if (currentStage === 'new') {
+      setIsRevealed(true);
+    } else {
+      // none of the other states should have the back displayed
+      // enforce it by this check
+      setIsRevealed(false);
+    }
+  }, [currentStage]);
 
   const pickRandomCardFrom = (cardsArray) => {
     // if there's only one card left, return it
@@ -132,6 +152,8 @@ function StudentReviewCards() {
       currentCard.familiarity = 0;
       // and add it to the newCards box
       setNewCards([...newCards, currentCard]);
+      // make sure the next card is not revealed!
+      setIsRevealed(false);
       // the useEffect will trigger a new random card pick
     }
   };
@@ -165,8 +187,29 @@ function StudentReviewCards() {
     }
   };
 
+  // moves a new card from the new box to the seen box
+  const moveToSeenBox = () => {
+    // if this is the final card in the box
+    if (newCards.length === 1) {
+      // this box is now empty
+      setNewCards([]);
+      // and we're moving into the seen review stage
+      setCurrentStage('seen');
+    } else {
+      // remove this card from the newCards box
+      const beginArr = newCards.slice(0, currentCardIndex);
+      const endArr = newCards.slice(currentCardIndex + 1);
+      setNewCards([...beginArr, ...endArr]);
+    }
+    // update the seenCards
+    // no need to change the familiarity yet
+    setCardsSeen([...cardsSeen, currentCard]);
+  };
+
   console.log(`here are your cards to learn`, newCards);
   console.log(`here are your cards to review`, cardsToReview);
+  console.log(`here are your cards seen`, cardsSeen);
+  console.log(`here are your cards in short term`, cardsShortTerm);
   console.log(`here is your random card`, currentCard);
   console.log(`we are in stage`, currentStage);
 
@@ -182,19 +225,53 @@ function StudentReviewCards() {
           {isRevealed && <Typography>{currentCard.back}</Typography>}
         </Box>
       </Paper>
-      <Button
-        variant="contained"
-        className={revealButton}
-        onClick={() => setIsRevealed(true)}
-      >
-        Reveal Card
-      </Button>
-      <Button variant="contained" className={yesNoButtons} onClick={handleNo}>
-        No
-      </Button>
-      <Button variant="contained" className={yesNoButtons} onClick={handleYes}>
-        Yes
-      </Button>
+      {/* Show different buttons and feedback depending on whether the card is revealed */}
+      {!isRevealed ? (
+        <Box className={feedback}>
+          <Button
+            variant="contained"
+            className={revealButton}
+            onClick={() => setIsRevealed(true)}
+          >
+            Reveal Card
+          </Button>
+        </Box>
+      ) : // Another conditional render, depending on the stage
+      // In the "new" stage, there are no "yes" or "no" buttons
+      //  Instead, there's a continue button
+      currentStage === 'new' ? (
+        <Box className={feedback}>
+          <Button
+            variant="contained"
+            className={revealButton}
+            onClick={moveToSeenBox}
+          >
+            Continue
+          </Button>
+        </Box>
+      ) : (
+        <Box className={feedback}>
+          <Box>
+            <Box>
+              <Typography variant="body1">Did you know this card?</Typography>
+            </Box>
+            <Button
+              variant="contained"
+              className={yesNoButtons}
+              onClick={handleNo}
+            >
+              No
+            </Button>
+            <Button
+              variant="contained"
+              className={yesNoButtons}
+              onClick={handleYes}
+            >
+              Yes
+            </Button>
+          </Box>
+        </Box>
+      )}
     </Container>
   );
 }
