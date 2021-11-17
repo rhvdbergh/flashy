@@ -12,6 +12,7 @@ const stacks = (state = [], action) => {
   }
 };
 
+// holds the current stack that is being edited
 const editStack = (state = {}, action) => {
   switch (action.type) {
     case 'SET_EDIT_STACK':

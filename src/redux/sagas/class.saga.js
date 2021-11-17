@@ -19,7 +19,7 @@ function* deleteClass(action) {
   try {
     yield axios.delete(`/api/class/${action.payload}`);
     // refresh the redux store and the DOM
-    yield put({ type: 'GET_CLASSES' });
+    yield put({ type: 'FETCH_CLASSES' });
   } catch (err) {
     console.log(
       `There was an error in the redux saga deleting the class from the server:`,
@@ -28,9 +28,55 @@ function* deleteClass(action) {
   }
 }
 
+// creates a new stack on the server, and returns its id
+function* createClass(action) {
+  try {
+    const response = yield axios.post('/api/class');
+    // move the view to the edit card stack view with the
+    // history that's sent through payload
+    yield action.payload.history.push(`/editclass/${response.data.id}`);
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga creating the class on the server:`,
+      err
+    );
+  }
+}
+
+// fetches a single class from the server
+function* fetchClass(action) {
+  try {
+    // the id is the class id to be fetched
+    const response = yield axios.get(`/api/class/${action.payload}`);
+    yield put({ type: 'SET_EDIT_CLASS', payload: response.data });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga fetching the class on the server:`,
+      err
+    );
+  }
+}
+
+// updates a specific class
+function* updateClass(action) {
+  try {
+    // the id is the class id to be updated;
+    yield axios.put(`/api/class/${action.payload.id}`, action.payload);
+    yield put({ type: 'FETCH_CLASS', payload: action.payload.id });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga creating the stack on the server:`,
+      err
+    );
+  }
+}
+
 function* classSaga() {
-  yield takeLatest('GET_CLASSES', fetchClasses);
+  yield takeLatest('FETCH_CLASSES', fetchClasses);
   yield takeLatest('DELETE_CLASS', deleteClass);
+  yield takeLatest('CREATE_CLASS', createClass);
+  yield takeLatest('FETCH_CLASS', fetchClass);
+  yield takeLatest('UPDATE_CLASS', updateClass);
 }
 
 export default classSaga;

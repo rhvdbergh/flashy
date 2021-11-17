@@ -45,7 +45,7 @@ function TeacherDashboard() {
   const dispatch = useDispatch();
 
   // get state from the redux store
-  const classes = useSelector((store) => store.classes);
+  const classes = useSelector((store) => store.classStore.classes);
   const stacks = useSelector((store) => store.stackStore.stacks);
 
   // set up the useHistory hook
@@ -61,8 +61,8 @@ function TeacherDashboard() {
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Dashboard' });
     // don't display the back button on this page
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: false });
-    dispatch({ type: 'GET_CLASSES' });
-    dispatch({ type: 'GET_STACKS' });
+    dispatch({ type: 'FETCH_CLASSES' });
+    dispatch({ type: 'FETCH_STACKS' });
   }, []);
 
   return (
@@ -71,7 +71,9 @@ function TeacherDashboard() {
         <Button
           variant="contained"
           value="add_class"
-          onClick={() => history.push('/editclass')}
+          onClick={() =>
+            dispatch({ type: 'CREATE_CLASS', payload: { history: history } })
+          }
         >
           Add Class
         </Button>

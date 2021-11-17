@@ -80,15 +80,11 @@ function TeacherEditCards() {
     setStackName(editStack.stack_name);
   }, [editStack]);
 
-  console.log(`this is stackName`, stackName);
-  console.log('this is editStack', editStack);
-
   return (
     <Container className={container}>
       <TextField
         type="text"
         label="Card Stack Name"
-        size="small"
         required
         className={textfield}
         value={
@@ -102,7 +98,6 @@ function TeacherEditCards() {
         // this will select the text in the name box when selected
         onFocus={(event) => {
           event.currentTarget.select();
-          console.log('focus achieved');
         }}
         // this will send a dispatch whenever the TextField loses focus
         onBlur={() => {
