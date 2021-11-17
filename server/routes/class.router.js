@@ -152,13 +152,18 @@ router.put(
     // build the sql query
     const query = `
       UPDATE "class"
-      SET "class_name" = $3
+      SET "class_name" = $3, "stack_id" = $4
       WHERE "id" = $1 AND "user_id" = $2;
     `;
 
     // run the sql query
     pool
-      .query(query, [req.params.class_id, req.user.id, req.body.class_name])
+      .query(query, [
+        req.params.class_id,
+        req.user.id,
+        req.body.class_name,
+        req.body.stack_id,
+      ])
       .then((response) => {
         res.sendStatus(200); // the class was updated
       })

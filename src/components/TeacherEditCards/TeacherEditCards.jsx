@@ -85,7 +85,6 @@ function TeacherEditCards() {
       <TextField
         type="text"
         label="Card Stack Name"
-        size="small"
         required
         className={textfield}
         value={
