@@ -89,6 +89,8 @@ function StudentDashboard() {
     //TODO:
   };
 
+  console.log(`enrolledClasses`, enrolledClasses);
+
   return (
     <Container className={container}>
       <Box className={select}>
@@ -108,6 +110,11 @@ function StudentDashboard() {
             ))}
           </Select>
         </FormControl>
+      </Box>
+      <Box>
+        {enrolledClasses.map((cl) => (
+          <Button key={cl.id}>{cl.name}</Button>
+        ))}
       </Box>
     </Container>
   );
