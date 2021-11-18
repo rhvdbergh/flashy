@@ -52,9 +52,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-// this will be used for the timer later on
-let interval;
-
 function StudentReviewCards() {
   // set up the redux dispatch
   const dispatch = useDispatch();
@@ -68,9 +65,6 @@ function StudentReviewCards() {
 
   // grab the cards to review from the redux store
   const cards = useSelector((store) => store.stackStore.cardsToReview);
-  const { initial_time, total_time } = useSelector(
-    (store) => store.classStore.editClass
-  );
 
   // local state to keep track of the two sets of cards that we have
   const [newCards, setNewCards] = useState([]);
@@ -90,8 +84,8 @@ function StudentReviewCards() {
   // otherwise, the timers starts refreshing from last
   // user interaction (in the useEffect hook!)
   // this slowing down effect is not as noticeable at 100 than at 1000 intervals
-  const initialTotalTime = 10 * 10;
-  const initialLearnTime = 5 * 10;
+  const initialTotalTime = 100 * 10;
+  const initialLearnTime = 10 * 10;
   const [totalTime, setTotalTime] = useState(initialTotalTime);
   const [learnTime, setLearnTime] = useState(initialLearnTime);
 
