@@ -3,7 +3,7 @@
 // select new classes, and see which classes have cards
 // that need to be reviewed
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // import mui
@@ -43,11 +43,18 @@ function StudentDashboard() {
   // get the mui styles
   const { container, select } = useStyles();
 
-  // TODO: fetch this from the redux store instead
-  // hardcoded at present
+  // fetch the classes this student is enrolled in
+  const enrolledClasses = useSelector(
+    (store) => store.classStore.enrolledClasses
+  );
+  // fetch all the availableClasses
   const availableClasses = useSelector(
     (store) => store.classStore.availableClasses
   );
+
+  // set up local state to control which classes the student
+  // can join
+  const [stillAvailable, setStillAvailable] = useState([]);
 
   // on page load, set nav bar title
   useEffect(() => {
@@ -56,7 +63,21 @@ function StudentDashboard() {
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
     // get the list of available classes
     dispatch({ type: 'FETCH_AVAILABLE_CLASSES' });
+    // get the classes that this student are already enrolled in
+    dispatch({ type: 'FETCH_ENROLLED_CLASSES' });
   }, []);
+
+  // when we get back the availableClasses list,
+  // set the classes available to this student
+  useEffect(() => {
+    // filter through; if the user already belongs to these classes,
+    // remove them from this list
+    setStillAvailable(
+      availableClasses.filter((cl) => {
+        enrolledClasses.map((enr) => enr.id).includes(cl.id);
+      })
+    );
+  }, [availableClasses]);
 
   // adds a class for this student
   // cl stands for class

@@ -68,6 +68,35 @@ router.get(
   }
 );
 
+// GET /api/student/classes/enrolled
+// fetches all the classes that the student is enrolled in
+router.get(
+  '/classes/enrolled',
+  rejectUnauthenticated,
+  onlyAllowStudent,
+  (req, res) => {
+    // build the sql query
+    const query = `
+      SELECT * FROM "student_class"
+      WHERE "user_id" = $1;
+    `;
+
+    // run the query
+    pool
+      .query(query, [req.user.id])
+      .then((response) => {
+        res.send(response.rows); // send back the cards
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error retrieving the enrolled classes for the student from the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
 // PUT /api/student/cards/:student_class_card_id
 // this endpoint upgrades the familiarity of a specific card
 // for a specific student in a specific class by 1 point.

@@ -36,10 +36,23 @@ const availableClasses = (state = [], action) => {
   }
 };
 
+// holds the classes that a student is enrolled in
+const enrolledClasses = (state = [], action) => {
+  switch (action.type) {
+    case 'SET_ENROLLED_CLASSES':
+      return action.payload;
+    case 'LOGOUT':
+      return [];
+    default:
+      return state;
+  }
+};
+
 const classStore = combineReducers({
   classes,
   editClass,
   availableClasses,
+  enrolledClasses,
 });
 
 export default classStore;
