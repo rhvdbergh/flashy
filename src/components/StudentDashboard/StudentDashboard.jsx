@@ -72,12 +72,21 @@ function StudentDashboard() {
   useEffect(() => {
     // filter through; if the user already belongs to these classes,
     // remove them from this list
+
+    const enrolledIds = enrolledClasses.map((enr) => enr.class_id);
+    console.log(`enrolledIds`, enrolledIds);
     setStillAvailable(
       availableClasses.filter((cl) => {
-        enrolledClasses.map((enr) => enr.id).includes(cl.id);
+        console.log(
+          `in the filter, cl.id = `,
+          cl.id,
+          'and enrolledIds = ',
+          enrolledIds
+        );
+        return !enrolledIds.includes(cl.id);
       })
     );
-  }, [availableClasses]);
+  }, [enrolledClasses, availableClasses]);
 
   // adds a class for this student
   // cl stands for class
@@ -90,6 +99,8 @@ function StudentDashboard() {
   };
 
   console.log(`enrolledClasses`, enrolledClasses);
+  console.log(`availableClasses`, availableClasses);
+  console.log(`stillAvailable`, stillAvailable);
 
   return (
     <Container className={container}>
@@ -103,7 +114,7 @@ function StudentDashboard() {
             className={select}
             onChange={(event) => addClass(event.target.value)}
           >
-            {availableClasses.map((cl) => (
+            {stillAvailable.map((cl) => (
               <MenuItem key={cl.id} value={cl.id}>
                 {cl.class_name}
               </MenuItem>
@@ -113,12 +124,9 @@ function StudentDashboard() {
       </Box>
       <Box>
         {enrolledClasses.map((cl) => (
-          <>
-            <Button key={cl.id} variant="contained">
-              {cl.class_name}
-            </Button>
-            <button></button>
-          </>
+          <Button key={cl.id} variant="contained">
+            {cl.class_name}
+          </Button>
         ))}
       </Box>
     </Container>
