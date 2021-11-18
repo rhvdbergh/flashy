@@ -72,13 +72,30 @@ function* updateClass(action) {
 }
 
 // fetches all the available classes
-function* fetchAvailableClasses() {
+function* fetchAvailableClasses(action) {
   try {
     const response = yield axios.get('/api/student/classes/available');
-    yield put({ type: 'SET_AVAILABLE_CLASSES', payload: action.payload });
+    yield put({ type: 'SET_AVAILABLE_CLASSES', payload: response.data });
   } catch (err) {
     console.log(
       `There was an error in the redux saga fetching the available classes from the server:`,
+      err
+    );
+  }
+}
+
+// adds a specific class to a student's class list
+// (making that student part of that class)
+function* addClassForStudent(action) {
+  try {
+    // the expected payload here is the class id that we need to add
+    yield axios.post(`/api/student/addclass/${action.payload}`);
+    // now refresh the class list
+    //TODO:
+    yield put({ type: 'FETCH_CLASSES_FOR_STUDENT' });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga adding the class to the student's list on the server:`,
       err
     );
   }
@@ -91,6 +108,7 @@ function* classSaga() {
   yield takeLatest('FETCH_CLASS', fetchClass);
   yield takeLatest('UPDATE_CLASS', updateClass);
   yield takeLatest('FETCH_AVAILABLE_CLASSES', fetchAvailableClasses);
+  yield takeLatest('ADD_CLASS_FOR_STUDENT', addClassForStudent);
 }
 
 export default classSaga;

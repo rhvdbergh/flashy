@@ -4,7 +4,7 @@
 // that need to be reviewed
 
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // import mui
 import {
@@ -45,7 +45,9 @@ function StudentDashboard() {
 
   // TODO: fetch this from the redux store instead
   // hardcoded at present
-  const availableClasses = [0, 1];
+  const availableClasses = useSelector(
+    (store) => store.classStore.availableClasses
+  );
 
   // on page load, set nav bar title
   useEffect(() => {
@@ -54,12 +56,15 @@ function StudentDashboard() {
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
     // get the list of available classes
     dispatch({ type: 'FETCH_AVAILABLE_CLASSES' });
-    //TODO:
   }, []);
 
   // adds a class for this student
   // cl stands for class
   const addClass = (cl) => {
+    // dispatch the new class to the server
+    dispatch({ type: 'ADD_CLASS_FOR_STUDENT', payload: cl });
+    // and remove it from the classes available to this student
+    // we only want to display those that the student has not yet joined
     //TODO:
   };
 
@@ -71,15 +76,15 @@ function StudentDashboard() {
           <Select
             labelId="select-class"
             label="Add Class"
-            value={availableClasses}
+            value={''}
             className={select}
             onChange={(event) => addClass(event.target.value)}
           >
-            {/* {stacks.map((stack) => (
-              <MenuItem key={stack.id} value={stack.id}>
-                {stack.stack_name}
+            {availableClasses.map((cl) => (
+              <MenuItem key={cl.id} value={cl.id}>
+                {cl.class_name}
               </MenuItem>
-            ))} */}
+            ))}
           </Select>
         </FormControl>
       </Box>

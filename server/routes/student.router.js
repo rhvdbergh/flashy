@@ -101,6 +101,35 @@ router.put(
   }
 );
 
+// adds a class to a student's list in student_class table
+// POST /api/student/addclass/:class_id
+router.post(
+  `/addclass/:class_id`,
+  rejectUnauthenticated,
+  onlyAllowStudent,
+  (req, res) => {
+    // build the query
+    const query = `
+      INSERT INTO "student_class" ("user_id", "class_id")
+      VALUES ($1, $2)
+    `;
+
+    // run the query
+    pool
+      .query(query, [req.user.id, req.params.class_id])
+      .then((response) => {
+        res.sendStatus(201); // show that the class has been added
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error adding the class to the student's list on the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
 /* UTILITY FUNCTIONS */
 const needsReview = (card) => {
   console.log(`in needsReview, card is:`, card);

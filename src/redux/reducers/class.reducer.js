@@ -24,9 +24,22 @@ const editClass = (state = {}, action) => {
   }
 };
 
+// holds the classes available to students
+const availableClasses = (state = [], action) => {
+  switch (action.type) {
+    case 'SET_AVAILABLE_CLASSES':
+      return action.payload;
+    case 'LOGOUT':
+      return [];
+    default:
+      return state;
+  }
+};
+
 const classStore = combineReducers({
   classes,
   editClass,
+  availableClasses,
 });
 
 export default classStore;
