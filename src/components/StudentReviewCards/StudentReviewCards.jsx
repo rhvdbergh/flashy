@@ -4,7 +4,9 @@
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import { useParams, useHistory } from 'react-router-dom';
+
+// confetti for the end effect
 import Confetti from 'react-confetti';
 
 // import mui
@@ -55,6 +57,9 @@ const useStyles = makeStyles(() => ({
 function StudentReviewCards() {
   // set up the redux dispatch
   const dispatch = useDispatch();
+
+  // set up the useHistory hook to navigate
+  const history = useHistory();
 
   // grab the class id from the params
   const { class_id } = useParams();
@@ -311,6 +316,9 @@ function StudentReviewCards() {
       setCardsShortTerm([]);
       //we've gone through all the cards
       setCurrentStage('complete');
+      // set the timers to 0
+      setTotalTime(0);
+      setLearnTime(0);
     } else {
       // remove this card from the cardsShortTerm box
       const beginArr = cardsShortTerm.slice(0, currentCardIndex);
@@ -380,7 +388,8 @@ function StudentReviewCards() {
     <Container className={container}>
       {/* Conditional rendering of components based on whether  */}
       {/* we are complete or not */}
-      {currentStage !== 'complete' && (
+      {/* else show the congrats button */}
+      {currentStage !== 'complete' ? (
         <>
           <Paper className={cardStyle}>
             <Box>
@@ -454,6 +463,20 @@ function StudentReviewCards() {
             </Box>
           )}
         </>
+      ) : (
+        <Box className={feedback}>
+          <Typography variant="h2">Finished!</Typography>
+          <Typography variant="h5">
+            Congratulations! You've reviewed all your cards for this class.
+          </Typography>
+          <Button
+            variant="contained"
+            className="revealbutton"
+            onClick={() => history.push(`/reviewstats/${class_id}`)}
+          >
+            Continue
+          </Button>
+        </Box>
       )}
       {currentStage === 'complete' && <Confetti />}
     </Container>

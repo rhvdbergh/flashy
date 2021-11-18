@@ -22,6 +22,7 @@ import TeacherDashboard from '../TeacherDashboard/TeacherDashboard';
 import TeacherEditClass from '../TeacherEditClass/TeacherEditClass';
 import TeacherEditCards from '../TeacherEditCards/TeacherEditCards';
 import StudentReviewCards from '../StudentReviewCards/StudentReviewCards';
+import StudentReviewStats from '../StudentReviewStats/StudentReviewStats';
 
 import './App.css';
 
@@ -132,6 +133,10 @@ function App() {
             path="/cards/:class_id"
           >
             <StudentReviewCards />
+          </ProtectedRoute>
+
+          <ProtectedRoute exact path="/reviewstats/:class_id">
+            <StudentReviewStats />
           </ProtectedRoute>
 
           {/* If none of the other routes matched, we will show a 404. */}
