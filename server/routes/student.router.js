@@ -77,8 +77,9 @@ router.get(
   (req, res) => {
     // build the sql query
     const query = `
-      SELECT * FROM "student_class"
-      WHERE "user_id" = $1;
+      SELECT "student_class".id, "student_class".user_id, "student_class".class_id, "class".class_name FROM "student_class"
+      JOIN "class" ON "class".id = "student_class"."class_id"
+      WHERE "student_class".user_id = $1;
     `;
 
     // run the query

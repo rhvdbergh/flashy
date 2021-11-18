@@ -113,7 +113,12 @@ function StudentDashboard() {
       </Box>
       <Box>
         {enrolledClasses.map((cl) => (
-          <Button key={cl.id}>{cl.name}</Button>
+          <>
+            <Button key={cl.id} variant="contained">
+              {cl.class_name}
+            </Button>
+            <button></button>
+          </>
         ))}
       </Box>
     </Container>
