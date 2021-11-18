@@ -53,6 +53,7 @@ function StudentDashboard() {
     // ensure that the back button is displayd on this page
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
     // get the list of available classes
+    dispatch({ type: 'FETCH_AVAILABLE_CLASSES' });
     //TODO:
   }, []);
 

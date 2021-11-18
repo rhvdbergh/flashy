@@ -71,12 +71,26 @@ function* updateClass(action) {
   }
 }
 
+// fetches all the available classes
+function* fetchAvailableClasses() {
+  try {
+    const response = yield axios.get('/api/student/classes/available');
+    yield put({ type: 'SET_AVAILABLE_CLASSES', payload: action.payload });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga fetching the available classes from the server:`,
+      err
+    );
+  }
+}
+
 function* classSaga() {
   yield takeLatest('FETCH_CLASSES', fetchClasses);
   yield takeLatest('DELETE_CLASS', deleteClass);
   yield takeLatest('CREATE_CLASS', createClass);
   yield takeLatest('FETCH_CLASS', fetchClass);
   yield takeLatest('UPDATE_CLASS', updateClass);
+  yield takeLatest('FETCH_AVAILABLE_CLASSES', fetchAvailableClasses);
 }
 
 export default classSaga;

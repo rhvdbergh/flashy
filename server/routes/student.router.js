@@ -39,6 +39,35 @@ router.get(
   }
 );
 
+// GET /api/student/classes/available
+// fetches all the available classes
+router.get(
+  '/classes/available',
+  rejectUnauthenticated,
+  onlyAllowStudent,
+  (req, res) => {
+    // build the sql query
+    const query = `
+      SELECT * FROM "class"
+      WHERE "available_to_students" = true;
+    `;
+
+    // run the query
+    pool
+      .query(query)
+      .then((response) => {
+        res.send(response.rows); // send back the cards
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error retrieving the available classes from the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
 // PUT /api/student/cards/:student_class_card_id
 // this endpoint upgrades the familiarity of a specific card
 // for a specific student in a specific class by 1 point.
