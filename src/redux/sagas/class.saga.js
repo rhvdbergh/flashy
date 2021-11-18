@@ -46,7 +46,7 @@ function* createClass(action) {
 // fetches a single class from the server
 function* fetchClass(action) {
   try {
-    // the id is the class id to be fetched
+    // the payload is the class id to be fetched
     const response = yield axios.get(`/api/class/${action.payload}`);
     yield put({ type: 'SET_EDIT_CLASS', payload: response.data });
   } catch (err) {

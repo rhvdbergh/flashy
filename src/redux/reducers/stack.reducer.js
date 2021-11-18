@@ -38,10 +38,24 @@ const cards = (state = [], action) => {
   }
 };
 
+const cardsToReview = (state = [], action) => {
+  switch (action.type) {
+    case 'SET_CARDS_TO_REVIEW':
+      // in this array, we want to store the cards to review
+      // thus, not the cards that haven't been seen yet
+      return action.payload;
+    case 'LOGOUT':
+      return [];
+    default:
+      return state;
+  }
+};
+
 const stackStore = combineReducers({
   stacks,
   editStack,
   cards,
+  cardsToReview,
 });
 
 export default stackStore;

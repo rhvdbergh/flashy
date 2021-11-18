@@ -74,6 +74,10 @@ function* fetchStack(action) {
   }
 }
 
+// returns ALL the cards in a specified stack for teachers
+// there is a different saga for fetching only those cards
+// that a specific student needs to review for a specific class:
+// namely fetchCardsToReview()
 function* fetchCards(action) {
   try {
     // the id is the stack id of the cards to be fetched
@@ -135,6 +139,38 @@ function* deleteCard(action) {
   }
 }
 
+// returns all the cards that a student needs to review for a specific class
+function* fetchCardsToReview(action) {
+  try {
+    // the expected payload is id of the class that the student is currently reviewing
+    const response = yield axios.get(`/api/student/cards/${action.payload}`);
+    yield put({ type: 'SET_CARDS_TO_REVIEW', payload: response.data });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga fetching the cards to review from the server:`,
+      err
+    );
+  }
+}
+
+// updates the familiarity of a specific card
+function* updateCardFamiliarity(action) {
+  try {
+    // the payload carried is an object
+    // containing the student_class_card_id for this card
+    // and the new familiarity
+    console.log('in updateCArdFamil, payload = ', action.payload);
+    yield axios.put(`/api/student/cards/${action.payload.id}`, {
+      familiarity: action.payload.familiarity,
+    });
+  } catch (err) {
+    console.log(
+      `There was an error updating the familiarity of the card for the specific student in the redux saga:`,
+      err
+    );
+  }
+}
+
 function* stackSaga() {
   yield takeLatest('FETCH_STACKS', fetchStacks);
   yield takeLatest('DELETE_STACK', deleteStack);
@@ -145,6 +181,8 @@ function* stackSaga() {
   yield takeLatest('UPDATE_CARD', updateCard);
   yield takeLatest('CREATE_CARD', createCard);
   yield takeLatest('DELETE_CARD', deleteCard);
+  yield takeLatest('FETCH_CARDS_TO_REVIEW', fetchCardsToReview);
+  yield takeLatest('UPDATE_CARD_FAMILIARITY', updateCardFamiliarity);
 }
 
 export default stackSaga;

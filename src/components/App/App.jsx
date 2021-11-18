@@ -9,7 +9,6 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 
 import Nav from '../Nav/Nav';
-import Footer from '../Footer/Footer';
 
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
@@ -22,6 +21,8 @@ import StudentDashboard from '../StudentDashboard/StudentDashboard';
 import TeacherDashboard from '../TeacherDashboard/TeacherDashboard';
 import TeacherEditClass from '../TeacherEditClass/TeacherEditClass';
 import TeacherEditCards from '../TeacherEditCards/TeacherEditCards';
+import StudentReviewCards from '../StudentReviewCards/StudentReviewCards';
+import StudentReviewStats from '../StudentReviewStats/StudentReviewStats';
 
 import './App.css';
 
@@ -120,10 +121,22 @@ function App() {
           </ProtectedRoute>
 
           <ProtectedRoute
-            // logged in edit class page else shows login
+            // logged in edit stack page else shows login
             path="/editstack/:stack_id"
           >
             <TeacherEditCards />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            // logged in learn cards screen
+            exact
+            path="/cards/:class_id"
+          >
+            <StudentReviewCards />
+          </ProtectedRoute>
+
+          <ProtectedRoute exact path="/reviewstats/:class_id">
+            <StudentReviewStats />
           </ProtectedRoute>
 
           {/* If none of the other routes matched, we will show a 404. */}
@@ -131,7 +144,6 @@ function App() {
             <h1>404</h1>
           </Route>
         </Switch>
-        <Footer />
       </div>
     </Router>
   );
