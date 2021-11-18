@@ -180,7 +180,7 @@ router.post(
             `;
             // add the card ids one by one with a comma
             // the last id will have a semicolon
-            for (let i = 0; i < cardIds.length - 2; i++) {
+            for (let i = 0; i < cardIds.length - 1; i++) {
               addCardsQuery += `(${cardIds[i].card_id}, ${student_class_id}), `;
             }
             // now add the final row
