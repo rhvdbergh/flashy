@@ -206,6 +206,7 @@ function StudentReviewCards() {
         },
       });
     }
+    setIsRevealed(false);
     // if the total timer has run out and we're in the seen stage,
     // move on to the shortTerm stage
     // it's time to review all the cards we've learned in this session
@@ -377,69 +378,82 @@ function StudentReviewCards() {
 
   return (
     <Container className={container}>
-      <Paper className={cardStyle}>
-        <Box>
-          <Typography>{currentCard.front}</Typography>
-        </Box>
-      </Paper>
-      <Paper>
-        <Box className={cardStyle}>
-          {isRevealed && <Typography>{currentCard.back}</Typography>}
-        </Box>
-      </Paper>
-      <Box>
-        <Typography>Total Time Left: {Math.round(totalTime / 10)}</Typography>
-        {/* Only show the Learn Time Left timer in the new stage */}
-        {currentStage === 'new' && (
-          <Typography>Learn Time Left: {Math.round(learnTime / 10)}</Typography>
-        )}
-      </Box>
-      {/* Show different buttons and feedback depending on whether the card is revealed */}
-      {!isRevealed ? (
-        <Box className={feedback}>
-          <Button
-            variant="contained"
-            className={revealButton}
-            onClick={() => setIsRevealed(true)}
-          >
-            Reveal Card
-          </Button>
-        </Box>
-      ) : // Another conditional render, depending on the stage
-      // In the "new" stage, there are no "yes" or "no" buttons
-      //  Instead, there's a continue button
-      currentStage === 'new' ? (
-        <Box className={feedback}>
-          <Button
-            variant="contained"
-            className={revealButton}
-            onClick={handleContinue}
-          >
-            Continue
-          </Button>
-        </Box>
-      ) : (
-        <Box className={feedback}>
-          <Box>
+      {/* Conditional rendering of components based on whether  */}
+      {/* we are complete or not */}
+      {currentStage !== 'complete' && (
+        <>
+          <Paper className={cardStyle}>
             <Box>
-              <Typography variant="body1">Did you know this card?</Typography>
+              <Typography>{currentCard.front}</Typography>
             </Box>
-            <Button
-              variant="contained"
-              className={yesNoButtons}
-              onClick={handleNo}
-            >
-              No
-            </Button>
-            <Button
-              variant="contained"
-              className={yesNoButtons}
-              onClick={handleYes}
-            >
-              Yes
-            </Button>
+          </Paper>
+
+          <Paper>
+            <Box className={cardStyle}>
+              {isRevealed && <Typography>{currentCard.back}</Typography>}
+            </Box>
+          </Paper>
+          <Box>
+            <Typography>
+              Total Time Left: {Math.round(totalTime / 10)}
+            </Typography>
+            {/* Only show the Learn Time Left timer in the new stage */}
+            {currentStage === 'new' && (
+              <Typography>
+                Learn Time Left: {Math.round(learnTime / 10)}
+              </Typography>
+            )}
           </Box>
-        </Box>
+          {/* Show different buttons and feedback depending on whether the card is revealed */}
+          {!isRevealed ? (
+            <Box className={feedback}>
+              <Button
+                variant="contained"
+                className={revealButton}
+                onClick={() => setIsRevealed(true)}
+              >
+                Reveal Card
+              </Button>
+            </Box>
+          ) : // Another conditional render, depending on the stage
+          // In the "new" stage, there are no "yes" or "no" buttons
+          //  Instead, there's a continue button
+          currentStage === 'new' ? (
+            <Box className={feedback}>
+              <Button
+                variant="contained"
+                className={revealButton}
+                onClick={handleContinue}
+              >
+                Continue
+              </Button>
+            </Box>
+          ) : (
+            <Box className={feedback}>
+              <Box>
+                <Box>
+                  <Typography variant="body1">
+                    Did you know this card?
+                  </Typography>
+                </Box>
+                <Button
+                  variant="contained"
+                  className={yesNoButtons}
+                  onClick={handleNo}
+                >
+                  No
+                </Button>
+                <Button
+                  variant="contained"
+                  className={yesNoButtons}
+                  onClick={handleYes}
+                >
+                  Yes
+                </Button>
+              </Box>
+            </Box>
+          )}
+        </>
       )}
       {currentStage === 'complete' && <Confetti />}
     </Container>
