@@ -84,8 +84,15 @@ function StudentReviewCards() {
   // options are review, new, seen, shortTerm, complete
   const [currentStage, setCurrentStage] = useState('review');
   // timers
-  const [totalTime, setTotalTime] = useState(360 * 10);
-  const [learnTime, setLearnTime] = useState(30 * 10);
+  // we speed the seconds up with * 10
+  // this is so user interaction doesn't slow down the timers
+  // otherwise, the timers starts refreshing from last
+  // user interaction (in the useEffect hook!)
+  // this slowing down effect is not as noticeable at 100 than at 1000 intervals
+  const initialTotalTime = 10 * 10;
+  const initialLearnTime = 5 * 10;
+  const [totalTime, setTotalTime] = useState(initialTotalTime);
+  const [learnTime, setLearnTime] = useState(initialLearnTime);
 
   // on page load
   useEffect(() => {
@@ -358,8 +365,8 @@ function StudentReviewCards() {
 
   const refreshTimer = () => {
     // refresh the timer
-    if (totalTime > 30 * 10) {
-      setLearnTime(30 * 10);
+    if (totalTime > initialLearnTime) {
+      setLearnTime(initialLearnTime);
     } else {
       setLearnTime(totalTime);
     }
@@ -371,7 +378,7 @@ function StudentReviewCards() {
   console.log(`here are your cards in short term`, cardsShortTerm);
   console.log(`here is your random card`, currentCard);
   console.log(`we are in stage`, currentStage);
-  console.log(`time`, totalTime);
+  // console.log(`time`, totalTime);
 
   return (
     <Container className={container}>
