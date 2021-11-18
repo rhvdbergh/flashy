@@ -75,7 +75,7 @@ function StudentReviewCards() {
   // keeps track of whether the card is revealed or not
   const [isRevealed, setIsRevealed] = useState(false);
   // keeps track of what stage the screen is in
-  // options are review, new, seen, shortTerm
+  // options are review, new, seen, shortTerm, complete
   const [currentStage, setCurrentStage] = useState('review');
 
   // on page load
@@ -128,6 +128,8 @@ function StudentReviewCards() {
       // enforce it by this check
       setIsRevealed(false);
     }
+    if (currentStage === 'complete') {
+    }
   }, [currentStage]);
 
   const pickRandomCardFrom = (cardsArray) => {
@@ -159,6 +161,11 @@ function StudentReviewCards() {
       removeCardFromSeen();
       // place this card in the newCard box
       resetCardToNew();
+    } else if (currentStage === 'shortTerm') {
+      // remove the card
+      removeCardFromShortTerm();
+
+      // dispatch({type:})
     }
   };
 
@@ -174,13 +181,31 @@ function StudentReviewCards() {
     // if this is in the review stage, we have to send a dispatch
     if (currentStage === 'review') {
       dispatch({
-        type: 'UPGRADE_CARD_FAMILIARITY',
-        payload: currentCard.student_class_card_id,
+        type: 'UPDATE_CARD_FAMILIARITY',
+        payload: {
+          id: currentCard.student_class_card_id,
+          familiarity:
+            currentCard.familiarity < 10 && currentCard.familiarity + 1,
+        },
       });
       removeCardFromReview();
     } else if (currentStage === 'seen') {
       moveToShortTermBox();
       removeCardFromSeen();
+      setIsRevealed(false);
+    } else if (currentStage === 'shortTerm') {
+      // the user knows this card; it needs to be reviewed later
+      // so upgrade its familiarity with 1
+      // but don't ever have more than 10
+      dispatch({
+        type: 'UPDATE_CARD_FAMILIARITY',
+        payload: {
+          id: currentCard.student_class_card_id,
+          familiarity:
+            currentCard.familiarity < 10 && currentCard.familiarity + 1,
+        },
+      });
+      removeCardFromShortTerm();
       setIsRevealed(false);
     }
   };
@@ -221,6 +246,22 @@ function StudentReviewCards() {
       const beginArr = cardsSeen.slice(0, currentCardIndex);
       const endArr = cardsSeen.slice(currentCardIndex + 1);
       setCardsSeen([...beginArr, ...endArr]);
+    }
+  };
+
+  // removes the card from the shortTerm box
+  const removeCardFromShortTerm = () => {
+    // if this is the final card in the box
+    if (cardsShortTerm.length === 1) {
+      // this box is now empty
+      setCardsShortTerm([]);
+      //we've gone through all the cards
+      setCurrentStage('complete');
+    } else {
+      // remove this card from the cardsShortTerm box
+      const beginArr = cardsShortTerm.slice(0, currentCardIndex);
+      const endArr = cardsShortTerm.slice(currentCardIndex + 1);
+      setCardsShortTerm([...beginArr, ...endArr]);
     }
   };
 

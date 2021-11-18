@@ -48,17 +48,17 @@ router.put(
   onlyAllowStudent,
   (req, res) => {
     // build the sql query
-    // we're updating the familiarity of this card,
-    // but only until it reaches level 9
+    // we're updating the familiarity of this card
+    console.log(`in PUT, this is req.body`, req.body);
     const query = `
       UPDATE "student_class_card"
-      SET "familiarity" = "familiarity" + 1, "time_reviewed" = NOW()
-      WHERE "id" = $1 AND "familiarity" < 10;
+      SET "familiarity" = $2, "time_reviewed" = NOW()
+      WHERE "id" = $1;
     `;
 
     // run the sql query
     pool
-      .query(query, [req.params.student_class_card_id])
+      .query(query, [req.params.student_class_card_id, req.body.familiarity])
       .then((response) => {
         res.sendStatus(204); // show that it's updated
       })

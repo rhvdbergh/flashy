@@ -153,11 +153,16 @@ function* fetchCardsToReview(action) {
   }
 }
 
-// updates the familiarity of a specific card by 1
-function* upgradeCardFamiliarity(action) {
+// updates the familiarity of a specific card
+function* updateCardFamiliarity(action) {
   try {
-    // the payload carried is the student_class_card_id for this card
-    yield axios.put(`/api/student/cards/${action.payload}`);
+    // the payload carried is an object
+    // containing the student_class_card_id for this card
+    // and the new familiarity
+    console.log('in updateCArdFamil, payload = ', action.payload);
+    yield axios.put(`/api/student/cards/${action.payload.id}`, {
+      familiarity: action.payload.familiarity,
+    });
   } catch (err) {
     console.log(
       `There was an error updating the familiarity of the card for the specific student in the redux saga:`,
@@ -177,7 +182,7 @@ function* stackSaga() {
   yield takeLatest('CREATE_CARD', createCard);
   yield takeLatest('DELETE_CARD', deleteCard);
   yield takeLatest('FETCH_CARDS_TO_REVIEW', fetchCardsToReview);
-  yield takeLatest('UPGRADE_CARD_FAMILIARITY', upgradeCardFamiliarity);
+  yield takeLatest('UPDATE_CARD_FAMILIARITY', updateCardFamiliarity);
 }
 
 export default stackSaga;
