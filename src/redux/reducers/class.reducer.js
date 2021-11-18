@@ -48,11 +48,25 @@ const enrolledClasses = (state = [], action) => {
   }
 };
 
+// holds the number of cards that a student needs to review for each class
+// this is stored in an object; the key is the id of the specific class
+const enrolledClassesOverdueCardCount = (state = {}, action) => {
+  switch (action.type) {
+    case 'SET_ENROLLED_CARDS_TO_REVIEW':
+      return { ...state, [action.payload.class_id]: action.payload.count };
+    case 'LOGOUT':
+      return {};
+    default:
+      return state;
+  }
+};
+
 const classStore = combineReducers({
   classes,
   editClass,
   availableClasses,
   enrolledClasses,
+  enrolledClassesOverdueCardCount,
 });
 
 export default classStore;

@@ -72,6 +72,7 @@ router.get(
 
 // GET /api/student/classes/enrolled
 // fetches all the classes that the student is enrolled in
+// as well as their overdue cards
 router.get(
   '/classes/enrolled',
   rejectUnauthenticated,

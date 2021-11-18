@@ -22,6 +22,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Badge,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
@@ -47,6 +48,13 @@ function StudentDashboard() {
   const enrolledClasses = useSelector(
     (store) => store.classStore.enrolledClasses
   );
+
+  // fetch the number of overdue cards for each enrolled class
+  // overdueCards is an object with the class id as key and the count as value
+  const overdueCards = useSelector(
+    (store) => store.classStore.enrolledClassesOverdueCardCount
+  );
+
   // fetch all the availableClasses
   const availableClasses = useSelector(
     (store) => store.classStore.availableClasses
@@ -86,6 +94,17 @@ function StudentDashboard() {
     );
   }, [enrolledClasses, availableClasses]);
 
+  // for each enrolled class, get the cards that the student needs to review
+  useEffect(() => {
+    // we send a dispatch for each class that the student is enrolled in
+    enrolledClasses.forEach((cl) => {
+      dispatch({
+        type: 'FETCH_ENROLLED_CARDS_TO_REVIEW',
+        payload: cl.class_id,
+      });
+    });
+  }, [enrolledClasses]);
+
   // adds a class for this student
   // cl stands for class
   const addClass = (cl) => {
@@ -101,6 +120,7 @@ function StudentDashboard() {
     setStillAvailable(tempArr);
   };
 
+  console.log(`enrolledOverdue`, overdueCards);
   return (
     <Container className={container}>
       <Box className={select}>
@@ -128,9 +148,9 @@ function StudentDashboard() {
       </Box>
       <Box>
         {enrolledClasses.map((cl) => (
-          <Button key={cl.id} variant="contained">
-            {cl.class_name}
-          </Button>
+          <Badge key={cl.id} badgeContent={4} color="error">
+            <Button variant="contained">{cl.class_name}</Button>
+          </Badge>
         ))}
       </Box>
     </Container>
