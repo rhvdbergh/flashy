@@ -72,9 +72,7 @@ function StudentDashboard() {
   useEffect(() => {
     // filter through; if the user already belongs to these classes,
     // remove them from this list
-
     const enrolledIds = enrolledClasses.map((enr) => enr.class_id);
-    console.log(`enrolledIds`, enrolledIds);
     setStillAvailable(
       availableClasses.filter((cl) => {
         console.log(
@@ -95,12 +93,13 @@ function StudentDashboard() {
     dispatch({ type: 'ADD_CLASS_FOR_STUDENT', payload: cl });
     // and remove it from the classes available to this student
     // we only want to display those that the student has not yet joined
-    //TODO:
-  };
+    // this is only in local state
+    const index = stillAvailable.findIndex((enr) => enr.id === cl.id);
 
-  console.log(`enrolledClasses`, enrolledClasses);
-  console.log(`availableClasses`, availableClasses);
-  console.log(`stillAvailable`, stillAvailable);
+    const tempArr = stillAvailable.splice(index, 1);
+    console.log(`tempArr`, tempArr);
+    setStillAvailable(tempArr);
+  };
 
   return (
     <Container className={container}>
@@ -119,6 +118,11 @@ function StudentDashboard() {
                 {cl.class_name}
               </MenuItem>
             ))}
+            {stillAvailable.length === 0 && (
+              <MenuItem disabled hidden>
+                No Classes Available
+              </MenuItem>
+            )}
           </Select>
         </FormControl>
       </Box>
