@@ -376,12 +376,15 @@ function StudentReviewCards() {
     }
   };
 
-  console.log(`here are your cards to learn`, newCards);
-  console.log(`here are your cards to review`, cardsToReview);
-  console.log(`here are your cards seen`, cardsSeen);
-  console.log(`here are your cards in short term`, cardsShortTerm);
-  console.log(`here is your random card`, currentCard);
-  console.log(`we are in stage`, currentStage);
+  // leaving these console.logs here for feedback
+  // component refreshes frequently
+
+  // console.log(`here are your cards to learn`, newCards);
+  // console.log(`here are your cards to review`, cardsToReview);
+  // console.log(`here are your cards seen`, cardsSeen);
+  // console.log(`here are your cards in short term`, cardsShortTerm);
+  // console.log(`here is your random card`, currentCard);
+  // console.log(`we are in stage`, currentStage);
   // console.log(`time`, totalTime);
 
   return (
