@@ -28,10 +28,11 @@ import { makeStyles } from '@mui/styles';
 // set up the mui styles
 const useStyles = makeStyles(() => ({
   container: {
-    marginTop: '100px',
+    marginTop: '150px',
+    width: '100%',
   },
   select: {
-    width: '250px',
+    width: '100%',
   },
 }));
 
@@ -64,7 +65,7 @@ function StudentDashboard() {
   return (
     <Container className={container}>
       <Box className={select}>
-        <FormControl>
+        <FormControl className={select}>
           <InputLabel id="select-class">Add Class</InputLabel>
           <Select
             labelId="select-class"
