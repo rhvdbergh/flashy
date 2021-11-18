@@ -129,6 +129,9 @@ function StudentReviewCards() {
       setIsRevealed(false);
     }
     if (currentStage === 'complete') {
+      // reset the state
+      setCurrentCard({});
+      setCurrentCardIndex(0);
     }
   }, [currentStage]);
 
@@ -164,8 +167,15 @@ function StudentReviewCards() {
     } else if (currentStage === 'shortTerm') {
       // remove the card
       removeCardFromShortTerm();
-
-      // dispatch({type:})
+      // this card will have to be reviewed as a new card in
+      // the next session
+      dispatch({
+        type: 'UPDATE_CARD_FAMILIARITY',
+        payload: {
+          id: currentCard.student_class_card_id,
+          familiarity: 0,
+        },
+      });
     }
   };
 
