@@ -181,6 +181,7 @@ function StudentReviewCards() {
     } else if (currentStage === 'seen') {
       moveToShortTermBox();
       removeCardFromSeen();
+      setIsRevealed(false);
     }
   };
 
@@ -240,6 +241,22 @@ function StudentReviewCards() {
     // update the seenCards
     // no need to change the familiarity yet
     setCardsSeen([...cardsSeen, currentCard]);
+  };
+
+  // moves a seen card from the seen box to the shortTerm box
+  const moveToShortTermBox = () => {
+    // if this is the final card in the box
+    if (cardsSeen.length === 1) {
+      // this box is now empty
+      setCardsSeen([]);
+      // and we're moving into the seen shortTerm stage
+      setCurrentStage('shortTerm');
+    } else {
+      removeCardFromSeen();
+    }
+    // update the cardsShortTerm
+    // no need to change the familiarity yet
+    setCardsShortTerm([...cardsShortTerm, currentCard]);
   };
 
   console.log(`here are your cards to learn`, newCards);
