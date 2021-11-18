@@ -67,6 +67,9 @@ function StudentReviewCards() {
 
   // grab the cards to review from the redux store
   const cards = useSelector((store) => store.stackStore.cardsToReview);
+  const { initial_time, total_time } = useSelector(
+    (store) => store.classStore.editClass
+  );
 
   // local state to keep track of the two sets of cards that we have
   const [newCards, setNewCards] = useState([]);
@@ -81,8 +84,8 @@ function StudentReviewCards() {
   // options are review, new, seen, shortTerm, complete
   const [currentStage, setCurrentStage] = useState('review');
   // timers
-  const [totalTime, setTotalTime] = useState(360);
-  const [learnTime, setLearnTime] = useState(30);
+  const [totalTime, setTotalTime] = useState(360 * 10);
+  const [learnTime, setLearnTime] = useState(30 * 10);
 
   // on page load
   useEffect(() => {
@@ -100,9 +103,14 @@ function StudentReviewCards() {
     // fire up the timers, decrease each second
     // we do it here because we now have the cards returned from the store
     const timer = setTimeout(() => {
-      setTotalTime(totalTime - 1);
-      setLearnTime(learnTime - 1);
-    }, 1000);
+      // only decrease the counters if they're not already 0
+      if (totalTime > 0) {
+        setTotalTime(totalTime - 1);
+      }
+      if (learnTime > 0) {
+        setLearnTime(learnTime - 1);
+      }
+    }, 100);
     // clear the timer
     return () => clearTimeout(timer);
   });
@@ -196,6 +204,12 @@ function StudentReviewCards() {
         },
       });
     }
+    // if the total timer has run out and we're in the seen stage,
+    // move on to the shortTerm stage
+    // it's time to review all the cards we've learned in this session
+    if (currentStage === 'seen' && totalTime === 0) {
+      setCurrentStage('shortTerm');
+    }
   };
 
   const resetCardToNew = () => {
@@ -237,6 +251,12 @@ function StudentReviewCards() {
       removeCardFromShortTerm();
       setIsRevealed(false);
     }
+    // if the total timer has run out and we're in the seen stage,
+    // move on to the shortTerm stage
+    // it's time to review all the cards we've learned in this session
+    if (currentStage === 'seen' && totalTime === 0) {
+      setCurrentStage('shortTerm');
+    }
   };
 
   // removes cards from the cardsToReview box
@@ -248,6 +268,7 @@ function StudentReviewCards() {
       setCardsToReview([]);
       // and we're moving into the new card learning stage
       setCurrentStage('new');
+      refreshTimer();
     } else {
       // remove this card from the cardsToReview box
       const beginArr = cardsToReview.slice(0, currentCardIndex);
@@ -266,6 +287,7 @@ function StudentReviewCards() {
       if (newCards.length > 0) {
         // there's still more new cards to learn
         setCurrentStage('new');
+        refreshTimer();
       } else {
         // we're moving to the shortTerm review stage
         setCurrentStage('shortTerm');
@@ -295,7 +317,7 @@ function StudentReviewCards() {
   };
 
   // moves a new card from the new box to the seen box
-  const moveToSeenBox = () => {
+  const handleContinue = () => {
     // if this is the final card in the box
     if (newCards.length === 1) {
       // this box is now empty
@@ -311,6 +333,11 @@ function StudentReviewCards() {
     // update the seenCards
     // no need to change the familiarity yet
     setCardsSeen([...cardsSeen, currentCard]);
+
+    // if the timer has run out, move on to the seen stage
+    if (learnTime === 0) {
+      setCurrentStage('seen');
+    }
   };
 
   // moves a seen card from the seen box to the shortTerm box
@@ -327,6 +354,15 @@ function StudentReviewCards() {
     // update the cardsShortTerm
     // no need to change the familiarity yet
     setCardsShortTerm([...cardsShortTerm, currentCard]);
+  };
+
+  const refreshTimer = () => {
+    // refresh the timer
+    if (totalTime > 30 * 10) {
+      setLearnTime(30 * 10);
+    } else {
+      setLearnTime(totalTime);
+    }
   };
 
   console.log(`here are your cards to learn`, newCards);
@@ -350,8 +386,11 @@ function StudentReviewCards() {
         </Box>
       </Paper>
       <Box>
-        <Typography>Total Time: {totalTime}</Typography>
-        <Typography>Learn Time: {learnTime}</Typography>
+        <Typography>Total Time Left: {Math.round(totalTime / 10)}</Typography>
+        {/* Only show the Learn Time Left timer in the new stage */}
+        {currentStage === 'new' && (
+          <Typography>Learn Time Left: {Math.round(learnTime / 10)}</Typography>
+        )}
       </Box>
       {/* Show different buttons and feedback depending on whether the card is revealed */}
       {!isRevealed ? (
@@ -372,7 +411,7 @@ function StudentReviewCards() {
           <Button
             variant="contained"
             className={revealButton}
-            onClick={moveToSeenBox}
+            onClick={handleContinue}
           >
             Continue
           </Button>
