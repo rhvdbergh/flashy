@@ -51,6 +51,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+// this will be used for the timer later on
+let interval;
+
 function StudentReviewCards() {
   // set up the redux dispatch
   const dispatch = useDispatch();
@@ -77,6 +80,9 @@ function StudentReviewCards() {
   // keeps track of what stage the screen is in
   // options are review, new, seen, shortTerm, complete
   const [currentStage, setCurrentStage] = useState('review');
+  // timers
+  const [totalTime, setTotalTime] = useState(360);
+  const [learnTime, setLearnTime] = useState(30);
 
   // on page load
   useEffect(() => {
@@ -87,6 +93,19 @@ function StudentReviewCards() {
     // fetch the cards to review for this student in this class
     dispatch({ type: 'FETCH_CARDS_TO_REVIEW', payload: class_id });
   }, []);
+
+  // note: to update state correctly, these timers need to be in a
+  // repeating useEffect (i.e., without empty array!)
+  useEffect(() => {
+    // fire up the timers, decrease each second
+    // we do it here because we now have the cards returned from the store
+    const timer = setTimeout(() => {
+      setTotalTime(totalTime - 1);
+      setLearnTime(learnTime - 1);
+    }, 1000);
+    // clear the timer
+    return () => clearTimeout(timer);
+  });
 
   // when the cards get set, update the local state
   useEffect(() => {
@@ -316,6 +335,7 @@ function StudentReviewCards() {
   console.log(`here are your cards in short term`, cardsShortTerm);
   console.log(`here is your random card`, currentCard);
   console.log(`we are in stage`, currentStage);
+  console.log(`time`, totalTime);
 
   return (
     <Container className={container}>
@@ -329,6 +349,10 @@ function StudentReviewCards() {
           {isRevealed && <Typography>{currentCard.back}</Typography>}
         </Box>
       </Paper>
+      <Box>
+        <Typography>Total Time: {totalTime}</Typography>
+        <Typography>Learn Time: {learnTime}</Typography>
+      </Box>
       {/* Show different buttons and feedback depending on whether the card is revealed */}
       {!isRevealed ? (
         <Box className={feedback}>
