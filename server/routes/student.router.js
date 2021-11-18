@@ -5,6 +5,8 @@ const {
   rejectUnauthenticated,
 } = require('../modules/authentication-middleware');
 const { onlyAllowStudent } = require('../modules/authorization-middleware');
+const { LtePlusMobiledataTwoTone } = require('@mui/icons-material');
+const { letterSpacing } = require('@mui/system');
 
 // GET /api/student/cards/:class_id
 // returns all the cards in a specific class that the logged in student
@@ -131,7 +133,7 @@ router.put(
   }
 );
 
-// adds a class to a student's list in student_class table
+// enrolls a student in a class in student_class table
 // POST /api/student/addclass/:class_id
 router.post(
   `/addclass/:class_id`,
@@ -142,15 +144,75 @@ router.post(
     const query = `
       INSERT INTO "student_class" ("user_id", "class_id")
       VALUES ($1, $2)
+      RETURNING "id";
     `;
 
     // run the query
     pool
       .query(query, [req.user.id, req.params.class_id])
       .then((response) => {
-        res.sendStatus(201); // show that the class has been added
+        // we have the id returned in the first row as id
+        const student_class_id = response.rows[0].id;
+        console.log(`this is student_class_id`, student_class_id);
+
+        // now retrieve cards for this class
+        // so we can add it for this specific student in this specific class
+        // build an SQL query that grabs all the card ids in this class
+        const fetchCardsQuery = `
+          SELECT "card".id AS "card_id" FROM "class"
+          JOIN "stack" ON "class".stack_id = "stack".id
+          JOIN "card" ON "card".stack_id = "stack".id
+          WHERE "class".id = $1; 
+        `;
+
+        // run the query
+        pool
+          .query(fetchCardsQuery, [req.params.class_id])
+          .then((response) => {
+            // we have the ids of the cards for this class
+            const cardIds = response.rows;
+            console.log('cardIds', cardIds);
+            // we don't have to sanitize here, since it's embedded in a response
+            // so build a query to insert all the cards
+            let addCardsQuery = `
+              INSERT INTO "student_class_card" ("card_id", "student_class_id")
+              VALUES
+            `;
+            // add the card ids one by one with a comma
+            // the last id will have a semicolon
+            for (let i = 0; i < cardIds.length - 2; i++) {
+              addCardsQuery += `(${cardIds[i].card_id}, ${student_class_id}), `;
+            }
+            // now add the final row
+            addCardsQuery += `(${
+              cardIds[cardIds.length - 1].card_id
+            }, ${student_class_id});`;
+
+            // run the query
+            pool
+              .query(addCardsQuery)
+              .then((response) => {
+                res.sendStatus(201); // show that the cards have been added
+              })
+              .catch((err) => {
+                console.log(
+                  `There was an error updating the card familiarity for this student on the server:`,
+                  err
+                );
+                res.sendStatus(500);
+              });
+          })
+          .catch((err) => {
+            // catch black 2/3 for query 2
+            console.log(
+              `There was an error retrieving the card ids from the server:`,
+              err
+            );
+            res.sendStatus(500);
+          });
       })
       .catch((err) => {
+        // catch block 1/3 for query 1
         console.log(
           `There was an error adding the class to the student's list on the server:`,
           err
