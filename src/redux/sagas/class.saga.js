@@ -71,12 +71,59 @@ function* updateClass(action) {
   }
 }
 
+// fetches all the available classes
+function* fetchAvailableClasses(action) {
+  try {
+    const response = yield axios.get('/api/student/classes/available');
+    yield put({ type: 'SET_AVAILABLE_CLASSES', payload: response.data });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga fetching the available classes from the server:`,
+      err
+    );
+  }
+}
+
+// adds a specific class to a student's class list
+// (making that student part of that class)
+function* addClassForStudent(action) {
+  try {
+    // the expected payload here is the class id that we need to add
+    yield axios.post(`/api/student/addclass/${action.payload}`);
+    // now refresh the list of classes that the student is enrolled in
+    yield put({ type: 'FETCH_ENROLLED_CLASSES' });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga adding the class to the student's list on the server:`,
+      err
+    );
+  }
+}
+
+// fetches all the classes the current student is already enrolled in
+function* fetchEnrolledClasses(action) {
+  try {
+    // the expected payload here is the class id that we need to add
+    const response = yield axios.get(`/api/student/classes/enrolled`);
+    // update the redux store
+    yield put({ type: 'SET_ENROLLED_CLASSES', payload: response.data });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga getting the classes that the student is enrolled in:`,
+      err
+    );
+  }
+}
+
 function* classSaga() {
   yield takeLatest('FETCH_CLASSES', fetchClasses);
   yield takeLatest('DELETE_CLASS', deleteClass);
   yield takeLatest('CREATE_CLASS', createClass);
   yield takeLatest('FETCH_CLASS', fetchClass);
   yield takeLatest('UPDATE_CLASS', updateClass);
+  yield takeLatest('FETCH_AVAILABLE_CLASSES', fetchAvailableClasses);
+  yield takeLatest('ADD_CLASS_FOR_STUDENT', addClassForStudent);
+  yield takeLatest('FETCH_ENROLLED_CLASSES', fetchEnrolledClasses);
 }
 
 export default classSaga;

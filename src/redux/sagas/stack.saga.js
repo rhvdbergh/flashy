@@ -1,4 +1,4 @@
-import { put, takeLatest } from 'redux-saga/effects';
+import { put, takeLatest, takeEvery } from 'redux-saga/effects';
 import axios from 'axios';
 
 // fetches stacks belonging to the logged in teacher from the server
@@ -171,6 +171,27 @@ function* updateCardFamiliarity(action) {
   }
 }
 
+// returns all the cards that a student needs to review for a specific class
+// and then stores that in a reducer
+function* fetchEnrolledCardsToReview(action) {
+  try {
+    // the expected payload is id of the class that the student is enrolled in
+    const response = yield axios.get(`/api/student/cards/${action.payload}`);
+    // we're only interested in the number of cards overdue, which is the length of
+    // the returned array
+    // the action.payload is the class id
+    yield put({
+      type: 'SET_ENROLLED_CARDS_TO_REVIEW',
+      payload: { class_id: action.payload, count: response.data.length },
+    });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga fetching the cards to review from the server:`,
+      err
+    );
+  }
+}
+
 function* stackSaga() {
   yield takeLatest('FETCH_STACKS', fetchStacks);
   yield takeLatest('DELETE_STACK', deleteStack);
@@ -183,6 +204,7 @@ function* stackSaga() {
   yield takeLatest('DELETE_CARD', deleteCard);
   yield takeLatest('FETCH_CARDS_TO_REVIEW', fetchCardsToReview);
   yield takeLatest('UPDATE_CARD_FAMILIARITY', updateCardFamiliarity);
+  yield takeEvery('FETCH_ENROLLED_CARDS_TO_REVIEW', fetchEnrolledCardsToReview);
 }
 
 export default stackSaga;
