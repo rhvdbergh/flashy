@@ -287,8 +287,6 @@ router.post(
 
 /* UTILITY FUNCTIONS */
 const needsReview = (card) => {
-  console.log(`in needsReview, card is:`, card);
-
   // all cards with a familiarity of 0 should be returned -
   // they are new cards or cards that are "not seen"
   // cards with a familiarity of 1 should be returned if they are 1 day old

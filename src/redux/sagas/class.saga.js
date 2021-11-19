@@ -115,6 +115,21 @@ function* fetchEnrolledClasses(action) {
   }
 }
 
+// fetches the progress stats for a specific class
+function* fetchClassProgress(action) {
+  try {
+    // the expected payload here is the class id for which we want the progress
+    const response = yield axios.get(`/api/class/progress/${action.payload}`);
+    // update the redux store
+    yield put({ type: 'SET_CLASS_PROGRESS', payload: response.data });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga getting the class progress:`,
+      err
+    );
+  }
+}
+
 function* classSaga() {
   yield takeLatest('FETCH_CLASSES', fetchClasses);
   yield takeLatest('DELETE_CLASS', deleteClass);
@@ -124,6 +139,7 @@ function* classSaga() {
   yield takeLatest('FETCH_AVAILABLE_CLASSES', fetchAvailableClasses);
   yield takeLatest('ADD_CLASS_FOR_STUDENT', addClassForStudent);
   yield takeLatest('FETCH_ENROLLED_CLASSES', fetchEnrolledClasses);
+  yield takeLatest('FETCH_CLASS_PROGRESS', fetchClassProgress);
 }
 
 export default classSaga;

@@ -167,7 +167,41 @@ router.put(
         req.body.available_to_students,
       ])
       .then((response) => {
-        res.sendStatus(200); // the class was updated
+        res.sendStatus(201); // the class was updated
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error updating the class on the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
+// fetches the progress details for a specific class from the server
+// GET /api/class/progress/:class_id
+router.get(
+  '/progress/:class_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the sql query
+    const query = `
+      SELECT "user".first_name, "user".last_name, COUNT(*) AS "total_cards" FROM "student_class"
+      JOIN "user" ON "user".id = "student_class".user_id
+      JOIN "student_class_card" ON "student_class".id = "student_class_card".student_class_id
+      WHERE "student_class".class_id = $1
+      GROUP BY "user".first_name, "user".last_name;
+    `;
+
+    // run the query
+    pool
+      .query(query, [req.params.class_id])
+      .then((response) => {
+        // TODO: calc the totals for everyone
+        console.log(response.rows);
+        res.sendStatus(200);
       })
       .catch((err) => {
         console.log(

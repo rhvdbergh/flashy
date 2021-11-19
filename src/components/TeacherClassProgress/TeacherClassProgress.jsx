@@ -49,6 +49,8 @@ function TeacherClassProgress() {
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Class Progress' });
     // ensure that the back button is displayd on this page
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
+    // get the progress
+    dispatch({ type: 'FETCH_CLASS_PROGRESS', payload: class_id });
   }, []);
 
   return (
