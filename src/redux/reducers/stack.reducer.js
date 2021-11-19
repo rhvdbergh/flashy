@@ -69,7 +69,7 @@ const totalNumNewCards = (state = 0, action) => {
       // the action.payload is all the cards that need to be reviewed
       // we want to calculate the number of new cards here
       // calculating the length of the array containing cards with familiarity of 0
-      return action.filter((card) => card.familiarity === 0).length;
+      return action.payload.filter((card) => card.familiarity === 0).length;
     case 'LOGOUT':
       return 0;
     default:
