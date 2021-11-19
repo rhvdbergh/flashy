@@ -120,7 +120,6 @@ function StudentDashboard() {
     setStillAvailable(tempArr);
   };
 
-  console.log(`enrolledOverdue`, overdueCards);
   return (
     <Container className={container}>
       <Box className={select}>
@@ -147,8 +146,15 @@ function StudentDashboard() {
         </FormControl>
       </Box>
       <Box>
+        {/* For the badge: the number of overdue cards show up */}
+        {/* That number is stored in the overdueCards object with  */}
+        {/* the key set as the class_id */}
         {enrolledClasses.map((cl) => (
-          <Badge key={cl.id} badgeContent={4} color="error">
+          <Badge
+            key={cl.id}
+            badgeContent={overdueCards[cl.class_id]}
+            color="error"
+          >
             <Button variant="contained">{cl.class_name}</Button>
           </Badge>
         ))}
