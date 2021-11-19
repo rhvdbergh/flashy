@@ -5,6 +5,7 @@
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 // import mui
 import {
@@ -63,6 +64,9 @@ function StudentDashboard() {
   // set up local state to control which classes the student
   // can join
   const [stillAvailable, setStillAvailable] = useState([]);
+
+  // set up the useHistory hook
+  const history = useHistory();
 
   // on page load, set nav bar title
   useEffect(() => {
@@ -155,7 +159,12 @@ function StudentDashboard() {
             badgeContent={overdueCards[cl.class_id]}
             color="error"
           >
-            <Button variant="contained">{cl.class_name}</Button>
+            <Button
+              variant="contained"
+              onClick={() => history.push(`/class/stats/${cl.class_id}`)}
+            >
+              {cl.class_name}
+            </Button>
           </Badge>
         ))}
       </Box>
