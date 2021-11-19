@@ -3,7 +3,7 @@
 
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 // import mui
 import {
@@ -43,6 +43,9 @@ function StudentClassStats() {
   // grab the class id from the params
   const { class_id } = useParams();
 
+  // set up the useHistory hook to navigate
+  const history = useHistory();
+
   // grab the cards to review from the redux store
   const cardsToReview = useSelector((store) => store.stackStore.cardsToReview);
   const totalNumCards = useSelector((store) => store.stackStore.totalNumCards);
@@ -81,7 +84,19 @@ function StudentClassStats() {
           <TableCell>{totalNumCards - cardsToReview.length}</TableCell>
         </TableBody>
       </Table>
-      <Button variant="contained">Review Cards</Button>
+      {/* if there are any cards to review show the Review Cards button, else the back */}
+      {cardsToReview.length > 0 ? (
+        <Button
+          variant="contained"
+          onClick={() => history.push(`/cards/${class_id}`)}
+        >
+          Review Cards
+        </Button>
+      ) : (
+        <Button variant="contained" onClick={() => history.back()}>
+          Back
+        </Button>
+      )}
     </Container>
   );
 }
