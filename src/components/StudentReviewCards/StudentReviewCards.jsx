@@ -93,6 +93,14 @@ function StudentReviewCards() {
   const initialLearnTime = 10 * 10;
   const [totalTime, setTotalTime] = useState(initialTotalTime);
   const [learnTime, setLearnTime] = useState(initialLearnTime);
+  // grab the numbers of cards to review from the redux store so we can calculate
+  // on complete how many were actually reviewed
+  const totalNumReviewCards = useSelector(
+    (store) => store.stackStore.totalNumReviewCards
+  );
+  // keep track of all the new cards that made it into the next familiarity stage
+  const [numNewCardsLearnedInSession, setNumNewCardsLearnedInSession] =
+    useState(0);
 
   // on page load
   useEffect(() => {
@@ -166,6 +174,19 @@ function StudentReviewCards() {
       // reset the state
       setCurrentCard({});
       setCurrentCardIndex(0);
+      // calculate how many cards the user reviewed during this session, and
+      const totalNumCardsReviewedInSession =
+        totalNumReviewCards - cardsToReview.length;
+      // set this in the redux store
+      // also set the number of new cards learned in this session
+      dispatch({
+        type: 'CREATE_SESSION_INFO',
+        payload: {
+          cards_reviewed: totalNumCardsReviewedInSession,
+          cards_learned: numNewCardsLearnedInSession,
+          student_class_id: student_class_id,
+        },
+      });
     }
   }, [currentStage]);
 
@@ -258,6 +279,8 @@ function StudentReviewCards() {
       });
       removeCardFromShortTerm();
       setIsRevealed(false);
+      // update the counter that keeps track of how many new cards have been learned
+      setNumNewCardsLearnedInSession(numNewCardsLearnedInSession + 1);
     }
     // if the total timer has run out and we're in the seen stage,
     // move on to the shortTerm stage

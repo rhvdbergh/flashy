@@ -163,6 +163,39 @@ router.put(
   }
 );
 
+// creates a new session entry for a specific student in a specific class
+// /api/student/session/:student_class_id
+router.post(
+  '/session/:student_class_id',
+  rejectUnauthenticated,
+  onlyAllowStudent,
+  () => {
+    // build the sql query
+    const query = `
+      INSERT INTO "student_class_session" ("student_class_id", "cards_learned", "cards_reviewed")
+      VALUES ($1, $2, $3);
+    `;
+
+    // run the query
+    pool
+      .query(query, [
+        req.params.student_class_id,
+        req.body.cards_learned,
+        req.body.cards_reviewed,
+      ])
+      .then((response) => {
+        res.sendStatus(201); // show that the session info entry has been created
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error posting the session information on the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
 // enrolls a student in a class in student_class table
 // POST /api/student/addclass/:class_id
 router.post(

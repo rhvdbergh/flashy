@@ -229,6 +229,23 @@ function* fetchCardNumbers(action) {
   }
 }
 
+function* createSessionInfo(action) {
+  try {
+    // the expected payload is an object
+    // containing the number of cards_reviewed, cards_learned in the session and the
+    // student_class_id
+    yield axios.post(
+      `/api/student/session/${action.payload.student_class_id}`,
+      action.payload
+    );
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga posting the new session on the server:`,
+      err
+    );
+  }
+}
+
 function* stackSaga() {
   yield takeLatest('FETCH_STACKS', fetchStacks);
   yield takeLatest('DELETE_STACK', deleteStack);
@@ -244,6 +261,7 @@ function* stackSaga() {
   yield takeEvery('FETCH_ENROLLED_CARDS_TO_REVIEW', fetchEnrolledCardsToReview);
   yield takeEvery('FETCH_TOTAL_NUM_CARDS', fetchTotalNumCards);
   yield takeLatest('FETCH_CARD_NUMBERS', fetchCardNumbers);
+  yield takeLatest('CREATE_SESSION_INFO', createSessionInfo);
 }
 
 export default stackSaga;

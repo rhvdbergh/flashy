@@ -45,6 +45,8 @@ function StudentReviewStats() {
   // get the mui styles
   const { container } = useStyles();
 
+  // get the old card numbers from the redux store
+
   // on page load, set nav bar title
   useEffect(() => {
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Stats:' });
