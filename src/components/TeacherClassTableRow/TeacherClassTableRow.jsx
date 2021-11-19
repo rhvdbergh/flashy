@@ -28,7 +28,9 @@ function TeacherClassTableRow({ cl }) {
         />
       </TableCell>
       <TableCell align="center">
-        <DonutLargeIcon />
+        <DonutLargeIcon
+          onClick={() => history.push(`/class/progress/${cl.id}`)}
+        />
       </TableCell>
       <TableCell align="center">
         <FormatListBulletedIcon
