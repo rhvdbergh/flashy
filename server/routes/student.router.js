@@ -5,8 +5,6 @@ const {
   rejectUnauthenticated,
 } = require('../modules/authentication-middleware');
 const { onlyAllowStudent } = require('../modules/authorization-middleware');
-const { LtePlusMobiledataTwoTone } = require('@mui/icons-material');
-const { letterSpacing } = require('@mui/system');
 
 // GET /api/student/cards/:class_id
 // returns all the cards in a specific class that the logged in student
@@ -34,6 +32,37 @@ router.get(
       .catch((err) => {
         console.log(
           `There was an error retrieving the cards to review from the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
+// GET /api/student/total/cards/:class_id
+// fetches the number of cards in total for a student in a specific clss
+router.get(
+  '/total/cards/:class_id',
+  rejectUnauthenticated,
+  onlyAllowStudent,
+  (req, res) => {
+    // build the sql query
+    const query = `
+    SELECT COUNT(*) FROM "student_class_card"
+    JOIN "student_class" ON "student_class".id = "student_class_card".student_class_id
+    WHERE "student_class".user_id = $1 AND "student_class".class_id = $2;
+  `;
+
+    // run the query
+    pool
+      .query(query, [req.user.id, req.params.class_id])
+      .then((response) => {
+        // there is only one number, living on the key of count
+        res.send(response.rows[0].count); // send back the total number of cards
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error retrieving the total number of cards for a student in a specific classes from the server:`,
           err
         );
         res.sendStatus(500);
@@ -127,6 +156,39 @@ router.put(
       .catch((err) => {
         console.log(
           `There was an error updating the card familiarity for this student on the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
+// creates a new session entry for a specific student in a specific class
+// /api/student/session/:student_class_id
+router.post(
+  '/session/:student_class_id',
+  rejectUnauthenticated,
+  onlyAllowStudent,
+  (req, res) => {
+    // build the sql query
+    const query = `
+      INSERT INTO "student_class_session" ("student_class_id", "cards_learned", "cards_reviewed")
+      VALUES ($1, $2, $3);
+    `;
+
+    // run the query
+    pool
+      .query(query, [
+        req.params.student_class_id,
+        req.body.cards_learned,
+        req.body.cards_reviewed,
+      ])
+      .then((response) => {
+        res.sendStatus(201); // show that the session info entry has been created
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error posting the session information on the server:`,
           err
         );
         res.sendStatus(500);

@@ -72,7 +72,7 @@ function StudentDashboard() {
   useEffect(() => {
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Dashboard' });
     // ensure that the back button is displayd on this page
-    dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
+    dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: false });
     // get the list of available classes
     dispatch({ type: 'FETCH_AVAILABLE_CLASSES' });
     // get the classes that this student are already enrolled in

@@ -51,11 +51,73 @@ const cardsToReview = (state = [], action) => {
   }
 };
 
+const totalNumCards = (state = 0, action) => {
+  switch (action.type) {
+    case 'SET_TOTAL_NUM_CARDS':
+      // the action.payload is the total number of cards
+      return action.payload;
+    case 'LOGOUT':
+      return 0;
+    default:
+      return state;
+  }
+};
+
+const totalNumNewCards = (state = 0, action) => {
+  switch (action.type) {
+    case 'SET_CARD_NUMBERS':
+      // the action.payload is all the cards that need to be reviewed
+      // we want to calculate the number of new cards here
+      // calculating the length of the array containing cards with familiarity of 0
+      return action.payload.filter((card) => card.familiarity === 0).length;
+    case 'LOGOUT':
+      return 0;
+    default:
+      return state;
+  }
+};
+
+const totalNumReviewCards = (state = 0, action) => {
+  switch (action.type) {
+    case 'SET_CARD_NUMBERS':
+      // the action.payload is all the cards that need to be reviewed
+      // we want to calculate the number of older cards that needs to be reviewed here
+      // calculating the length of the array containing cards with familiarity of 0
+      // calculating the length of the array containing cards with familiarity of 0
+      return action.payload.filter((card) => card.familiarity !== 0).length;
+    case 'LOGOUT':
+      return 0;
+    default:
+      return state;
+  }
+};
+
+// keeps track of the latest review session's number
+const latestSessionNumbers = (state = {}, action) => {
+  // the action.payload is an object containing
+  // cards_learned, cards_reviewed, and student_class_id
+  switch (action.type) {
+    case 'CREATE_SESSION_INFO':
+      return {
+        cards_learned: action.payload.cards_learned,
+        cards_reviewed: action.payload.cards_reviewed,
+      };
+    case 'LOGOUT':
+      return {};
+    default:
+      return state;
+  }
+};
+
 const stackStore = combineReducers({
   stacks,
   editStack,
   cards,
   cardsToReview,
+  totalNumCards,
+  totalNumNewCards,
+  totalNumReviewCards,
+  latestSessionNumbers,
 });
 
 export default stackStore;
