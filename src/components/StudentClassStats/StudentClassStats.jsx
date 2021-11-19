@@ -44,7 +44,8 @@ function StudentClassStats() {
   const { class_id } = useParams();
 
   // grab the cards to review from the redux store
-  const cards = useSelector((store) => store.stackStore.cardsToReview);
+  const cardsToReview = useSelector((store) => store.stackStore.cardsToReview);
+  const totalNumCards = useSelector((store) => store.stackStore.totalNumCards);
 
   // on page load, set nav bar title
   useEffect(() => {
@@ -53,6 +54,8 @@ function StudentClassStats() {
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
     // fetch the cards to review for this student in this class
     dispatch({ type: 'FETCH_CARDS_TO_REVIEW', payload: class_id });
+    // fetch the number of all the cards in this class already made available to the student
+    dispatch({ type: 'FETCH_TOTAL_NUM_CARDS', payload: class_id });
   }, []);
 
   return (
@@ -63,19 +66,19 @@ function StudentClassStats() {
             <TableCell>New cards to learn:</TableCell>
             {/* calculating the length of the array containing cards with familiarity of 0 */}
             <TableCell>
-              {cards.filter((card) => card.familiarity === 0).length}
+              {cardsToReview.filter((card) => card.familiarity === 0).length}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Cards to review: </TableCell>
             <TableCell>
               {/* calculating the length of the array containing cards with familiarity of 0 */}
-              {cards.filter((card) => card.familiarity !== 0).length}
+              {cardsToReview.filter((card) => card.familiarity !== 0).length}
             </TableCell>
           </TableRow>
           <TableRow></TableRow>
           <TableCell>Cards already learned:</TableCell>
-          <TableCell></TableCell>
+          <TableCell>{totalNumCards - cardsToReview.length}</TableCell>
         </TableBody>
       </Table>
       <Button variant="contained">Review Cards</Button>

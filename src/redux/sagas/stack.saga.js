@@ -192,6 +192,27 @@ function* fetchEnrolledCardsToReview(action) {
   }
 }
 
+// fetches the number of total cards that has been made available to the student
+// for a specific class (in the student_class_card table)
+function* fetchTotalNumCards(action) {
+  try {
+    // the expected payload is id of the class that the student is enrolled in
+    const response = yield axios.get(
+      `/api/student/total/cards/${action.payload}`
+    );
+    // we're returning a single number
+    yield put({
+      type: 'SET_TOTAL_NUM_CARDS',
+      payload: response.data,
+    });
+  } catch (err) {
+    console.log(
+      `There was an error fetching the total number of cards for this student in this class from the server:`,
+      err
+    );
+  }
+}
+
 function* stackSaga() {
   yield takeLatest('FETCH_STACKS', fetchStacks);
   yield takeLatest('DELETE_STACK', deleteStack);
@@ -205,6 +226,7 @@ function* stackSaga() {
   yield takeLatest('FETCH_CARDS_TO_REVIEW', fetchCardsToReview);
   yield takeLatest('UPDATE_CARD_FAMILIARITY', updateCardFamiliarity);
   yield takeEvery('FETCH_ENROLLED_CARDS_TO_REVIEW', fetchEnrolledCardsToReview);
+  yield takeEvery('FETCH_TOTAL_NUM_CARDS', fetchTotalNumCards);
 }
 
 export default stackSaga;

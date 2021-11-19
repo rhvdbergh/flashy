@@ -51,11 +51,24 @@ const cardsToReview = (state = [], action) => {
   }
 };
 
+const totalNumCards = (state = 0, action) => {
+  switch (action.type) {
+    case 'SET_TOTAL_NUM_CARDS':
+      // the action.payload is the total number of cards
+      return action.payload;
+    case 'LOGOUT':
+      return 0;
+    default:
+      return state;
+  }
+};
+
 const stackStore = combineReducers({
   stacks,
   editStack,
   cards,
   cardsToReview,
+  totalNumCards,
 });
 
 export default stackStore;
