@@ -180,11 +180,12 @@ function StudentReviewCards() {
       // set this in the redux store
       // also set the number of new cards learned in this session
       dispatch({
+        // grabing the student_class_id from the first card in cards
         type: 'CREATE_SESSION_INFO',
         payload: {
           cards_reviewed: totalNumCardsReviewedInSession,
           cards_learned: numNewCardsLearnedInSession,
-          student_class_id: student_class_id,
+          student_class_id: cards[0].student_class_id,
         },
       });
     }

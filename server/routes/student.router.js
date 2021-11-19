@@ -169,7 +169,7 @@ router.post(
   '/session/:student_class_id',
   rejectUnauthenticated,
   onlyAllowStudent,
-  () => {
+  (req, res) => {
     // build the sql query
     const query = `
       INSERT INTO "student_class_session" ("student_class_id", "cards_learned", "cards_reviewed")

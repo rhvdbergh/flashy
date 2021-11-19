@@ -84,10 +84,26 @@ const totalNumReviewCards = (state = 0, action) => {
       // we want to calculate the number of older cards that needs to be reviewed here
       // calculating the length of the array containing cards with familiarity of 0
       // calculating the length of the array containing cards with familiarity of 0
-      console.log(`in totalNumReviewCards, action.payload=`, action.payload);
       return action.payload.filter((card) => card.familiarity !== 0).length;
     case 'LOGOUT':
       return 0;
+    default:
+      return state;
+  }
+};
+
+// keeps track of the latest review session's number
+const latestSessionNumbers = (state = {}, action) => {
+  // the action.payload is an object containing
+  // cards_learned, cards_reviewed, and student_class_id
+  switch (action.type) {
+    case 'CREATE_SESSION_INFO':
+      return {
+        cards_learned: action.payload.cards_learned,
+        cards_reviewed: action.payload.cards_reviewed,
+      };
+    case 'LOGOUT':
+      return {};
     default:
       return state;
   }
@@ -101,6 +117,7 @@ const stackStore = combineReducers({
   totalNumCards,
   totalNumNewCards,
   totalNumReviewCards,
+  latestSessionNumbers,
 });
 
 export default stackStore;
