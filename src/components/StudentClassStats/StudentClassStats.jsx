@@ -46,9 +46,14 @@ function StudentClassStats() {
   // set up the useHistory hook to navigate
   const history = useHistory();
 
-  // grab the cards to review from the redux store
-  const cardsToReview = useSelector((store) => store.stackStore.cardsToReview);
+  // grab the number of cards to review from the redux store
   const totalNumCards = useSelector((store) => store.stackStore.totalNumCards);
+  const totalNumNewCards = useSelector(
+    (store) => store.stackStore.totalNumNewCards
+  );
+  const totalNumReviewCards = useSelector(
+    (store) => store.stackStore.totalNumReviewCards
+  );
 
   // on page load, set nav bar title
   useEffect(() => {
@@ -56,7 +61,7 @@ function StudentClassStats() {
     // ensure that the back button is displayd on this page
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
     // fetch the cards to review for this student in this class
-    dispatch({ type: 'FETCH_CARDS_TO_REVIEW', payload: class_id });
+    dispatch({ type: 'FETCH_CARD_NUMBERS', payload: class_id });
     // fetch the number of all the cards in this class already made available to the student
     dispatch({ type: 'FETCH_TOTAL_NUM_CARDS', payload: class_id });
   }, []);
@@ -67,25 +72,21 @@ function StudentClassStats() {
         <TableBody>
           <TableRow>
             <TableCell>New cards to learn:</TableCell>
-            {/* calculating the length of the array containing cards with familiarity of 0 */}
-            <TableCell>
-              {cardsToReview.filter((card) => card.familiarity === 0).length}
-            </TableCell>
+            <TableCell>{totalNumNewCards}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Cards to review: </TableCell>
-            <TableCell>
-              {/* calculating the length of the array containing cards with familiarity of 0 */}
-              {cardsToReview.filter((card) => card.familiarity !== 0).length}
-            </TableCell>
+            <TableCell>{totalNumReviewCards}</TableCell>
           </TableRow>
           <TableRow></TableRow>
           <TableCell>Cards already learned:</TableCell>
-          <TableCell>{totalNumCards - cardsToReview.length}</TableCell>
+          <TableCell>
+            {totalNumCards - (totalNumNewCards + totalNumReviewCards)}
+          </TableCell>
         </TableBody>
       </Table>
       {/* if there are any cards to review show the Review Cards button, else the back */}
-      {cardsToReview.length > 0 ? (
+      {totalNumNewCards + totalNumReviewCards > 0 ? (
         <Button
           variant="contained"
           onClick={() => history.push(`/cards/${class_id}`)}
@@ -93,7 +94,7 @@ function StudentClassStats() {
           Review Cards
         </Button>
       ) : (
-        <Button variant="contained" onClick={() => history.back()}>
+        <Button variant="contained" onClick={() => history.goBack()}>
           Back
         </Button>
       )}

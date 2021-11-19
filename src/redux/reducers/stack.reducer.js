@@ -63,12 +63,44 @@ const totalNumCards = (state = 0, action) => {
   }
 };
 
+const totalNumNewCards = (state = 0, action) => {
+  switch (action.type) {
+    case 'SET_CARD_NUMBERS':
+      // the action.payload is all the cards that need to be reviewed
+      // we want to calculate the number of new cards here
+      // calculating the length of the array containing cards with familiarity of 0
+      return action.filter((card) => card.familiarity === 0).length;
+    case 'LOGOUT':
+      return 0;
+    default:
+      return state;
+  }
+};
+
+const totalNumReviewCards = (state = 0, action) => {
+  switch (action.type) {
+    case 'SET_CARD_NUMBERS':
+      // the action.payload is all the cards that need to be reviewed
+      // we want to calculate the number of older cards that needs to be reviewed here
+      // calculating the length of the array containing cards with familiarity of 0
+      // calculating the length of the array containing cards with familiarity of 0
+      console.log(`in totalNumReviewCards, action.payload=`, action.payload);
+      return action.payload.filter((card) => card.familiarity !== 0).length;
+    case 'LOGOUT':
+      return 0;
+    default:
+      return state;
+  }
+};
+
 const stackStore = combineReducers({
   stacks,
   editStack,
   cards,
   cardsToReview,
   totalNumCards,
+  totalNumNewCards,
+  totalNumReviewCards,
 });
 
 export default stackStore;

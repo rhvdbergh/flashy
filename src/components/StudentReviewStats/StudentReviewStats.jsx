@@ -64,11 +64,11 @@ function StudentReviewStats() {
             <TableCell></TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Cards to review: </TableCell>
+            <TableCell>Cards reviewed: </TableCell>
             <TableCell></TableCell>
           </TableRow>
           <TableRow></TableRow>
-          <TableCell>Cards already learned:</TableCell>
+          <TableCell>Total cards learned: </TableCell>
           <TableCell></TableCell>
         </TableBody>
       </Table>

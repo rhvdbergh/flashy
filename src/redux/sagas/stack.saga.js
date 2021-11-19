@@ -213,6 +213,22 @@ function* fetchTotalNumCards(action) {
   }
 }
 
+// returns all the cards that a student needs to review for a specific class
+// we then send this payload to several reducers that stores the numbers
+// of new cards and cards to review for later use (post review process)
+function* fetchCardNumbers(action) {
+  try {
+    // the expected payload is id of the class that the student is currently reviewing
+    const response = yield axios.get(`/api/student/cards/${action.payload}`);
+    yield put({ type: 'SET_CARD_NUMBERS', payload: response.data });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga fetching the cards to review for calculating card numbers from the server:`,
+      err
+    );
+  }
+}
+
 function* stackSaga() {
   yield takeLatest('FETCH_STACKS', fetchStacks);
   yield takeLatest('DELETE_STACK', deleteStack);
@@ -224,9 +240,10 @@ function* stackSaga() {
   yield takeLatest('CREATE_CARD', createCard);
   yield takeLatest('DELETE_CARD', deleteCard);
   yield takeLatest('FETCH_CARDS_TO_REVIEW', fetchCardsToReview);
-  yield takeLatest('UPDATE_CARD_FAMILIARITY', updateCardFamiliarity);
+  yield takeEvery('UPDATE_CARD_FAMILIARITY', updateCardFamiliarity);
   yield takeEvery('FETCH_ENROLLED_CARDS_TO_REVIEW', fetchEnrolledCardsToReview);
   yield takeEvery('FETCH_TOTAL_NUM_CARDS', fetchTotalNumCards);
+  yield takeLatest('FETCH_CARD_NUMBERS', fetchCardNumbers);
 }
 
 export default stackSaga;
