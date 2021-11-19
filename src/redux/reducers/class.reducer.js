@@ -61,12 +61,25 @@ const enrolledClassesOverdueCardCount = (state = {}, action) => {
   }
 };
 
+// holds the progress details for a specific class
+const classProgress = (state = [], action) => {
+  switch (action.type) {
+    case 'SET_CLASS_PROGRESS':
+      return action.payload;
+    case 'LOGOUT':
+      return [];
+    default:
+      return state;
+  }
+};
+
 const classStore = combineReducers({
   classes,
   editClass,
   availableClasses,
   enrolledClasses,
   enrolledClassesOverdueCardCount,
+  classProgress,
 });
 
 export default classStore;
