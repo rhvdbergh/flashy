@@ -22,6 +22,7 @@ import TeacherDashboard from '../TeacherDashboard/TeacherDashboard';
 import TeacherEditClass from '../TeacherEditClass/TeacherEditClass';
 import TeacherEditCards from '../TeacherEditCards/TeacherEditCards';
 import TeacherClassProgress from '../TeacherClassProgress/TeacherClassProgress';
+import TeacherProgressDetails from '../TeacherProgressDetails/TeacherProgressDetails';
 import StudentReviewCards from '../StudentReviewCards/StudentReviewCards';
 import StudentReviewStats from '../StudentReviewStats/StudentReviewStats';
 import StudentClassStats from '../StudentClassStats/StudentClassStats';
@@ -124,6 +125,13 @@ function App() {
 
           <ProtectedRoute exact path="/class/progress/:class_id">
             <TeacherClassProgress />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            exact
+            path="/class/progress/details/:student_class_id"
+          >
+            <TeacherProgressDetails />
           </ProtectedRoute>
 
           <ProtectedRoute

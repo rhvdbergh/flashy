@@ -73,6 +73,18 @@ const classProgress = (state = [], action) => {
   }
 };
 
+// holds the progress details for a specific student
+const studentProgress = (state = [], action) => {
+  switch (action.type) {
+    case 'SET_STUDENT_PROGRESS':
+      return action.payload;
+    case 'LOGOUT':
+      return [];
+    default:
+      return state;
+  }
+};
+
 const classStore = combineReducers({
   classes,
   editClass,
@@ -80,6 +92,7 @@ const classStore = combineReducers({
   enrolledClasses,
   enrolledClassesOverdueCardCount,
   classProgress,
+  studentProgress,
 });
 
 export default classStore;
