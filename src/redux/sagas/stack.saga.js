@@ -100,7 +100,7 @@ function* updateCard(action) {
     yield put({ type: 'FETCH_CARDS', payload: action.payload.stack_id });
   } catch (err) {
     console.log(
-      `There was an error in the redux saga creating the stack on the server:`,
+      `There was an error in the redux saga updating the card on the server:`,
       err
     );
   }
@@ -159,7 +159,6 @@ function* updateCardFamiliarity(action) {
     // the payload carried is an object
     // containing the student_class_card_id for this card
     // and the new familiarity
-    console.log('in updateCArdFamil, payload = ', action.payload);
     yield axios.put(`/api/student/cards/${action.payload.id}`, {
       familiarity: action.payload.familiarity,
     });
