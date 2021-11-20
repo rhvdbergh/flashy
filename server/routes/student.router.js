@@ -4,7 +4,10 @@ const router = express.Router();
 const {
   rejectUnauthenticated,
 } = require('../modules/authentication-middleware');
-const { onlyAllowStudent } = require('../modules/authorization-middleware');
+const {
+  onlyAllowStudent,
+  onlyAllowTeacher,
+} = require('../modules/authorization-middleware');
 
 // GET /api/student/cards/:class_id
 // returns all the cards in a specific class that the logged in student
@@ -278,6 +281,37 @@ router.post(
         // catch block 1/3 for query 1
         console.log(
           `There was an error adding the class to the student's list on the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
+// fetches the progress details for a student in a specific class
+// GET /api/student/progress/:student_class_id
+router.get(
+  '/progress/:student_class_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the sql query
+    const query = `
+      SELECT "user".last_name, "user".first_name, "student_class_session".cards_learned, "student_class_session".cards_reviewed, "student_class_session".timestamp, "student_class_session".id AS "student_class_session_id" FROM "student_class"
+      JOIN "student_class_session" ON "student_class_session".student_class_id = "student_class".id
+      JOIN "user" ON "user".id = "student_class".user_id
+      WHERE "student_class".id = $1;
+    `;
+
+    // run the query
+    pool
+      .query(query, [req.params.student_class_id])
+      .then((response) => {
+        res.send(response.rows); // show that the cards have been added
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error fetching the details for the student from the server:`,
           err
         );
         res.sendStatus(500);
