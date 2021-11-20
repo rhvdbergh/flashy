@@ -3,7 +3,7 @@
 // a specific student on this screen
 
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 //import mui
@@ -33,19 +33,7 @@ import { makeStyles } from '@mui/styles';
 // set up the mui styles
 const useStyles = makeStyles(() => ({
   container: {
-    marginTop: '150px',
-  },
-  textfield: {
-    width: '250px',
-  },
-  select: {
-    width: '250px',
-  },
-  checkbox: {
-    alignSelf: 'center',
-  },
-  spacing: {
-    margin: '20px',
+    marginTop: '100px',
   },
 }));
 
@@ -59,6 +47,11 @@ function TeacherProgressDetails() {
   // grab the student_class_id from the params
   const { student_class_id } = useParams();
 
+  // get the progress details for this student from the redux store
+  const studentProgress = useSelector(
+    (store) => store.classStore.studentProgress
+  );
+
   // on page load, set nav bar title
   useEffect(() => {
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Student Progress ' });
@@ -68,10 +61,16 @@ function TeacherProgressDetails() {
     dispatch({ type: 'FETCH_STUDENT_PROGRESS', payload: student_class_id });
   }, []);
 
+  console.log(`studentProgress`, studentProgress);
+
   return (
     <Container className={container}>
       <Box>
-        <Typography variant="h4">Details for Student: </Typography>
+        <Typography variant="h4">
+          Details for Student:{' '}
+          {studentProgress.length > 0 && studentProgress[0].first_name}{' '}
+          {studentProgress.length > 0 && studentProgress[0].last_name}
+        </Typography>
       </Box>
       <Box>
         <Typography variant="h5">Completed Attempts:</Typography>
@@ -80,12 +79,26 @@ function TeacherProgressDetails() {
         <Table aria-label="Student Progress">
           <TableHead>
             <TableRow>
-              <TableCell>Date</TableCell>
+              <TableCell align="center">Date</TableCell>
               <TableCell align="center">Cards Learned</TableCell>
-              <TableCell align="center">Cards Not Learned</TableCell>
+              <TableCell align="center">Cards Reviewed</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody></TableBody>
+          <TableBody>
+            {/* {last_name: 'student1', first_name: 'student1', cards_learned: 2, cards_reviewed: 3, timestamp: '2021-11-20T03:09:52.173Z'} */}
+            {studentProgress &&
+              studentProgress.map((session) => (
+                <TableRow key={session.student_class_session_id}>
+                  <TableCell align="center">
+                    {new Date(session.timestamp).getMonth() + 1}/
+                    {new Date(session.timestamp).getDate()}/
+                    {new Date(session.timestamp).getFullYear()}
+                  </TableCell>
+                  <TableCell align="center">{session.cards_learned}</TableCell>
+                  <TableCell align="center">{session.cards_reviewed}</TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
         </Table>
       </TableContainer>
     </Container>
