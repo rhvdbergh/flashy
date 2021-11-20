@@ -188,12 +188,12 @@ router.get(
   (req, res) => {
     // build the sql query
     const query = `
-      SELECT "user".first_name, "user".last_name, ARRAY_AGG("student_class_card".familiarity) AS "familiarity", ARRAY_AGG("student_class_session".id) AS "num_sessions" FROM "student_class"
+      SELECT "user".first_name, "user".last_name, "user".id AS "student_id", "student_class".id AS "student_class_id", ARRAY_AGG("student_class_card".familiarity) AS "familiarity", ARRAY_AGG("student_class_session".id) AS "sessions" FROM "student_class"
       JOIN "user" ON "user".id = "student_class".user_id
       JOIN "student_class_card" ON "student_class".id = "student_class_card".student_class_id
       JOIN "student_class_session" ON "student_class_session".student_class_id = "student_class".id
       WHERE "student_class".class_id = $1
-      GROUP BY "user".first_name, "user".last_name;
+      GROUP BY "user".first_name, "user".last_name, "user".id, "student_class".id;
     `;
 
     // run the query
@@ -204,17 +204,23 @@ router.get(
         // we're receiving back an object with an embedded array with the
         // familiarities of cards in an object as "familiarity"
         // and an array of all the cards's sessions, which needs to be calculated
+        console.log(`this is the response.rows`, response.rows);
         const list = response.rows.map((student) => {
           return {
             first_name: student.first_name,
             last_name: student.last_name,
             // we're filtering for 0's and more than 0's because that shows learned and unlearned
-            learned_cards: student.familiarity.filter((fam) => fam > 0).length,
-            not_learned_cards: student.familiarity.filter((fam) => fam === 0)
-              .length,
+            learned_cards:
+              student.familiarity.filter((fam) => fam > 0).length /
+              new Set(student.sessions).size,
+            not_learned_cards:
+              student.familiarity.filter((fam) => fam === 0).length /
+              new Set(student.sessions).size,
             // there are several duplicates of the sessions, so we need to
             // make a set and then gets it's size to do the count
-            completed_sessions: new Set(student.num_sessions).size,
+            completed_sessions: new Set(student.sessions).size,
+            student_id: student.student_id,
+            student_class_id: student.student_class_id,
           };
         });
         res.send(list);

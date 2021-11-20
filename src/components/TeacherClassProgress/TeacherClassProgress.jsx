@@ -2,8 +2,11 @@
 // the progress of a specific class
 
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
+
+// import custom components
+import TeacherClassProgressRow from '../TeacherClassProgressRow/TeacherClassProgressRow';
 
 //import mui
 import {
@@ -24,13 +27,10 @@ import { makeStyles } from '@mui/styles';
 // set up the mui styles
 const useStyles = makeStyles(() => ({
   container: {
-    marginTop: '100px',
+    marginTop: '150px',
   },
   table: {
     marginTop: '30px',
-  },
-  textfield: {
-    width: '250px',
   },
 }));
 
@@ -43,6 +43,9 @@ function TeacherClassProgress() {
 
   // set up the mui styles
   const { container, table } = useStyles();
+
+  // grab the class progress from the redux store
+  const classProgress = useSelector((store) => store.classStore.classProgress);
 
   // on page load, set nav bar title
   useEffect(() => {
@@ -61,13 +64,21 @@ function TeacherClassProgress() {
             <TableRow>
               <TableCell>First Name</TableCell>
               <TableCell>Last Name</TableCell>
-              <TableCell>Cards Learned</TableCell>
-              <TableCell>Cards Not Learned</TableCell>
-              <TableCell>Completed Attempts</TableCell>
-              <TableCell>Details</TableCell>
+              <TableCell align="center">Cards Learned</TableCell>
+              <TableCell align="center">Cards Not Learned</TableCell>
+              <TableCell align="center">Completed Attempts</TableCell>
+              <TableCell align="center">Details</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody></TableBody>
+          <TableBody>
+            {classProgress &&
+              classProgress.map((student) => (
+                <TeacherClassProgressRow
+                  key={student.student_id}
+                  student={student}
+                />
+              ))}
+          </TableBody>
         </Table>
       </TableContainer>
     </Container>
