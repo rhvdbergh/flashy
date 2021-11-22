@@ -33,6 +33,27 @@ const useStyles = makeStyles(() => ({
   container: {
     marginTop: '100px',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    height: '78vh',
+  },
+  main: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonBox: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  table: {
+    display: 'flex',
+    justifyConten: 'center',
+  },
+  heading: {
+    paddingBottom: '30px',
   },
 }));
 
@@ -47,7 +68,8 @@ function StudentReviewStats() {
   const { class_id } = useParams();
 
   // get the mui styles
-  const { container } = useStyles();
+  const { container, main, buttonBox, table, heading, subheading } =
+    useStyles();
 
   // get the old card numbers from the redux store
   const { cards_learned, cards_reviewed } = useSelector(
@@ -57,37 +79,51 @@ function StudentReviewStats() {
 
   // on page load, set nav bar title
   useEffect(() => {
-    dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Stats:' });
+    dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Stats' });
     // ensure that the back button is displayd on this page
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
     // fetch the number of all the cards in this class already made available to the student
     dispatch({ type: 'FETCH_TOTAL_NUM_CARDS', payload: class_id });
   }, []);
   return (
-    <Container className={container}>
-      <Box>
-        <Typography variant="h2">Good job!</Typography>
-        <Typography variant="h5">Today's Stats</Typography>
+    <Box
+      className={container}
+      sx={{
+        display: 'flex',
+      }}
+    >
+      <Box className={main}>
+        <Typography variant="h2" className={heading}>
+          Good job!
+        </Typography>
+        <Typography variant="h5" className={subheading}>
+          Today's Stats
+        </Typography>
       </Box>
-      <Table>
+      <Table className={table}>
         <TableBody>
           <TableRow>
             <TableCell>New cards learned:</TableCell>
-            <TableCell>{cards_learned}</TableCell>
+            {/* TODO: switch below to {cards_learned} */}
+            <TableCell>16</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Cards reviewed: </TableCell>
-            <TableCell>{cards_reviewed}</TableCell>
+            {/* TODO: switch below to {cards_reviewed} */}
+            <TableCell>23</TableCell>
           </TableRow>
           <TableRow></TableRow>
           <TableCell>Total cards learned: </TableCell>
-          <TableCell>{totalNumCards}</TableCell>
+          {/* TODO: switch below to {totalNumCards} */}
+          <TableCell>83</TableCell>
         </TableBody>
       </Table>
-      <Button variant="contained" onClick={() => history.push(`/`)}>
-        Continue
-      </Button>
-    </Container>
+      <Box className={buttonBox}>
+        <Button variant="contained" onClick={() => history.push(`/`)}>
+          Continue
+        </Button>
+      </Box>
+    </Box>
   );
 }
 
