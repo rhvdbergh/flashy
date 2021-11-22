@@ -113,10 +113,12 @@ function Nav() {
                 Back
               </Button>
             ) : (
-              <SettingsBackupRestoreIcon
-                onClick={() => history.goBack()}
-                className={icon}
-              />
+              displayBackButton && (
+                <SettingsBackupRestoreIcon
+                  onClick={() => history.goBack()}
+                  className={icon}
+                />
+              )
             )}
 
             {/* For the moment, there is no about page  */}
@@ -140,7 +142,9 @@ function Nav() {
                 Log Out
               </Button>
             ) : (
-              <LogoutIcon onClick={() => dispatch({ type: 'LOGOUT' })} />
+              user.id && (
+                <LogoutIcon onClick={() => dispatch({ type: 'LOGOUT' })} />
+              )
             )}
           </Box>
         </Toolbar>

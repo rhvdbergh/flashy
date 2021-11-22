@@ -30,11 +30,33 @@ import { makeStyles } from '@mui/styles';
 // set up the mui styles
 const useStyles = makeStyles(() => ({
   container: {
-    marginTop: '150px',
+    marginTop: '120px',
     width: '100%',
+    height: '78vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   select: {
     width: '100%',
+    marginBottom: '20px',
+  },
+  buttonBox: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  badge: {
+    height: '56px',
+    marginTop: '30px',
+    maxWidth: '400px',
+  },
+  button: {
+    width: '100%',
+    // minWidth: '200px',
+    // maxWidth: '400px',
   },
 }));
 
@@ -43,7 +65,7 @@ function StudentDashboard() {
   const dispatch = useDispatch();
 
   // get the mui styles
-  const { container, select } = useStyles();
+  const { container, select, buttonBox, button, badge } = useStyles();
 
   // fetch the classes this student is enrolled in
   const enrolledClasses = useSelector(
@@ -149,7 +171,7 @@ function StudentDashboard() {
           </Select>
         </FormControl>
       </Box>
-      <Box>
+      <Box className={buttonBox}>
         {/* For the badge: the number of overdue cards show up */}
         {/* That number is stored in the overdueCards object with  */}
         {/* the key set as the class_id */}
@@ -158,9 +180,11 @@ function StudentDashboard() {
             key={cl.id}
             badgeContent={overdueCards[cl.class_id]}
             color="error"
+            className={badge}
           >
             <Button
               variant="contained"
+              className={button}
               onClick={() => history.push(`/class/stats/${cl.class_id}`)}
             >
               {cl.class_name}
