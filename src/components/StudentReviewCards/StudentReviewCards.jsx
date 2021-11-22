@@ -22,7 +22,6 @@ import {
   TableRow,
   Typography,
   Paper,
-  Grid,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
@@ -444,14 +443,14 @@ function StudentReviewCards() {
   // console.log(`time`, totalTime);
 
   return (
-    <Grid
+    <Container
       container
-      justifyContent="center"
-      spacing={6}
       sx={{
-        height: '78vh',
+        height: '90vh',
         paddingTop: '50px',
         display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
         alignItems: 'space-between',
       }}
     >
@@ -460,21 +459,21 @@ function StudentReviewCards() {
       {/* else show the congrats button */}
       {currentStage !== 'complete' ? (
         <>
-          <Grid item xs={11}>
-            <Paper className={cardStyle}>
+          <Box>
+            <Paper>
               <Box>
                 <Typography>{currentCard.front}</Typography>
               </Box>
             </Paper>
-          </Grid>
-          <Grid item xs={11}>
-            <Paper className={cardStyle}>
+          </Box>
+          <Box>
+            <Paper>
               <Box>
                 {isRevealed && <Typography>{currentCard.back}</Typography>}
               </Box>
             </Paper>
-          </Grid>
-          <Grid item xs={11}>
+          </Box>
+          <Box>
             <Typography>
               Total Time Left: {Math.round(totalTime / 10)}
             </Typography>
@@ -484,81 +483,64 @@ function StudentReviewCards() {
                 Learn Time Left: {Math.round(learnTime / 10)}
               </Typography>
             )}
-          </Grid>
+          </Box>
           {/* Show different buttons and feedback depending on whether the card is revealed */}
           {!isRevealed ? (
-            <Grid
+            <Box
               item
               xs={11}
               sx={{ display: 'flex', justifyContent: 'center' }}
             >
-              <Button
-                variant="contained"
-                className={revealButton}
-                onClick={() => setIsRevealed(true)}
-              >
+              <Button variant="contained" onClick={() => setIsRevealed(true)}>
                 <Typography variant="h6">Reveal Card</Typography>
               </Button>
-            </Grid>
+            </Box>
           ) : // Another conditional render, depending on the stage
           // In the "new" stage, there are no "yes" or "no" buttons
           //  Instead, there's a continue button
           currentStage === 'new' ? (
-            <Grid item xs={11} className={feedback}>
+            <Box>
               <Box>
                 <Typography variant="body1"> </Typography>
               </Box>
-              <Button
-                variant="contained"
-                className={revealButton}
-                onClick={handleContinue}
-              >
+              <Button variant="contained" onClick={handleContinue}>
                 <Typography variant="h6">Continue</Typography>
               </Button>
-            </Grid>
+            </Box>
           ) : (
-            <Grid item xs={11} className={feedback}>
+            <Box>
               <Box>
                 <Box>
                   <Typography variant="body1">
                     Did you know this card?
                   </Typography>
                 </Box>
-                <Button
-                  variant="contained"
-                  className={yesNoButtons}
-                  onClick={handleNo}
-                >
+                <Button variant="contained" onClick={handleNo}>
                   <Typography variant="h6">No</Typography>
                 </Button>
-                <Button
-                  variant="contained"
-                  className={yesNoButtons}
-                  onClick={handleYes}
-                >
+                <Button variant="contained" onClick={handleYes}>
                   <Typography variant="h6">Yes</Typography>
                 </Button>
               </Box>
-            </Grid>
+            </Box>
           )}
         </>
       ) : (
-        <Grid item xs={11} className={feedback}>
+        <Box>
           <Typography variant="h2">Finished!</Typography>
           <Typography variant="h5">
             Congratulations! You've reviewed all your cards for this class.
           </Typography>
           <Button
             variant="contained"
-            className="revealbutton"
             onClick={() => history.push(`/reviewstats/${class_id}`)}
           >
             <Typography variant="h6">Continue</Typography>
           </Button>
-        </Grid>
+        </Box>
       )}
       {currentStage === 'complete' && <Confetti />}
-    </Grid>
+    </Container>
   );
 }
 
