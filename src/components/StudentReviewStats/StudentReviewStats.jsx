@@ -104,18 +104,15 @@ function StudentReviewStats() {
         <TableBody>
           <TableRow>
             <TableCell>New cards learned:</TableCell>
-            {/* TODO: switch below to {cards_learned} */}
-            <TableCell>16</TableCell>
+            <TableCell>{cards_learned}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Cards reviewed: </TableCell>
-            {/* TODO: switch below to {cards_reviewed} */}
-            <TableCell>23</TableCell>
+            <TableCell>{cards_reviewed}</TableCell>
           </TableRow>
           <TableRow></TableRow>
           <TableCell>Total cards learned: </TableCell>
-          {/* TODO: switch below to {totalNumCards} */}
-          <TableCell>83</TableCell>
+          <TableCell>{totalNumCards}</TableCell>
         </TableBody>
       </Table>
       <Box className={buttonBox}>
