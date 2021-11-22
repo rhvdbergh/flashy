@@ -68,8 +68,7 @@ function StudentReviewStats() {
   const { class_id } = useParams();
 
   // get the mui styles
-  const { container, main, buttonBox, table, heading, subheading } =
-    useStyles();
+  const { container, main, buttonBox, table, heading } = useStyles();
 
   // get the old card numbers from the redux store
   const { cards_learned, cards_reviewed } = useSelector(
@@ -86,7 +85,7 @@ function StudentReviewStats() {
     dispatch({ type: 'FETCH_TOTAL_NUM_CARDS', payload: class_id });
   }, []);
   return (
-    <Box
+    <Container
       className={container}
       sx={{
         display: 'flex',
@@ -96,9 +95,7 @@ function StudentReviewStats() {
         <Typography variant="h2" className={heading}>
           Good job!
         </Typography>
-        <Typography variant="h5" className={subheading}>
-          Today's Stats
-        </Typography>
+        <Typography variant="h5">Today's Stats</Typography>
       </Box>
       <Table className={table}>
         <TableBody>
@@ -120,7 +117,7 @@ function StudentReviewStats() {
           Continue
         </Button>
       </Box>
-    </Box>
+    </Container>
   );
 }
 
