@@ -189,6 +189,25 @@ function StudentReviewCards() {
         },
       });
     }
+
+    // change the nav bar heading
+    switch (currentStage) {
+      case 'new':
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Learn Cards' });
+        break;
+      case 'seen':
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Cards' });
+        break;
+      case 'shortTerm':
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Cards' });
+        break;
+      case 'review':
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Cards' });
+        break;
+      case 'complete':
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Cards' });
+        break;
+    }
   }, [currentStage]);
 
   const pickRandomCardFrom = (cardsArray) => {
