@@ -49,6 +49,10 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  button: {
+    height: '70px',
+    width: '200px',
+  },
 }));
 
 function StudentClassStats() {
@@ -56,7 +60,7 @@ function StudentClassStats() {
   const dispatch = useDispatch();
 
   // get the mui styles
-  const { container, headingBox, heading, buttonBox } = useStyles();
+  const { container, headingBox, heading, buttonBox, button } = useStyles();
 
   // grab the class id from the params
   const { class_id } = useParams();
@@ -120,11 +124,16 @@ function StudentClassStats() {
           <Button
             variant="contained"
             onClick={() => history.push(`/cards/${class_id}`)}
+            className={button}
           >
-            Review Cards
+            <Typography variant="h6">Review Cards</Typography>
           </Button>
         ) : (
-          <Button variant="contained" onClick={() => history.goBack()}>
+          <Button
+            variant="contained"
+            onClick={() => history.goBack()}
+            className={button}
+          >
             Back
           </Button>
         )}

@@ -48,6 +48,10 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  button: {
+    height: '70px',
+    width: '200px',
+  },
   table: {
     display: 'flex',
     justifyConten: 'center',
@@ -68,7 +72,7 @@ function StudentReviewStats() {
   const { class_id } = useParams();
 
   // get the mui styles
-  const { container, main, buttonBox, table, heading } = useStyles();
+  const { container, main, buttonBox, button, table, heading } = useStyles();
 
   // get the old card numbers from the redux store
   const { cards_learned, cards_reviewed } = useSelector(
@@ -113,8 +117,12 @@ function StudentReviewStats() {
         </TableBody>
       </Table>
       <Box className={buttonBox}>
-        <Button variant="contained" onClick={() => history.push(`/`)}>
-          Continue
+        <Button
+          variant="contained"
+          onClick={() => history.push(`/`)}
+          className={button}
+        >
+          <Typography variant="h6">Continue</Typography>
         </Button>
       </Box>
     </Container>
