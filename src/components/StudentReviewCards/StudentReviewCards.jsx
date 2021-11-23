@@ -9,6 +9,9 @@ import { useParams, useHistory } from 'react-router-dom';
 // confetti for the end effect
 import Confetti from 'react-confetti';
 
+// import custom components
+import CardBox from '../CardBox/CardBox';
+
 // import mui
 import {
   Box,
@@ -460,20 +463,12 @@ function StudentReviewCards() {
       {currentStage !== 'complete' ? (
         <>
           <Box>
-            <Paper>
-              <Box>
-                <Typography>{currentCard.front}</Typography>
-              </Box>
-            </Paper>
+            <CardBox cardText={currentCard.front} isRevealed={true} />
           </Box>
           <Box>
-            <Paper>
-              <Box>
-                {isRevealed && <Typography>{currentCard.back}</Typography>}
-              </Box>
-            </Paper>
+            <CardBox cardText={currentCard.back} isRevealed={isRevealed} />
           </Box>
-          <Box>
+          <Box sx={{ height: '10vh' }}>
             <Typography>
               Total Time Left: {Math.round(totalTime / 10)}
             </Typography>
@@ -500,7 +495,7 @@ function StudentReviewCards() {
           //  Instead, there's a continue button
           currentStage === 'new' ? (
             <Box>
-              <Box>
+              <Box sx={{ height: '5vh' }}>
                 <Typography variant="body1"> </Typography>
               </Box>
               <Button variant="contained" onClick={handleContinue}>
@@ -509,12 +504,10 @@ function StudentReviewCards() {
             </Box>
           ) : (
             <Box>
+              <Box sx={{ height: '5vh' }}>
+                <Typography variant="body1">Did you know this card?</Typography>
+              </Box>
               <Box>
-                <Box>
-                  <Typography variant="body1">
-                    Did you know this card?
-                  </Typography>
-                </Box>
                 <Button variant="contained" onClick={handleNo}>
                   <Typography variant="h6">No</Typography>
                 </Button>
