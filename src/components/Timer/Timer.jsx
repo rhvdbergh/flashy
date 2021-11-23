@@ -1,5 +1,5 @@
 // import mui
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, LinearProgress } from '@mui/material';
 
 function Timer({ totalTime, learnTime, currentStage }) {
   return (
@@ -13,11 +13,19 @@ function Timer({ totalTime, learnTime, currentStage }) {
       <Typography variant="h6">
         Total Time Left: {Math.round(totalTime / 10)}
       </Typography>
+      <Box sx={{ width: '100%', mr: 1 }}>
+        <LinearProgress variant="determinate" value={totalTime / 10} />
+      </Box>
       {/* Only show the Learn Time Left timer in the new stage */}
       {currentStage === 'new' && (
-        <Typography variant="h6">
-          Learn Time Left: {Math.round(learnTime / 10)}
-        </Typography>
+        <>
+          <Typography variant="h6">
+            Learn Time Left: {Math.round(learnTime / 10)}
+          </Typography>
+          <Box sx={{ width: '100%', mr: 1 }}>
+            <LinearProgress variant="determinate" value={learnTime} />
+          </Box>
+        </>
       )}
     </Box>
   );
