@@ -13,9 +13,10 @@ function CSVUploadBox({ setOpenModal, stack_id }) {
 
   // local state to keep the cards
   const [cards, setCards] = useState([]);
+  const [displaySubmit, setDisplaySubmit] = useState(false);
 
   // functions that fire with CSVReader
-  const handleOnDrop = (data) => {
+  const handleFileLoad = (data) => {
     // build a temporary array of cards with the data
     const tempCards = [];
     for (let datum of data) {
@@ -23,6 +24,7 @@ function CSVUploadBox({ setOpenModal, stack_id }) {
     }
     // set the local state
     setCards(tempCards);
+    setDisplaySubmit(true);
   };
 
   const handleOnError = (err, file, inputElem, reason) => {
@@ -30,9 +32,9 @@ function CSVUploadBox({ setOpenModal, stack_id }) {
   };
 
   const handleOnRemoveFile = (data) => {
-    console.log('---------------------------');
-    console.log(data);
-    console.log('---------------------------');
+    // reset the cards to an empty array
+    setCards([]);
+    setDisplaySubmit(false);
   };
 
   // this is cards
@@ -42,7 +44,7 @@ function CSVUploadBox({ setOpenModal, stack_id }) {
     <Paper sx={{ height: '480px', width: '550px', padding: '50px' }}>
       <Box sx={{ height: '300px', width: '450px' }}>
         <CSVReader
-          onDrop={handleOnDrop}
+          onFileLoad={handleFileLoad}
           onError={handleOnError}
           addRemoveButton
           onRemoveFile={handleOnRemoveFile}
@@ -65,18 +67,29 @@ function CSVUploadBox({ setOpenModal, stack_id }) {
               setOpenModal(false);
               // reset the cards state to an empty array
               setCards([]);
+              setDisplaySubmit(false);
             }}
           >
             Cancel
           </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              dispatch({ type: 'CREATE_CARDS', payload: { cards, stack_id } });
-            }}
-          >
-            Submit
-          </Button>
+          {/* Show different buttons depending on whether a file has been uploaded */}
+          {displaySubmit ? (
+            <Button
+              variant="contained"
+              onClick={() => {
+                dispatch({
+                  type: 'CREATE_CARDS',
+                  payload: { cards, stack_id },
+                });
+              }}
+            >
+              Submit
+            </Button>
+          ) : (
+            <Button variant="contained" disabled>
+              Submit
+            </Button>
+          )}
         </Box>
       </Box>
     </Paper>
