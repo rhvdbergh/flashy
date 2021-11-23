@@ -154,7 +154,7 @@ function TeacherEditCards() {
             marginTop: '20vh',
           }}
         >
-          <CSVUploadBox setOpenModal={setOpenModal} />
+          <CSVUploadBox setOpenModal={setOpenModal} stack_id={stack_id} />
         </Box>
       </Modal>
     </Container>

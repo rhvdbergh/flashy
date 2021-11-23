@@ -255,6 +255,36 @@ router.put(
   }
 );
 
+// delete a specific stack for a logged in teacher
+// DELETE /api/stack/card/:card_id
+router.delete(
+  '/card/:card_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the SQL query
+    const query = `
+      DELETE FROM "card" CASCADE
+      WHERE "id" = $1;
+      `;
+
+    // run the SQL query
+    pool
+      .query(query, [req.params.card_id])
+      .then((response) => {
+        res.sendStatus(204); // the delete was successful
+      })
+      .catch((err) => {
+        // error block for second pool query
+        console.log(
+          `There was an error deleting the card from the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
 // creates a new card in a specific stack
 // /api/stack/card/:stack_id
 router.post(
@@ -283,33 +313,18 @@ router.post(
   }
 );
 
-// delete a specific stack for a logged in teacher
-// DELETE /api/stack/card/:card_id
-router.delete(
-  '/card/:card_id',
+// uploads a batch of cards at once
+// POST /api/stack/card/batch_upload/:stack_id
+router.post(
+  '/card/batch_upload/:stack_id',
   rejectUnauthenticated,
   onlyAllowTeacher,
   (req, res) => {
-    // build the SQL query
-    const query = `
-      DELETE FROM "card" CASCADE
-      WHERE "id" = $1;
-      `;
-
-    // run the SQL query
-    pool
-      .query(query, [req.params.card_id])
-      .then((response) => {
-        res.sendStatus(204); // the delete was successful
-      })
-      .catch((err) => {
-        // error block for second pool query
-        console.log(
-          `There was an error deleting the card from the server:`,
-          err
-        );
-        res.sendStatus(500);
-      });
+    console.log(
+      `in POST /api/stack/card/batch_upload/:stack_id, this is req.body `,
+      req.body
+    );
+    res.sendStatus(200);
   }
 );
 
