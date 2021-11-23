@@ -81,6 +81,10 @@ function CSVUploadBox({ setOpenModal, stack_id }) {
                   type: 'CREATE_CARDS',
                   payload: { cards, stack_id },
                 });
+
+                setOpenModal(false);
+                setDisplaySubmit(false);
+                setCards([]);
               }}
             >
               Submit
