@@ -14,28 +14,14 @@ import CardBox from '../CardBox/CardBox';
 import Timer from '../Timer/Timer';
 import Feedback from '../Feedback/Feedback';
 import FeedbackButtons from '../FeedbackButtons/FeedbackButtons';
+import FinishedPage from '../FinishedPage/FinishedPage';
 
 // import mui
-import {
-  Box,
-  Button,
-  Container,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Paper,
-} from '@mui/material';
+import { Box, Container } from '@mui/material';
 
 function StudentReviewCards() {
   // set up the redux dispatch
   const dispatch = useDispatch();
-
-  // set up the useHistory hook to navigate
-  const history = useHistory();
 
   // grab the class id from the params
   const { class_id } = useParams();
@@ -177,7 +163,7 @@ function StudentReviewCards() {
         dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Cards' });
         break;
       case 'complete':
-        dispatch({ type: 'SET_NAV_TITLE', payload: 'Cards' });
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Congratulations!' });
         break;
     }
   }, [currentStage]);
@@ -457,18 +443,7 @@ function StudentReviewCards() {
           </Box>
         </>
       ) : (
-        <Box>
-          <Typography variant="h2">Finished!</Typography>
-          <Typography variant="h5">
-            Congratulations! You've reviewed all your cards for this class.
-          </Typography>
-          <Button
-            variant="contained"
-            onClick={() => history.push(`/reviewstats/${class_id}`)}
-          >
-            <Typography variant="h6">Continue</Typography>
-          </Button>
-        </Box>
+        <FinishedPage />
       )}
       {currentStage === 'complete' && <Confetti />}
     </Container>
