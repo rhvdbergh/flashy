@@ -11,6 +11,9 @@ import Confetti from 'react-confetti';
 
 // import custom components
 import CardBox from '../CardBox/CardBox';
+import Timer from '../Timer/Timer';
+import Feedback from '../Feedback/Feedback';
+import FeedbackButtons from '../FeedbackButtons/FeedbackButtons';
 
 // import mui
 import {
@@ -26,48 +29,6 @@ import {
   Typography,
   Paper,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-
-// set up the mui styles
-const useStyles = makeStyles(() => ({
-  container: {
-    marginTop: '100px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: '78vh',
-  },
-  // container: {
-  //   marginTop: '100px',
-  //   width: '100%',
-  //   display: 'flex',
-  //   flexDirection: 'column',
-  //   justifyContent: 'space-between',
-  //   height: '78vh',
-  // },
-  cardStyle: {
-    marginTop: '30px',
-    width: '100%',
-    maxWidth: '500px',
-    height: '100px',
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: 'text.primary',
-  },
-  revealButton: {
-    width: '100%',
-    height: '70px',
-  },
-  yesNoButtons: {
-    width: '40%',
-    height: '70px',
-  },
-  feedback: {
-    height: '200px',
-    width: '100%',
-  },
-}));
 
 function StudentReviewCards() {
   // set up the redux dispatch
@@ -78,10 +39,6 @@ function StudentReviewCards() {
 
   // grab the class id from the params
   const { class_id } = useParams();
-
-  // get the mui styles
-  const { container, cardStyle, revealButton, yesNoButtons, feedback } =
-    useStyles();
 
   // grab the cards to review from the redux store
   const cards = useSelector((store) => store.stackStore.cardsToReview);
@@ -462,61 +419,42 @@ function StudentReviewCards() {
       {/* else show the congrats button */}
       {currentStage !== 'complete' ? (
         <>
+          {/* In this container, there are five sections:
+          {/* the front of the card, the back of the card, */}
+          {/* the timer, the feedback section, and */}
+          {/* the feedback buttons */}
+          {/* This is the first and second section */}
+          {/* The sx needs to be set in the card, it is 20vh */}
           <Box>
             <CardBox cardText={currentCard.front} isRevealed={true} />
           </Box>
           <Box>
             <CardBox cardText={currentCard.back} isRevealed={isRevealed} />
           </Box>
+          {/* This is the third section */}
           <Box sx={{ height: '10vh' }}>
-            <Typography>
-              Total Time Left: {Math.round(totalTime / 10)}
-            </Typography>
-            {/* Only show the Learn Time Left timer in the new stage */}
-            {currentStage === 'new' && (
-              <Typography>
-                Learn Time Left: {Math.round(learnTime / 10)}
-              </Typography>
-            )}
+            <Timer
+              totalTime={totalTime}
+              learnTime={learnTime}
+              currentStage={currentStage}
+            />
           </Box>
-          {/* Show different buttons and feedback depending on whether the card is revealed */}
-          {!isRevealed ? (
-            <Box
-              item
-              xs={11}
-              sx={{ display: 'flex', justifyContent: 'center' }}
-            >
-              <Button variant="contained" onClick={() => setIsRevealed(true)}>
-                <Typography variant="h6">Reveal Card</Typography>
-              </Button>
-            </Box>
-          ) : // Another conditional render, depending on the stage
-          // In the "new" stage, there are no "yes" or "no" buttons
-          //  Instead, there's a continue button
-          currentStage === 'new' ? (
-            <Box>
-              <Box sx={{ height: '5vh' }}>
-                <Typography variant="body1"> </Typography>
-              </Box>
-              <Button variant="contained" onClick={handleContinue}>
-                <Typography variant="h6">Continue</Typography>
-              </Button>
-            </Box>
-          ) : (
-            <Box>
-              <Box sx={{ height: '5vh' }}>
-                <Typography variant="body1">Did you know this card?</Typography>
-              </Box>
-              <Box>
-                <Button variant="contained" onClick={handleNo}>
-                  <Typography variant="h6">No</Typography>
-                </Button>
-                <Button variant="contained" onClick={handleYes}>
-                  <Typography variant="h6">Yes</Typography>
-                </Button>
-              </Box>
-            </Box>
-          )}
+          {/* This is the fourth section */}
+          <Box sx={{ height: '5vh' }}>
+            <Feedback currentStage={currentStage} isRevealed={isRevealed} />
+          </Box>
+          {/* This is the fifth section */}
+          {/* Show different buttons depending on whether the card is revealed */}
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <FeedbackButtons
+              isRevealed={isRevealed}
+              setIsRevealed={setIsRevealed}
+              currentStage={currentStage}
+              handleNo={handleNo}
+              handleYes={handleYes}
+              handleContinue={handleContinue}
+            />
+          </Box>
         </>
       ) : (
         <Box>
