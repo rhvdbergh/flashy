@@ -116,31 +116,26 @@ router.post('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
 });
 
 // fetches a specific class from the server
-router.get(
-  '/:class_id',
-  rejectUnauthenticated,
-  onlyAllowTeacher,
-  (req, res) => {
-    // build the SQL query
-    const query = `
+router.get('/:class_id', rejectUnauthenticated, (req, res) => {
+  // build the SQL query
+  const query = `
       SELECT * FROM "class"
       WHERE id = $1;
     `;
 
-    pool
-      .query(query, [req.params.class_id])
-      .then((response) => {
-        res.send(response.rows[0]); // send back the class
-      })
-      .catch((err) => {
-        console.log(
-          `There was an error retrieving the stack from the server:`,
-          err
-        );
-        res.sendStatus(500);
-      });
-  }
-);
+  pool
+    .query(query, [req.params.class_id])
+    .then((response) => {
+      res.send(response.rows[0]); // send back the class
+    })
+    .catch((err) => {
+      console.log(
+        `There was an error retrieving the stack from the server:`,
+        err
+      );
+      res.sendStatus(500);
+    });
+});
 
 // updates a specific class
 // /api/class/:class_id

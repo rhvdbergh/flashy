@@ -20,6 +20,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
   Paper,
   Badge,
 } from '@mui/material';
@@ -28,8 +29,29 @@ import { makeStyles } from '@mui/styles';
 // set up the mui styles
 const useStyles = makeStyles(() => ({
   container: {
-    marginTop: '200px',
+    marginTop: '100px',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    height: '78vh',
+  },
+  headingBox: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  heading: {
+    paddingBottom: '30px',
+  },
+  buttonBox: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  button: {
+    height: '70px',
+    width: '200px',
   },
 }));
 
@@ -38,7 +60,7 @@ function StudentClassStats() {
   const dispatch = useDispatch();
 
   // get the mui styles
-  const { container } = useStyles();
+  const { container, headingBox, heading, buttonBox, button } = useStyles();
 
   // grab the class id from the params
   const { class_id } = useParams();
@@ -54,20 +76,31 @@ function StudentClassStats() {
   const totalNumReviewCards = useSelector(
     (store) => store.stackStore.totalNumReviewCards
   );
+  const currentClass = useSelector((store) => store.classStore.editClass);
 
   // on page load, set nav bar title
   useEffect(() => {
-    dispatch({ type: 'SET_NAV_TITLE', payload: 'Stats:' });
+    dispatch({ type: 'SET_NAV_TITLE', payload: 'Stats' });
     // ensure that the back button is displayd on this page
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
     // fetch the cards to review for this student in this class
     dispatch({ type: 'FETCH_CARD_NUMBERS', payload: class_id });
     // fetch the number of all the cards in this class already made available to the student
     dispatch({ type: 'FETCH_TOTAL_NUM_CARDS', payload: class_id });
+    // fetch details about this class (we esp. want the name)
+    dispatch({ type: 'FETCH_CLASS', payload: class_id });
   }, []);
 
+  console.log(`class obj`, currentClass);
+
   return (
-    <Container className={container}>
+    <Container className={container} sx={{ display: 'flex' }}>
+      <Box className={headingBox}>
+        <Typography variant="h2" className={heading}>
+          Class Stats
+        </Typography>
+        <Typography variant="h5">{currentClass.class_name}</Typography>
+      </Box>
       <Table>
         <TableBody>
           <TableRow>
@@ -86,18 +119,25 @@ function StudentClassStats() {
         </TableBody>
       </Table>
       {/* if there are any cards to review show the Review Cards button, else the back */}
-      {totalNumNewCards + totalNumReviewCards > 0 ? (
-        <Button
-          variant="contained"
-          onClick={() => history.push(`/cards/${class_id}`)}
-        >
-          Review Cards
-        </Button>
-      ) : (
-        <Button variant="contained" onClick={() => history.goBack()}>
-          Back
-        </Button>
-      )}
+      <Box className={buttonBox}>
+        {totalNumNewCards + totalNumReviewCards > 0 ? (
+          <Button
+            variant="contained"
+            onClick={() => history.push(`/cards/${class_id}`)}
+            className={button}
+          >
+            <Typography variant="h6">Review Cards</Typography>
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            onClick={() => history.goBack()}
+            className={button}
+          >
+            Back
+          </Button>
+        )}
+      </Box>
     </Container>
   );
 }

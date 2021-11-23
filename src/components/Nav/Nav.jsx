@@ -3,6 +3,16 @@ import { Link, useHistory } from 'react-router-dom';
 import './Nav.css';
 import { useDispatch, useSelector } from 'react-redux';
 
+//import icons from mui
+import LogoutIcon from '@mui/icons-material/Logout';
+import HomeIcon from '@mui/icons-material/Home';
+import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
+
+// import responsive hook from mui
+import useMediaQuery from '@mui/material/useMediaQuery';
+import json2mq from 'json2mq';
+
+// import mui styling
 import {
   Box,
   Typography,
@@ -18,6 +28,9 @@ const useStyles = makeStyles(() => ({
   toolbar: {
     display: 'flex',
     justifyContent: 'space-between',
+  },
+  icon: {
+    marginRight: '25px',
   },
 }));
 
@@ -35,7 +48,14 @@ function Nav() {
   const history = useHistory();
 
   // set up the styling for mui
-  const { toolbar } = useStyles();
+  const { toolbar, icon } = useStyles();
+
+  // set up responsive breakpoints for icons
+  const matches = useMediaQuery(
+    json2mq({
+      minWidth: 600,
+    })
+  );
 
   return (
     <header className="nav">
@@ -43,9 +63,13 @@ function Nav() {
         <Toolbar className={toolbar}>
           <Link to="/home">
             {/* Adding component="h1" here so screen readers pick up on it, it's the main heading */}
-            <Typography variant="h4" component="h1" className="nav-title">
-              Flashy
-            </Typography>
+            {matches ? (
+              <Typography variant="h4" component="h1" className="nav-title">
+                Flashy
+              </Typography>
+            ) : (
+              <HomeIcon className={icon} />
+            )}
           </Link>
           <Box>
             <Typography variant="h5" className="nav-title">
@@ -67,7 +91,7 @@ function Nav() {
             )}
 
             {/* If a user is logged in, show these links */}
-            {user.id && (
+            {user.id && matches && (
               <Button
                 key="Home"
                 color="inherit"
@@ -79,7 +103,7 @@ function Nav() {
             )}
             {/* Show the back button if utils.displayBackButton is true */}
 
-            {displayBackButton && (
+            {displayBackButton && matches ? (
               <Button
                 className="navLink"
                 key="Back"
@@ -88,6 +112,13 @@ function Nav() {
               >
                 Back
               </Button>
+            ) : (
+              displayBackButton && (
+                <SettingsBackupRestoreIcon
+                  onClick={() => history.goBack()}
+                  className={icon}
+                />
+              )
             )}
 
             {/* For the moment, there is no about page  */}
@@ -101,7 +132,7 @@ function Nav() {
             </Button> */}
 
             {/* If a user is logged in, show these links */}
-            {user.id && (
+            {user.id && matches ? (
               <Button
                 className="navLink"
                 key="Log Out"
@@ -110,6 +141,10 @@ function Nav() {
               >
                 Log Out
               </Button>
+            ) : (
+              user.id && (
+                <LogoutIcon onClick={() => dispatch({ type: 'LOGOUT' })} />
+              )
             )}
           </Box>
         </Toolbar>

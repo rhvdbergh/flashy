@@ -9,64 +9,22 @@ import { useParams, useHistory } from 'react-router-dom';
 // confetti for the end effect
 import Confetti from 'react-confetti';
 
-// import mui
-import {
-  Box,
-  Button,
-  Container,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Paper,
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
+// import custom components
+import CardBox from '../CardBox/CardBox';
+import Timer from '../Timer/Timer';
+import Feedback from '../Feedback/Feedback';
+import FeedbackButtons from '../FeedbackButtons/FeedbackButtons';
+import FinishedPage from '../FinishedPage/FinishedPage';
 
-// set up the mui styles
-const useStyles = makeStyles(() => ({
-  container: {
-    marginTop: '130px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cardStyle: {
-    marginTop: '30px',
-    width: '100%',
-    maxWidth: '500px',
-    height: '100px',
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: 'text.primary',
-  },
-  revealButton: {
-    width: '100%',
-  },
-  yesNoButtons: {
-    width: '40%',
-  },
-  feedback: {
-    height: '200px',
-    width: '100%',
-  },
-}));
+// import mui
+import { Box, Container } from '@mui/material';
 
 function StudentReviewCards() {
   // set up the redux dispatch
   const dispatch = useDispatch();
 
-  // set up the useHistory hook to navigate
-  const history = useHistory();
-
   // grab the class id from the params
   const { class_id } = useParams();
-
-  // get the mui styles
-  const { container, cardStyle, revealButton, yesNoButtons, feedback } =
-    useStyles();
 
   // grab the cards to review from the redux store
   const cards = useSelector((store) => store.stackStore.cardsToReview);
@@ -188,6 +146,25 @@ function StudentReviewCards() {
           student_class_id: cards[0].student_class_id,
         },
       });
+    }
+
+    // change the nav bar heading
+    switch (currentStage) {
+      case 'new':
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Learn Cards' });
+        break;
+      case 'seen':
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Cards' });
+        break;
+      case 'shortTerm':
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Cards' });
+        break;
+      case 'review':
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Cards' });
+        break;
+      case 'complete':
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Congratulations!' });
+        break;
     }
   }, [currentStage]);
 
@@ -412,98 +389,61 @@ function StudentReviewCards() {
   // console.log(`time`, totalTime);
 
   return (
-    <Container className={container}>
+    <Container
+      container
+      sx={{
+        height: '90vh',
+        paddingTop: '50px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'space-between',
+      }}
+    >
       {/* Conditional rendering of components based on whether  */}
       {/* we are complete or not */}
       {/* else show the congrats button */}
       {currentStage !== 'complete' ? (
         <>
-          <Paper className={cardStyle}>
-            <Box>
-              <Typography>{currentCard.front}</Typography>
-            </Box>
-          </Paper>
-
-          <Paper>
-            <Box className={cardStyle}>
-              {isRevealed && <Typography>{currentCard.back}</Typography>}
-            </Box>
-          </Paper>
+          {/* In this container, there are five sections:
+          {/* the front of the card, the back of the card, */}
+          {/* the timer, the feedback section, and */}
+          {/* the feedback buttons */}
+          {/* This is the first and second section */}
+          {/* The sx needs to be set in the card, it is 20vh */}
           <Box>
-            <Typography>
-              Total Time Left: {Math.round(totalTime / 10)}
-            </Typography>
-            {/* Only show the Learn Time Left timer in the new stage */}
-            {currentStage === 'new' && (
-              <Typography>
-                Learn Time Left: {Math.round(learnTime / 10)}
-              </Typography>
-            )}
+            <CardBox cardText={currentCard.front} isRevealed={true} />
           </Box>
-          {/* Show different buttons and feedback depending on whether the card is revealed */}
-          {!isRevealed ? (
-            <Box className={feedback}>
-              <Button
-                variant="contained"
-                className={revealButton}
-                onClick={() => setIsRevealed(true)}
-              >
-                Reveal Card
-              </Button>
-            </Box>
-          ) : // Another conditional render, depending on the stage
-          // In the "new" stage, there are no "yes" or "no" buttons
-          //  Instead, there's a continue button
-          currentStage === 'new' ? (
-            <Box className={feedback}>
-              <Button
-                variant="contained"
-                className={revealButton}
-                onClick={handleContinue}
-              >
-                Continue
-              </Button>
-            </Box>
-          ) : (
-            <Box className={feedback}>
-              <Box>
-                <Box>
-                  <Typography variant="body1">
-                    Did you know this card?
-                  </Typography>
-                </Box>
-                <Button
-                  variant="contained"
-                  className={yesNoButtons}
-                  onClick={handleNo}
-                >
-                  No
-                </Button>
-                <Button
-                  variant="contained"
-                  className={yesNoButtons}
-                  onClick={handleYes}
-                >
-                  Yes
-                </Button>
-              </Box>
-            </Box>
-          )}
+          <Box>
+            <CardBox cardText={currentCard.back} isRevealed={isRevealed} />
+          </Box>
+          {/* This is the third section */}
+          <Box sx={{ height: '10vh' }}>
+            <Timer
+              totalTime={totalTime}
+              learnTime={learnTime}
+              currentStage={currentStage}
+            />
+          </Box>
+          {/* This is the fourth section */}
+          <Box sx={{ height: '5vh' }}>
+            <Feedback currentStage={currentStage} isRevealed={isRevealed} />
+          </Box>
+          {/* This is the fifth section */}
+          {/* Show different buttons depending on whether the card is revealed */}
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <FeedbackButtons
+              isRevealed={isRevealed}
+              setIsRevealed={setIsRevealed}
+              currentStage={currentStage}
+              handleNo={handleNo}
+              handleYes={handleYes}
+              handleContinue={handleContinue}
+            />
+          </Box>
         </>
       ) : (
-        <Box className={feedback}>
-          <Typography variant="h2">Finished!</Typography>
-          <Typography variant="h5">
-            Congratulations! You've reviewed all your cards for this class.
-          </Typography>
-          <Button
-            variant="contained"
-            className="revealbutton"
-            onClick={() => history.push(`/reviewstats/${class_id}`)}
-          >
-            Continue
-          </Button>
-        </Box>
+        <FinishedPage />
       )}
       {currentStage === 'complete' && <Confetti />}
     </Container>
