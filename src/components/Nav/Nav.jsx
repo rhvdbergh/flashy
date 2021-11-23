@@ -77,19 +77,6 @@ function Nav() {
             </Typography>
           </Box>
           <Box>
-            {/* If no user is logged in, show these links */}
-            {user.id === undefined && (
-              // If there's no user, show login/registration links
-              <Button
-                key="login"
-                color="inherit"
-                className="navLink"
-                onClick={() => history.push('/login')}
-              >
-                Login / Register
-              </Button>
-            )}
-
             {/* If a user is logged in, show these links */}
             {user.id && matches && (
               <Button
