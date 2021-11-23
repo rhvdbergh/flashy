@@ -422,6 +422,8 @@ function StudentReviewCards() {
             <Timer
               totalTime={totalTime}
               learnTime={learnTime}
+              initialTotalTime={initialTotalTime}
+              initialLearnTime={initialLearnTime}
               currentStage={currentStage}
             />
           </Box>
