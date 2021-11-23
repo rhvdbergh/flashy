@@ -99,21 +99,33 @@ function StudentReviewStats() {
         <Typography variant="h2" className={heading}>
           Good job!
         </Typography>
-        <Typography variant="h5">Today's Stats</Typography>
+        <Typography variant="h4">Today's Stats</Typography>
       </Box>
       <Table className={table}>
         <TableBody>
           <TableRow>
-            <TableCell>New cards learned:</TableCell>
-            <TableCell>{cards_learned}</TableCell>
+            <TableCell>
+              <Typography variant="h5">New cards learned:</Typography>
+            </TableCell>
+            <TableCell>
+              <Typography variant="h5">{cards_learned}</Typography>
+            </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Cards reviewed: </TableCell>
-            <TableCell>{cards_reviewed}</TableCell>
+            <TableCell>
+              <Typography variant="h5">Cards reviewed:</Typography>
+            </TableCell>
+            <TableCell>
+              <Typography variant="h5">{cards_reviewed}</Typography>
+            </TableCell>
           </TableRow>
           <TableRow></TableRow>
-          <TableCell>Total cards learned: </TableCell>
-          <TableCell>{totalNumCards}</TableCell>
+          <TableCell>
+            <Typography variant="h5">Total cards learned:</Typography>
+          </TableCell>
+          <TableCell>
+            <Typography variant="h5">{totalNumCards}</Typography>
+          </TableCell>
         </TableBody>
       </Table>
       <Box className={buttonBox}>
