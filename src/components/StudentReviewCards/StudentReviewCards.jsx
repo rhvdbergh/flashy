@@ -154,11 +154,7 @@ function StudentReviewCards() {
         dispatch({ type: 'SET_NAV_TITLE', payload: 'Learn Cards' });
         break;
       case 'seen':
-        dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Cards' });
-        break;
       case 'shortTerm':
-        dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Cards' });
-        break;
       case 'review':
         dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Cards' });
         break;
@@ -393,11 +389,12 @@ function StudentReviewCards() {
       container
       sx={{
         height: '90vh',
-        paddingTop: '50px',
+        paddingTop: '30px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'space-between',
+        overflow: 'hidden',
       }}
     >
       {/* Conditional rendering of components based on whether  */}
@@ -422,11 +419,13 @@ function StudentReviewCards() {
             <Timer
               totalTime={totalTime}
               learnTime={learnTime}
+              initialTotalTime={initialTotalTime}
+              initialLearnTime={initialLearnTime}
               currentStage={currentStage}
             />
           </Box>
           {/* This is the fourth section */}
-          <Box sx={{ height: '5vh' }}>
+          <Box sx={{ height: '3vh' }}>
             <Feedback currentStage={currentStage} isRevealed={isRevealed} />
           </Box>
           {/* This is the fifth section */}
