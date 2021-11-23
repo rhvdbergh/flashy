@@ -324,7 +324,43 @@ router.post(
       `in POST /api/stack/card/batch_upload/:stack_id, this is req.body `,
       req.body
     );
-    res.sendStatus(200);
+
+    const cards = req.body.cards;
+
+    // build the sql query
+    let query = `
+      INSERT INTO "card" ("front", "back", "stack_id")
+      VALUES
+    `;
+
+    // an array to push all the values into
+    // the first value will be stack_id
+    const values = [req.params.stack_id];
+    let counter = 1;
+
+    // build everything but the last with commas
+    for (let i = 0; i < cards.length - 1; i++) {
+      query += `($${counter + 1}, $${counter + 2}, $${1}),`;
+      values.push(cards[i].front);
+      values.push(cards[i].back);
+      counter += 2;
+    }
+
+    // now add the last line with a semicolon
+    query += `($${counter + 1}, $${counter + 2}, $${1});`;
+    values.push(cards[cards.length - 1].front);
+    values.push(cards[cards.length - 1].back);
+
+    // now run the query
+    pool
+      .query(query, [...values])
+      .then((response) => {
+        res.sendStatus(201); // the card was created
+      })
+      .catch((err) => {
+        console.log(`There was an error updating the card on the server:`, err);
+        res.sendStatus(500);
+      });
   }
 );
 
