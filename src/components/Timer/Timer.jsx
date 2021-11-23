@@ -8,8 +8,6 @@ function Timer({
   initialLearnTime,
   currentStage,
 }) {
-  console.log(`totalTime %:`, (totalTime / initialTotalTime) * 100);
-
   return (
     <Box
       sx={{
@@ -18,27 +16,27 @@ function Timer({
         alignItems: 'center',
       }}
     >
-      <Typography variant="h6">
+      <Typography variant="body2">
         Total Time Left: {Math.round(totalTime / 10)}
       </Typography>
       <Box sx={{ width: '100%', mr: 1 }}>
         <LinearProgress
           variant="determinate"
           value={100 - (totalTime / initialTotalTime) * 100}
-          sx={{ height: '3vh' }}
+          sx={{ height: '4vh', borderRadius: '10px' }}
         />
       </Box>
       {/* Only show the Learn Time Left timer in the new stage */}
       {currentStage === 'new' && (
         <>
-          <Typography variant="h6">
-            Learn Time Left: {Math.round(learnTime / 10)}
+          <Typography variant="body2">
+            Time to Learn New Cards: {Math.round(learnTime / 10)}
           </Typography>
           <Box sx={{ width: '100%', mr: 1 }}>
             <LinearProgress
               variant="determinate"
               value={100 - (learnTime / initialLearnTime) * 100}
-              sx={{ height: '3vh' }}
+              sx={{ height: '4vh', borderRadius: '10px' }}
             />
           </Box>
         </>
