@@ -20,11 +20,15 @@ function TeacherStackTableRow({ stack }) {
       <TableCell>{stack.stack_name}</TableCell>
       <TableCell align="center">
         <DeleteIcon
+          color="error"
           onClick={() => dispatch({ type: 'DELETE_STACK', payload: stack.id })}
         />
       </TableCell>
       <TableCell align="center">
-        <CreateIcon onClick={() => history.push(`/editstack/${stack.id}`)} />
+        <CreateIcon
+          color="primary"
+          onClick={() => history.push(`/editstack/${stack.id}`)}
+        />
       </TableCell>
     </TableRow>
   );

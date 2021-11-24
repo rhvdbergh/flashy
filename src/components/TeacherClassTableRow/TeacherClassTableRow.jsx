@@ -38,12 +38,13 @@ function TeacherClassTableRow({ cl }) {
       </TableCell>
       <TableCell align="center">
         <DonutLargeIcon
-          color="secondary"
+          color="success"
           onClick={() => history.push(`/class/progress/${cl.id}`)}
         />
       </TableCell>
       <TableCell align="center">
         <FormatListBulletedIcon
+          color="primary"
           onClick={() => history.push(`/editclass/${cl.id}`)}
         />
       </TableCell>
