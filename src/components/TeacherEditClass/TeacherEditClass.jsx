@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 //import mui
 import {
   Box,
+  Button,
   Container,
   Checkbox,
   TextField,
@@ -158,6 +159,7 @@ function TeacherEditClass() {
               <TextField
                 type="text"
                 label="Total Time in Session (seconds)"
+                size="small"
                 value={totalTime}
                 onChange={(event) => {
                   setTotalTime(event.target.value);
@@ -183,6 +185,7 @@ function TeacherEditClass() {
               <TextField
                 type="text"
                 label="Time to Learn Cards (seconds)"
+                size="small"
                 value={learnTime}
                 onChange={(event) => {
                   setLearnTime(event.target.value);
@@ -206,8 +209,27 @@ function TeacherEditClass() {
               />
             </FormControl>
           </Box>
+          <Box className={spacing}>
+            <Button
+              sx={{ height: '40px' }}
+              variant="contained"
+              onClick={() => {
+                dispatch({
+                  type: 'UPDATE_CLASS',
+                  payload: {
+                    ...editClass,
+                    total_time: 360,
+                    initial_time: 30,
+                  },
+                });
+              }}
+            >
+              Reset to Default
+            </Button>
+          </Box>
         </Box>
       </Paper>
+      {/* Section for making class available to students */}
       <Paper elevation={4}>
         <Box className={spacing}>
           <FormGroup className={checkbox}>
