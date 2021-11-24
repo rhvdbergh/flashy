@@ -10,8 +10,6 @@ import TeacherClassProgressRow from '../TeacherClassProgressRow/TeacherClassProg
 
 //import mui
 import {
-  Box,
-  Button,
   Container,
   Table,
   TableBody,
@@ -20,7 +18,8 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TextField,
+  Box,
+  Typography,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
@@ -58,29 +57,38 @@ function TeacherClassProgress() {
 
   return (
     <Container className={container}>
-      <TableContainer component={Paper} className={table}>
-        <Table aria-label="Classes">
-          <TableHead>
-            <TableRow>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
-              <TableCell align="center">Cards Learned</TableCell>
-              <TableCell align="center">Cards Not Learned</TableCell>
-              <TableCell align="center">Completed Attempts</TableCell>
-              <TableCell align="center">Details</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {classProgress &&
-              classProgress.map((student) => (
-                <TeacherClassProgressRow
-                  key={student.student_id}
-                  student={student}
-                />
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {/* If the class is empty, display a message instead of the table */}
+      {classProgress.length === 0 || classProgress === undefined ? (
+        <Box>
+          <Typography variant="h2">
+            There are currently no students in this class.
+          </Typography>
+        </Box>
+      ) : (
+        <TableContainer component={Paper} className={table}>
+          <Table aria-label="Classes">
+            <TableHead>
+              <TableRow>
+                <TableCell>First Name</TableCell>
+                <TableCell>Last Name</TableCell>
+                <TableCell align="center">Cards Learned</TableCell>
+                <TableCell align="center">Cards Not Learned</TableCell>
+                <TableCell align="center">Completed Attempts</TableCell>
+                <TableCell align="center">Details</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {classProgress &&
+                classProgress.map((student) => (
+                  <TeacherClassProgressRow
+                    key={student.student_id}
+                    student={student}
+                  />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Container>
   );
 }
