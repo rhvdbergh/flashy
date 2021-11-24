@@ -8,16 +8,8 @@ import { useParams } from 'react-router-dom';
 //import mui
 import {
   Box,
-  Button,
   Container,
   Checkbox,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   TextField,
   FormControl,
   FormControlLabel,
@@ -54,6 +46,8 @@ function TeacherEditClass() {
   // set up local state to track inputs
   const [clName, setClName] = useState('');
   const [assignedStack, setAssignedStack] = useState('');
+  const [learnTime, setLearnTime] = useState(30);
+  const [totalTime, setTotalTime] = useState(360);
 
   // draw in the mui styles
   const { container, textfield, select, checkbox, spacing } = useStyles();
@@ -90,6 +84,8 @@ function TeacherEditClass() {
     // set the class name to the name of the class in the redux store
     setClName(editClass.class_name);
     setAssignedStack(editClass.stack_id);
+    setTotalTime(editClass.total_time);
+    setLearnTime(editClass.intial_time);
   }, [editClass]);
 
   console.log(`this is stacks`, stacks);
@@ -165,6 +161,52 @@ function TeacherEditClass() {
               />
             }
             label="Make class available to students."
+          />
+        </FormGroup>
+      </Box>
+      <Box className={spacing}>
+        <FormGroup className={textfield}>
+          <TextField
+            type="text"
+            label="Total Time in Session"
+            value={totalTime}
+            onChange={(event) => {
+              setTotalTime(event.target.value);
+            }}
+            // this will select the text in the name box when selected
+            onFocus={(event) => {
+              event.currentTarget.select();
+            }}
+            // this will send a dispatch whenever the TextField loses focus
+            onBlur={() => {
+              // if the clName is empty, we do not want to update the name
+              totalTime !== '' &&
+                dispatch({
+                  type: 'UPDATE_CLASS',
+                  payload: { ...editClass, total_time: totalTime },
+                });
+            }}
+          />
+          <TextField
+            type="text"
+            label="Time to Learn Cards"
+            value={learnTime}
+            onChange={(event) => {
+              setLearnTime(event.target.value);
+            }}
+            // this will select the text in the name box when selected
+            onFocus={(event) => {
+              event.currentTarget.select();
+            }}
+            // this will send a dispatch whenever the TextField loses focus
+            onBlur={() => {
+              // if the clName is empty, we do not want to update the name
+              learnTime !== '' &&
+                dispatch({
+                  type: 'UPDATE_CLASS',
+                  payload: { ...editClass, initial_time: learnTime },
+                });
+            }}
           />
         </FormGroup>
       </Box>
