@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Nav from '../Nav/Nav';
 
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import ProtectedStudentRoute from '../ProtectedStudentRoute/ProtectedStudentRoute';
+import ProtectedTeacherRoute from '../ProtectedTeacherRoute/ProtectedTeacherRoute';
 
 import AboutPage from '../AboutPage/AboutPage';
 import InfoPage from '../InfoPage/InfoPage';
@@ -115,47 +117,47 @@ function App() {
             )}
           </Route>
 
-          <ProtectedRoute
+          <ProtectedTeacherRoute
             // logged in edit class page else shows login
             exact
             path="/editclass/:class_id"
           >
             <TeacherEditClass />
-          </ProtectedRoute>
+          </ProtectedTeacherRoute>
 
-          <ProtectedRoute exact path="/class/progress/:class_id">
+          <ProtectedTeacherRoute exact path="/class/progress/:class_id">
             <TeacherClassProgress />
-          </ProtectedRoute>
+          </ProtectedTeacherRoute>
 
-          <ProtectedRoute
+          <ProtectedTeacherRoute
             exact
             path="/class/progress/details/:student_class_id"
           >
             <TeacherProgressDetails />
-          </ProtectedRoute>
+          </ProtectedTeacherRoute>
 
-          <ProtectedRoute
+          <ProtectedTeacherRoute
             // logged in edit stack page else shows login
             path="/editstack/:stack_id"
           >
             <TeacherEditCards />
-          </ProtectedRoute>
+          </ProtectedTeacherRoute>
 
-          <ProtectedRoute
+          <ProtectedStudentRoute
             // logged in learn cards screen
             exact
             path="/cards/:class_id"
           >
             <StudentReviewCards />
-          </ProtectedRoute>
+          </ProtectedStudentRoute>
 
-          <ProtectedRoute exact path="/reviewstats/:class_id">
+          <ProtectedStudentRoute exact path="/reviewstats/:class_id">
             <StudentReviewStats />
-          </ProtectedRoute>
+          </ProtectedStudentRoute>
 
-          <ProtectedRoute exact path="/class/stats/:class_id">
+          <ProtectedStudentRoute exact path="/class/stats/:class_id">
             <StudentClassStats />
-          </ProtectedRoute>
+          </ProtectedStudentRoute>
 
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>
