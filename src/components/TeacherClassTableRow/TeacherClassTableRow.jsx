@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 
 // import mui
-import { TableCell, TableRow } from '@mui/material';
+import { TableCell, TableRow, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DonutLargeIcon from '@mui/icons-material/DonutLarge';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
@@ -37,10 +37,16 @@ function TeacherClassTableRow({ cl }) {
         )}
       </TableCell>
       <TableCell align="center">
-        <DonutLargeIcon
-          color="secondary"
-          onClick={() => history.push(`/class/progress/${cl.id}`)}
-        />
+        <Typography variant="body1">{cl.num_students}</Typography>
+      </TableCell>
+      <TableCell align="center">
+        {/* Only show icon if there is at least one student enrolled in the class */}
+        {cl.num_students > 0 && (
+          <DonutLargeIcon
+            color="secondary"
+            onClick={() => history.push(`/class/progress/${cl.id}`)}
+          />
+        )}
       </TableCell>
       <TableCell align="center">
         <FormatListBulletedIcon
