@@ -68,7 +68,7 @@ function Nav() {
                 Flashy
               </Typography>
             ) : (
-              <HomeIcon className={icon} />
+              <HomeIcon className={icon} color="white" />
             )}
           </Link>
           <Box>
@@ -81,7 +81,7 @@ function Nav() {
             {user.id && matches && (
               <Button
                 key="Home"
-                color="inherit"
+                color="white"
                 className="navLink"
                 onClick={() => history.push('/home')}
               >
@@ -94,7 +94,7 @@ function Nav() {
               <Button
                 className="navLink"
                 key="Back"
-                color="inherit"
+                color="white"
                 onClick={() => history.goBack()}
               >
                 Back
@@ -104,6 +104,7 @@ function Nav() {
                 <SettingsBackupRestoreIcon
                   onClick={() => history.goBack()}
                   className={icon}
+                  color="white"
                 />
               )
             )}
