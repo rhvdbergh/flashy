@@ -24,6 +24,7 @@ function TeacherClassProgressRow({ student }) {
       <TableCell align="center">{student.completed_sessions}</TableCell>
       <TableCell align="center">
         <DonutLargeIcon
+          color="secondary"
           onClick={() =>
             history.push(`/class/progress/details/${student.student_class_id}`)
           }

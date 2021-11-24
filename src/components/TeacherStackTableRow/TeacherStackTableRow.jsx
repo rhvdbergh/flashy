@@ -26,7 +26,7 @@ function TeacherStackTableRow({ stack }) {
       </TableCell>
       <TableCell align="center">
         <CreateIcon
-          color="primary"
+          color="success"
           onClick={() => history.push(`/editstack/${stack.id}`)}
         />
       </TableCell>

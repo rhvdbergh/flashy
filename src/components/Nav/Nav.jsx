@@ -13,14 +13,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import json2mq from 'json2mq';
 
 // import mui styling
-import {
-  Box,
-  Typography,
-  ButtonGroup,
-  Button,
-  AppBar,
-  Toolbar,
-} from '@mui/material';
+import { Box, Typography, Button, AppBar, Toolbar } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 // styling for mui
@@ -30,7 +23,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-between',
   },
   icon: {
-    marginRight: '25px',
+    marginRight: '20px',
   },
 }));
 
