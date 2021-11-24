@@ -402,7 +402,7 @@ function StudentReviewCards() {
       container
       sx={{
         height: '90vh',
-        paddingTop: '30px',
+        paddingTop: '45px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -422,10 +422,12 @@ function StudentReviewCards() {
           {/* This is the first and second section */}
           {/* The sx needs to be set in the card, it is 20vh */}
           <Box>
-            <CardBox cardText={currentCard.front} isRevealed={true} />
-          </Box>
-          <Box>
-            <CardBox cardText={currentCard.back} isRevealed={isRevealed} />
+            <Box sx={{ pb: '15px' }}>
+              <CardBox cardText={currentCard.front} isRevealed={true} />
+            </Box>
+            <Box>
+              <CardBox cardText={currentCard.back} isRevealed={isRevealed} />
+            </Box>
           </Box>
           {/* This is the third section */}
           <Box sx={{ height: '10vh' }}>

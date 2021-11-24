@@ -102,6 +102,7 @@ function TeacherEditCardsTableRow({ card, stack_id }) {
         {/* only display the delete icon if this is an actual card */}
         {card.id !== -1 && (
           <DeleteIcon
+            color="error"
             onClick={() => dispatch({ type: 'DELETE_CARD', payload: card })}
           />
         )}

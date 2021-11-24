@@ -9,6 +9,7 @@ function CardBox({ cardText, isRevealed }) {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        bgcolor: '#ffecb3',
       }}
     >
       <Box>

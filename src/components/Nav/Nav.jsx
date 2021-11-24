@@ -13,14 +13,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import json2mq from 'json2mq';
 
 // import mui styling
-import {
-  Box,
-  Typography,
-  ButtonGroup,
-  Button,
-  AppBar,
-  Toolbar,
-} from '@mui/material';
+import { Box, Typography, Button, AppBar, Toolbar } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 // styling for mui
@@ -30,7 +23,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-between',
   },
   icon: {
-    marginRight: '25px',
+    marginRight: '20px',
   },
 }));
 
@@ -68,7 +61,7 @@ function Nav() {
                 Flashy
               </Typography>
             ) : (
-              <HomeIcon className={icon} />
+              <HomeIcon className={icon} color="white" />
             )}
           </Link>
           <Box>
@@ -81,7 +74,7 @@ function Nav() {
             {user.id && matches && (
               <Button
                 key="Home"
-                color="inherit"
+                color="white"
                 className="navLink"
                 onClick={() => history.push('/home')}
               >
@@ -94,7 +87,7 @@ function Nav() {
               <Button
                 className="navLink"
                 key="Back"
-                color="inherit"
+                color="white"
                 onClick={() => history.goBack()}
               >
                 Back
@@ -104,6 +97,7 @@ function Nav() {
                 <SettingsBackupRestoreIcon
                   onClick={() => history.goBack()}
                   className={icon}
+                  color="white"
                 />
               )
             )}

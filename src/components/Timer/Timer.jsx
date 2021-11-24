@@ -19,7 +19,7 @@ function Timer({
       <Typography variant="body2">
         Total Time Left: {Math.round(totalTime / 10)}
       </Typography>
-      <Box sx={{ width: '100%', mr: 1 }}>
+      <Box sx={{ width: '100%', mb: '10px' }}>
         <LinearProgress
           variant="determinate"
           value={100 - (totalTime / initialTotalTime) * 100}
@@ -32,7 +32,7 @@ function Timer({
           <Typography variant="body2">
             Time to Learn New Cards: {Math.round(learnTime / 10)}
           </Typography>
-          <Box sx={{ width: '100%', mr: 1 }}>
+          <Box sx={{ width: '100%' }}>
             <LinearProgress
               variant="determinate"
               value={100 - (learnTime / initialLearnTime) * 100}

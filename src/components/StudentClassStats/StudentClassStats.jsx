@@ -23,12 +23,12 @@ import { makeStyles } from '@mui/styles';
 // set up the mui styles
 const useStyles = makeStyles(() => ({
   container: {
-    marginTop: '100px',
+    marginTop: '90px',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    height: '78vh',
+    height: '82vh',
   },
   headingBox: {
     display: 'flex',
