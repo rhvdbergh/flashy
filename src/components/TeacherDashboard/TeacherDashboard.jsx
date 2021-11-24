@@ -83,9 +83,9 @@ function TeacherDashboard() {
               <TableRow>
                 <TableCell>Class Name</TableCell>
                 <TableCell align="center">Delete</TableCell>
+                <TableCell align="center">Card Assigned</TableCell>
                 <TableCell align="center">View Progress</TableCell>
                 <TableCell align="center">Settings</TableCell>
-                <TableCell align="center">Card Assigned</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

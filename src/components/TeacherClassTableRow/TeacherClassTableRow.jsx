@@ -24,22 +24,29 @@ function TeacherClassTableRow({ cl }) {
       <TableCell>{cl.class_name}</TableCell>
       <TableCell align="center">
         <DeleteIcon
+          color="error"
           onClick={() => dispatch({ type: 'DELETE_CLASS', payload: cl.id })}
         />
       </TableCell>
+      {/* Conditional render based on whether a stack is assigned or not */}
+      <TableCell align="center">
+        {cl.stack_id ? (
+          <CheckCircleIcon color="primary" />
+        ) : (
+          <CancelIcon color="warning" />
+        )}
+      </TableCell>
       <TableCell align="center">
         <DonutLargeIcon
+          color="success"
           onClick={() => history.push(`/class/progress/${cl.id}`)}
         />
       </TableCell>
       <TableCell align="center">
         <FormatListBulletedIcon
+          color="primary"
           onClick={() => history.push(`/editclass/${cl.id}`)}
         />
-      </TableCell>
-      {/* Conditional render based on whether a stack is assigned or not */}
-      <TableCell align="center">
-        {cl.stack_id ? <CheckCircleIcon /> : <CancelIcon />}
       </TableCell>
     </TableRow>
   );
