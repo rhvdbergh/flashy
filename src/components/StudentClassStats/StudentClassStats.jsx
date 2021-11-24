@@ -8,28 +8,16 @@ import { useParams, useHistory } from 'react-router-dom';
 // import charts
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+
 // set up chartjs
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+// import responsive hook from mui
+import useMediaQuery from '@mui/material/useMediaQuery';
+import json2mq from 'json2mq';
+
 // import mui
-import {
-  Box,
-  Button,
-  Container,
-  FormControl,
-  Select,
-  InputLabel,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Paper,
-  Badge,
-} from '@mui/material';
+import { Box, Button, Container, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 // set up the mui styles
@@ -71,6 +59,19 @@ function StudentClassStats() {
   // grab the class id from the params
   const { class_id } = useParams();
 
+  // set up responsive breakpoints for font sizes
+  const matchesMediumAndUp = useMediaQuery(
+    json2mq({
+      minHeight: 800,
+    })
+  );
+
+  const matchesSmallAndUp = useMediaQuery(
+    json2mq({
+      minHeight: 600,
+    })
+  );
+
   // set up the useHistory hook to navigate
   const history = useHistory();
 
@@ -86,7 +87,7 @@ function StudentClassStats() {
 
   // on page load, set nav bar title
   useEffect(() => {
-    dispatch({ type: 'SET_NAV_TITLE', payload: 'Stats' });
+    dispatch({ type: 'SET_NAV_TITLE', payload: 'Class Stats' });
     // ensure that the back button is displayd on this page
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
     // fetch the cards to review for this student in this class
@@ -102,10 +103,14 @@ function StudentClassStats() {
   return (
     <Container className={container} sx={{ display: 'flex' }}>
       <Box className={headingBox}>
-        <Typography variant="h2" className={heading}>
-          Class Stats
-        </Typography>
-        <Typography variant="h5">{currentClass.class_name}</Typography>
+        {/* If the screen is not big enough, display smaller text here */}
+        {matchesMediumAndUp ? (
+          <Typography variant="h3">{currentClass.class_name}</Typography>
+        ) : matchesSmallAndUp ? (
+          <Typography variant="h5">{currentClass.class_name}</Typography>
+        ) : (
+          <Typography variant="body1">{currentClass.class_name}</Typography>
+        )}
       </Box>
       <Box sx={{ height: '-180px' }}>
         <Pie
