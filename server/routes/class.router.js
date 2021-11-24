@@ -11,6 +11,8 @@ const { onlyAllowTeacher } = require('../modules/authorization-middleware');
 router.get('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
   // build the sql query
   // this query also returns the number of students in each class
+  // we'er doing a left join because regardless of whether there are students we want
+  // all the classes
   const query = `
     SELECT "class".class_name, "class".id, "class".user_id, "class".available_to_students, "class".initial_time, "class".release_at_once, "class".release_from, "class".release_order, "class".release_to, "class".total_time, "class".stack_id, COUNT("student_class".user_id) AS "num_students" FROM "class"
 LEFT JOIN "student_class" ON "student_class".class_id = "class".id
