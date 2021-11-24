@@ -255,6 +255,36 @@ router.put(
   }
 );
 
+// delete a specific stack for a logged in teacher
+// DELETE /api/stack/card/:card_id
+router.delete(
+  '/card/:card_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the SQL query
+    const query = `
+      DELETE FROM "card" CASCADE
+      WHERE "id" = $1;
+      `;
+
+    // run the SQL query
+    pool
+      .query(query, [req.params.card_id])
+      .then((response) => {
+        res.sendStatus(204); // the delete was successful
+      })
+      .catch((err) => {
+        // error block for second pool query
+        console.log(
+          `There was an error deleting the card from the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
 // creates a new card in a specific stack
 // /api/stack/card/:stack_id
 router.post(
@@ -283,31 +313,52 @@ router.post(
   }
 );
 
-// delete a specific stack for a logged in teacher
-// DELETE /api/stack/card/:card_id
-router.delete(
-  '/card/:card_id',
+// uploads a batch of cards at once
+// POST /api/stack/card/batch_upload/:stack_id
+router.post(
+  '/card/batch_upload/:stack_id',
   rejectUnauthenticated,
   onlyAllowTeacher,
   (req, res) => {
-    // build the SQL query
-    const query = `
-      DELETE FROM "card" CASCADE
-      WHERE "id" = $1;
-      `;
+    console.log(
+      `in POST /api/stack/card/batch_upload/:stack_id, this is req.body `,
+      req.body
+    );
 
-    // run the SQL query
+    const cards = req.body.cards;
+
+    // build the sql query
+    let query = `
+      INSERT INTO "card" ("front", "back", "stack_id")
+      VALUES
+    `;
+
+    // an array to push all the values into
+    // the first value will be stack_id
+    const values = [req.params.stack_id];
+    let counter = 1;
+
+    // build everything but the last with commas
+    for (let i = 0; i < cards.length - 1; i++) {
+      query += `($${counter + 1}, $${counter + 2}, $${1}),`;
+      values.push(cards[i].front);
+      values.push(cards[i].back);
+      counter += 2;
+    }
+
+    // now add the last line with a semicolon
+    query += `($${counter + 1}, $${counter + 2}, $${1});`;
+    values.push(cards[cards.length - 1].front);
+    values.push(cards[cards.length - 1].back);
+
+    // now run the query
     pool
-      .query(query, [req.params.card_id])
+      .query(query, [...values])
       .then((response) => {
-        res.sendStatus(204); // the delete was successful
+        res.sendStatus(201); // the card was created
       })
       .catch((err) => {
-        // error block for second pool query
-        console.log(
-          `There was an error deleting the card from the server:`,
-          err
-        );
+        console.log(`There was an error updating the card on the server:`, err);
         res.sendStatus(500);
       });
   }

@@ -245,6 +245,23 @@ function* createSessionInfo(action) {
   }
 }
 
+function* createCards(action) {
+  try {
+    // the expected payload is an object with the stack_id and cards in an array
+    yield axios.post(
+      `/api/stack/card/batch_upload/${action.payload.stack_id}`,
+      action.payload
+    );
+    // refresh the DOM
+    yield put({ type: 'FETCH_CARDS', payload: action.payload.stack_id });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga posting the batch of cards to the server:`,
+      err
+    );
+  }
+}
+
 function* stackSaga() {
   yield takeLatest('FETCH_STACKS', fetchStacks);
   yield takeLatest('DELETE_STACK', deleteStack);
@@ -261,6 +278,7 @@ function* stackSaga() {
   yield takeEvery('FETCH_TOTAL_NUM_CARDS', fetchTotalNumCards);
   yield takeLatest('FETCH_CARD_NUMBERS', fetchCardNumbers);
   yield takeLatest('CREATE_SESSION_INFO', createSessionInfo);
+  yield takeLatest('CREATE_CARDS', createCards);
 }
 
 export default stackSaga;

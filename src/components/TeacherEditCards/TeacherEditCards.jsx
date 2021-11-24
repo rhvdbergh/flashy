@@ -19,11 +19,13 @@ import {
   TableRow,
   Paper,
   TextField,
+  Modal,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 // import components
 import TeacherEditCardsTableRow from '../TeacherEditCardsTableRow/TeacherEditCardsTableRow';
+import CSVUploadBox from '../CSVUploadBox/CSVUploadBox';
 
 // set up the mui styles
 const useStyles = makeStyles(() => ({
@@ -48,6 +50,7 @@ function TeacherEditCards() {
 
   // set up the local state
   const [stackName, setStackName] = useState('');
+  const [openModal, setOpenModal] = useState(false);
 
   // set up the mui styles
   const { container, table, textfield } = useStyles();
@@ -82,34 +85,43 @@ function TeacherEditCards() {
 
   return (
     <Container className={container}>
-      <TextField
-        type="text"
-        label="Card Stack Name"
-        required
-        className={textfield}
-        value={
-          stackName !== '' && stackName !== null
-            ? stackName
-            : `New Card Stack ${stack_id}`
-        }
-        onChange={(event) => {
-          setStackName(event.target.value);
-        }}
-        // this will select the text in the name box when selected
-        onFocus={(event) => {
-          event.currentTarget.select();
-        }}
-        // this will send a dispatch whenever the TextField loses focus
-        onBlur={() => {
-          // if the stackName is empty, we do not want to update the name
-          stackName &&
-            stackName !== '' &&
-            dispatch({
-              type: 'UPDATE_STACK',
-              payload: { id: stack_id, name: stackName },
-            });
-        }}
-      />
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <TextField
+          type="text"
+          label="Card Stack Name"
+          required
+          className={textfield}
+          value={
+            stackName !== '' && stackName !== null
+              ? stackName
+              : `New Card Stack ${stack_id}`
+          }
+          onChange={(event) => {
+            setStackName(event.target.value);
+          }}
+          // this will select the text in the name box when selected
+          onFocus={(event) => {
+            event.currentTarget.select();
+          }}
+          // this will send a dispatch whenever the TextField loses focus
+          onBlur={() => {
+            // if the stackName is empty, we do not want to update the name
+            stackName &&
+              stackName !== '' &&
+              dispatch({
+                type: 'UPDATE_STACK',
+                payload: { id: stack_id, name: stackName },
+              });
+          }}
+        />
+        <Button
+          variant="contained"
+          sx={{ height: '56px' }}
+          onClick={() => setOpenModal(true)}
+        >
+          Upload CSV
+        </Button>
+      </Box>
       <TableContainer component={Paper} className={table}>
         <Table aria-label="Classes">
           <TableHead>
@@ -133,6 +145,18 @@ function TeacherEditCards() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Modal open={openModal} onClose={() => setOpenModal(false)}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: '20vh',
+          }}
+        >
+          <CSVUploadBox setOpenModal={setOpenModal} stack_id={stack_id} />
+        </Box>
+      </Modal>
     </Container>
   );
 }
