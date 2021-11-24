@@ -11,13 +11,6 @@ import {
   Button,
   Container,
   Checkbox,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   TextField,
   FormControl,
   FormControlLabel,
@@ -25,6 +18,7 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Paper,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
@@ -54,6 +48,8 @@ function TeacherEditClass() {
   // set up local state to track inputs
   const [clName, setClName] = useState('');
   const [assignedStack, setAssignedStack] = useState('');
+  const [learnTime, setLearnTime] = useState(30);
+  const [totalTime, setTotalTime] = useState(360);
 
   // draw in the mui styles
   const { container, textfield, select, checkbox, spacing } = useStyles();
@@ -90,84 +86,173 @@ function TeacherEditClass() {
     // set the class name to the name of the class in the redux store
     setClName(editClass.class_name);
     setAssignedStack(editClass.stack_id);
+    setTotalTime(editClass.total_time);
+    setLearnTime(editClass.initial_time);
   }, [editClass]);
 
   console.log(`this is stacks`, stacks);
 
   return (
     <Container className={container}>
-      <Box className={spacing}>
-        <FormControl className={textfield}>
-          <TextField
-            type="text"
-            label="Class Name"
-            required
-            value={clName}
-            onChange={(event) => {
-              setClName(event.target.value);
-            }}
-            // this will select the text in the name box when selected
-            onFocus={(event) => {
-              event.currentTarget.select();
-            }}
-            // this will send a dispatch whenever the TextField loses focus
-            onBlur={() => {
-              // if the clName is empty, we do not want to update the name
-              clName !== '' &&
-                dispatch({
-                  type: 'UPDATE_CLASS',
-                  payload: { ...editClass, class_name: clName },
-                });
-            }}
-          />
-        </FormControl>
-      </Box>
-      <Box className={spacing}>
-        <FormControl>
-          <InputLabel id="select-card-stack">Select Card Stack</InputLabel>
-          <Select
-            labelId="select-card-stack"
-            label="Select Card Stack"
-            value={assignedStack}
-            className={select}
-            onChange={(event) => setAssignedStack(event.target.value)}
-            onBlur={() => {
-              dispatch({
-                type: 'UPDATE_CLASS',
-                payload: { ...editClass, stack_id: assignedStack },
-              });
-            }}
-          >
-            <MenuItem value={null}>No Assigned Stack</MenuItem>
-            {stacks.map((stack) => (
-              <MenuItem key={stack.id} value={stack.id}>
-                {stack.stack_name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-      <Box className={spacing}>
-        <FormGroup className={checkbox}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={editClass.available_to_students}
-                onClick={() =>
+      {/* Section for general class settings like name and stack */}
+      <Paper
+        elevation={4}
+        sx={{ display: 'flex', justifyContent: 'space-between' }}
+      >
+        <Box className={spacing}>
+          <FormControl className={textfield}>
+            <TextField
+              type="text"
+              label="Class Name"
+              required
+              value={clName}
+              onChange={(event) => {
+                setClName(event.target.value);
+              }}
+              // this will select the text in the name box when selected
+              onFocus={(event) => {
+                event.currentTarget.select();
+              }}
+              // this will send a dispatch whenever the TextField loses focus
+              onBlur={() => {
+                // if the clName is empty, we do not want to update the name
+                clName !== '' &&
                   dispatch({
                     type: 'UPDATE_CLASS',
-                    payload: {
-                      ...editClass,
-                      available_to_students: !editClass.available_to_students,
-                    },
-                  })
-                }
+                    payload: { ...editClass, class_name: clName },
+                  });
+              }}
+            />
+          </FormControl>
+        </Box>
+        <Box className={spacing}>
+          <FormControl>
+            <InputLabel id="select-card-stack">Select Card Stack</InputLabel>
+            <Select
+              labelId="select-card-stack"
+              label="Select Card Stack"
+              value={assignedStack}
+              className={select}
+              onChange={(event) => setAssignedStack(event.target.value)}
+              onBlur={() => {
+                dispatch({
+                  type: 'UPDATE_CLASS',
+                  payload: { ...editClass, stack_id: assignedStack },
+                });
+              }}
+            >
+              <MenuItem value={null}>No Assigned Stack</MenuItem>
+              {stacks.map((stack) => (
+                <MenuItem key={stack.id} value={stack.id}>
+                  {stack.stack_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      </Paper>
+      {/* Section for timer settings */}
+      <Paper elevation={4}>
+        <Box className={spacing} sx={{ display: 'flex' }}>
+          <Box className={spacing}>
+            <FormControl>
+              <TextField
+                type="text"
+                label="Total Time in Session (seconds)"
+                size="small"
+                value={totalTime}
+                onChange={(event) => {
+                  setTotalTime(event.target.value);
+                }}
+                // this will select the text in the name box when selected
+                onFocus={(event) => {
+                  event.currentTarget.select();
+                }}
+                // this will send a dispatch whenever the TextField loses focus
+                onBlur={() => {
+                  // if the clName is empty, we do not want to update the name
+                  totalTime !== '' &&
+                    dispatch({
+                      type: 'UPDATE_CLASS',
+                      payload: { ...editClass, total_time: Number(totalTime) },
+                    });
+                }}
               />
-            }
-            label="Make class available to students."
-          />
-        </FormGroup>
-      </Box>
+            </FormControl>
+          </Box>
+          <Box className={spacing}>
+            <FormControl>
+              <TextField
+                type="text"
+                label="Time to Learn Cards (seconds)"
+                size="small"
+                value={learnTime}
+                onChange={(event) => {
+                  setLearnTime(event.target.value);
+                }}
+                // this will select the text in the name box when selected
+                onFocus={(event) => {
+                  event.currentTarget.select();
+                }}
+                // this will send a dispatch whenever the TextField loses focus
+                onBlur={() => {
+                  // if the clName is empty, we do not want to update the name
+                  learnTime !== '' &&
+                    dispatch({
+                      type: 'UPDATE_CLASS',
+                      payload: {
+                        ...editClass,
+                        initial_time: Number(learnTime),
+                      },
+                    });
+                }}
+              />
+            </FormControl>
+          </Box>
+          <Box className={spacing}>
+            <Button
+              sx={{ height: '40px' }}
+              variant="contained"
+              onClick={() => {
+                dispatch({
+                  type: 'UPDATE_CLASS',
+                  payload: {
+                    ...editClass,
+                    total_time: 360,
+                    initial_time: 30,
+                  },
+                });
+              }}
+            >
+              Reset to Default
+            </Button>
+          </Box>
+        </Box>
+      </Paper>
+      {/* Section for making class available to students */}
+      <Paper elevation={4}>
+        <Box className={spacing}>
+          <FormGroup className={checkbox}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={editClass.available_to_students}
+                  onClick={() =>
+                    dispatch({
+                      type: 'UPDATE_CLASS',
+                      payload: {
+                        ...editClass,
+                        available_to_students: !editClass.available_to_students,
+                      },
+                    })
+                  }
+                />
+              }
+              label="Make class available to students."
+            />
+          </FormGroup>
+        </Box>
+      </Paper>
     </Container>
   );
 }

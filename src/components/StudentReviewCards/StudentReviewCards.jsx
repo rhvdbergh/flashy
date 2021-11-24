@@ -18,6 +18,7 @@ import FinishedPage from '../FinishedPage/FinishedPage';
 
 // import mui
 import { Box, Container } from '@mui/material';
+import { letterSpacing } from '@mui/system';
 
 function StudentReviewCards() {
   // set up the redux dispatch
@@ -28,6 +29,8 @@ function StudentReviewCards() {
 
   // grab the cards to review from the redux store
   const cards = useSelector((store) => store.stackStore.cardsToReview);
+  // grab the current class from the redux store
+  const currentClass = useSelector((store) => store.classStore.editClass);
 
   // local state to keep track of the two sets of cards that we have
   const [newCards, setNewCards] = useState([]);
@@ -41,16 +44,10 @@ function StudentReviewCards() {
   // keeps track of what stage the screen is in
   // options are review, new, seen, shortTerm, complete
   const [currentStage, setCurrentStage] = useState('review');
-  // timers
-  // we speed the seconds up with * 10
-  // this is so user interaction doesn't slow down the timers
-  // otherwise, the timers starts refreshing from last
-  // user interaction (in the useEffect hook!)
-  // this slowing down effect is not as noticeable at 100 than at 1000 intervals
-  const initialTotalTime = 100 * 10;
-  const initialLearnTime = 10 * 10;
-  const [totalTime, setTotalTime] = useState(initialTotalTime);
-  const [learnTime, setLearnTime] = useState(initialLearnTime);
+  // timers; these are just the initial default values, but the
+  // class values get loaded
+  const [totalTime, setTotalTime] = useState(1000);
+  const [learnTime, setLearnTime] = useState(100);
   // grab the numbers of cards to review from the redux store so we can calculate
   // on complete how many were actually reviewed
   const totalNumReviewCards = useSelector(
@@ -68,6 +65,8 @@ function StudentReviewCards() {
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
     // fetch the cards to review for this student in this class
     dispatch({ type: 'FETCH_CARDS_TO_REVIEW', payload: class_id });
+    // fetch the class so we can set the times
+    dispatch({ type: 'FETCH_CLASS', payload: class_id });
   }, []);
 
   // note: to update state correctly, these timers need to be in a
@@ -103,6 +102,18 @@ function StudentReviewCards() {
       setCurrentStage('review');
     }
   }, [cards]);
+
+  // when the class returns in the store, we want to set the initial times
+  useEffect(() => {
+    // the database stores seconcds
+    // but we speed the seconds up with * 10
+    // this is so user interaction doesn't slow down the timers
+    // otherwise, the timers starts refreshing from last
+    // user interaction (in the useEffect hook!)
+    // this slowing down effect is not as noticeable at 100 than at 1000 intervals
+    setTotalTime(currentClass.total_time * 10);
+    setLearnTime(currentClass.initial_time * 10);
+  }, [currentClass]);
 
   // whenever any of the state "boxes" of cards changes, pick a new random card
   // to display to the user
@@ -366,8 +377,8 @@ function StudentReviewCards() {
 
   const refreshTimer = () => {
     // refresh the timer
-    if (totalTime > initialLearnTime) {
-      setLearnTime(initialLearnTime);
+    if (totalTime > currentClass.initial_time * 10) {
+      setLearnTime(currentClass.initial_time * 10);
     } else {
       setLearnTime(totalTime);
     }
@@ -383,6 +394,8 @@ function StudentReviewCards() {
   // console.log(`here is your random card`, currentCard);
   // console.log(`we are in stage`, currentStage);
   // console.log(`time`, totalTime);
+  // console.log(`current class`, currentClass);
+  // console.log('currentClass.initial_time', currentClass.initial_time);
 
   return (
     <Container
@@ -419,8 +432,8 @@ function StudentReviewCards() {
             <Timer
               totalTime={totalTime}
               learnTime={learnTime}
-              initialTotalTime={initialTotalTime}
-              initialLearnTime={initialLearnTime}
+              initialTotalTime={currentClass.total_time * 10}
+              initialLearnTime={currentClass.initial_time * 10}
               currentStage={currentStage}
             />
           </Box>
