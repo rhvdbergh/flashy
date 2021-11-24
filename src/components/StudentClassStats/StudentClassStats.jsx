@@ -36,9 +36,6 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  heading: {
-    paddingBottom: '30px',
-  },
   buttonBox: {
     display: 'flex',
     justifyContent: 'center',
@@ -54,7 +51,7 @@ function StudentClassStats() {
   const dispatch = useDispatch();
 
   // get the mui styles
-  const { container, headingBox, heading, buttonBox, button } = useStyles();
+  const { container, headingBox, buttonBox, button } = useStyles();
 
   // grab the class id from the params
   const { class_id } = useParams();
@@ -87,7 +84,7 @@ function StudentClassStats() {
 
   // on page load, set nav bar title
   useEffect(() => {
-    dispatch({ type: 'SET_NAV_TITLE', payload: 'Class Stats' });
+    dispatch({ type: 'SET_NAV_TITLE', payload: 'Stats' });
     // ensure that the back button is displayd on this page
     dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
     // fetch the cards to review for this student in this class
@@ -102,12 +99,12 @@ function StudentClassStats() {
 
   return (
     <Container className={container} sx={{ display: 'flex' }}>
-      <Box className={headingBox}>
+      <Box className={headingBox} overflow="hidden">
         {/* If the screen is not big enough, display smaller text here */}
         {matchesMediumAndUp ? (
-          <Typography variant="h3">{currentClass.class_name}</Typography>
-        ) : matchesSmallAndUp ? (
           <Typography variant="h5">{currentClass.class_name}</Typography>
+        ) : matchesSmallAndUp ? (
+          <Typography variant="h6">{currentClass.class_name}</Typography>
         ) : (
           <Typography variant="body1">{currentClass.class_name}</Typography>
         )}
@@ -122,7 +119,6 @@ function StudentClassStats() {
             ],
             datasets: [
               {
-                label: 'look at me!',
                 data: [
                   totalNumNewCards,
                   totalNumReviewCards,
