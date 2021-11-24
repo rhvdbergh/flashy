@@ -5,6 +5,12 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 
+// import charts
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+// set up chartjs
+ChartJS.register(ArcElement, Tooltip, Legend);
+
 // import mui
 import {
   Box,
@@ -101,7 +107,34 @@ function StudentClassStats() {
         </Typography>
         <Typography variant="h5">{currentClass.class_name}</Typography>
       </Box>
-      <Table>
+      <Box sx={{ height: '-180px' }}>
+        <Pie
+          data={{
+            labels: [
+              'New Cards to Learn',
+              'Cards to Review',
+              'Cards already Learned',
+            ],
+            datasets: [
+              {
+                label: 'look at me!',
+                data: [
+                  totalNumNewCards,
+                  totalNumReviewCards,
+                  totalNumCards - (totalNumNewCards + totalNumReviewCards),
+                ],
+                backgroundColor: [
+                  'rgb(255, 99, 132)',
+                  'rgb(54, 162, 235)',
+                  'rgb(255, 205, 86)',
+                ],
+                hoverOffset: 12,
+              },
+            ],
+          }}
+        />
+      </Box>
+      {/* <Table>
         <TableBody>
           <TableRow>
             <TableCell>New cards to learn:</TableCell>
@@ -117,7 +150,7 @@ function StudentClassStats() {
             {totalNumCards - (totalNumNewCards + totalNumReviewCards)}
           </TableCell>
         </TableBody>
-      </Table>
+      </Table> */}
       {/* if there are any cards to review show the Review Cards button, else the back */}
       <Box className={buttonBox}>
         {totalNumNewCards + totalNumReviewCards > 0 ? (

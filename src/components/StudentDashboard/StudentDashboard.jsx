@@ -54,7 +54,7 @@ const useStyles = makeStyles(() => ({
     maxWidth: '400px',
   },
   button: {
-    width: '100%',
+    width: '80vw',
     // minWidth: '200px',
     // maxWidth: '400px',
   },
