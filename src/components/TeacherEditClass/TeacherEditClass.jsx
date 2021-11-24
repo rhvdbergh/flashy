@@ -167,6 +167,7 @@ function TeacherEditClass() {
       <Box className={spacing}>
         <FormGroup className={textfield}>
           <TextField
+            className={spacing}
             type="text"
             label="Total Time in Session"
             value={totalTime}
@@ -188,6 +189,7 @@ function TeacherEditClass() {
             }}
           />
           <TextField
+            className={spacing}
             type="text"
             label="Time to Learn Cards"
             value={learnTime}
