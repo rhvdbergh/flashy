@@ -96,7 +96,7 @@ function TeacherDashboard() {
           </Table>
         </TableContainer>
       </Box>
-      <Box className={addStackBox}>
+      <Box className={addStackBox} sx={{ pb: '50px' }}>
         <Button
           variant="contained"
           value="add_stack"
