@@ -5,25 +5,19 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 
+// import charts
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+
+// set up chartjs
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+// import responsive hook from mui
+import useMediaQuery from '@mui/material/useMediaQuery';
+import json2mq from 'json2mq';
+
 // import mui
-import {
-  Box,
-  Button,
-  Container,
-  FormControl,
-  Select,
-  InputLabel,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Paper,
-  Badge,
-} from '@mui/material';
+import { Box, Button, Container, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 // set up the mui styles
@@ -42,9 +36,6 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  heading: {
-    paddingBottom: '30px',
-  },
   buttonBox: {
     display: 'flex',
     justifyContent: 'center',
@@ -60,10 +51,23 @@ function StudentClassStats() {
   const dispatch = useDispatch();
 
   // get the mui styles
-  const { container, headingBox, heading, buttonBox, button } = useStyles();
+  const { container, headingBox, buttonBox, button } = useStyles();
 
   // grab the class id from the params
   const { class_id } = useParams();
+
+  // set up responsive breakpoints for font sizes
+  const matchesMediumAndUp = useMediaQuery(
+    json2mq({
+      minHeight: 800,
+    })
+  );
+
+  const matchesSmallAndUp = useMediaQuery(
+    json2mq({
+      minHeight: 600,
+    })
+  );
 
   // set up the useHistory hook to navigate
   const history = useHistory();
@@ -95,13 +99,43 @@ function StudentClassStats() {
 
   return (
     <Container className={container} sx={{ display: 'flex' }}>
-      <Box className={headingBox}>
-        <Typography variant="h2" className={heading}>
-          Class Stats
-        </Typography>
-        <Typography variant="h5">{currentClass.class_name}</Typography>
+      <Box className={headingBox} overflow="hidden">
+        {/* If the screen is not big enough, display smaller text here */}
+        {matchesMediumAndUp ? (
+          <Typography variant="h5">{currentClass.class_name}</Typography>
+        ) : matchesSmallAndUp ? (
+          <Typography variant="h6">{currentClass.class_name}</Typography>
+        ) : (
+          <Typography variant="body1">{currentClass.class_name}</Typography>
+        )}
       </Box>
-      <Table>
+      <Box sx={{ height: '-180px' }}>
+        <Pie
+          data={{
+            labels: [
+              'New Cards to Learn',
+              'Cards to Review',
+              'Cards already Learned',
+            ],
+            datasets: [
+              {
+                data: [
+                  totalNumNewCards,
+                  totalNumReviewCards,
+                  totalNumCards - (totalNumNewCards + totalNumReviewCards),
+                ],
+                backgroundColor: [
+                  'rgb(255, 99, 132)',
+                  'rgb(54, 162, 235)',
+                  'rgb(255, 205, 86)',
+                ],
+                hoverOffset: 12,
+              },
+            ],
+          }}
+        />
+      </Box>
+      {/* <Table>
         <TableBody>
           <TableRow>
             <TableCell>New cards to learn:</TableCell>
@@ -117,7 +151,7 @@ function StudentClassStats() {
             {totalNumCards - (totalNumNewCards + totalNumReviewCards)}
           </TableCell>
         </TableBody>
-      </Table>
+      </Table> */}
       {/* if there are any cards to review show the Review Cards button, else the back */}
       <Box className={buttonBox}>
         {totalNumNewCards + totalNumReviewCards > 0 ? (

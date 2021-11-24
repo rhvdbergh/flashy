@@ -6,24 +6,27 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
+// import charts
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+
+// set up chartjs
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+// import responsive hook from mui
+import useMediaQuery from '@mui/material/useMediaQuery';
+import json2mq from 'json2mq';
+
 // import mui
 import {
   Box,
   Button,
   Container,
-  FormControl,
-  Select,
-  InputLabel,
-  MenuItem,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
-  TableHead,
   TableRow,
   Typography,
-  Paper,
-  Badge,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useHistory } from 'react-router-dom';
@@ -71,6 +74,19 @@ function StudentReviewStats() {
   // grab the class id from the params
   const { class_id } = useParams();
 
+  // set up responsive breakpoints for font sizes
+  const matchesMediumAndUp = useMediaQuery(
+    json2mq({
+      minHeight: 800,
+    })
+  );
+
+  const matchesSmallAndUp = useMediaQuery(
+    json2mq({
+      minHeight: 600,
+    })
+  );
+
   // get the mui styles
   const { container, main, buttonBox, button, table, heading } = useStyles();
 
@@ -96,38 +112,41 @@ function StudentReviewStats() {
       }}
     >
       <Box className={main}>
-        <Typography variant="h2" className={heading}>
-          Good job!
-        </Typography>
-        <Typography variant="h4">Today's Stats</Typography>
+        {/* Adjust text size based on screen height */}
+        {matchesMediumAndUp ? (
+          <Typography variant="h2" className={heading}>
+            Good job!
+          </Typography>
+        ) : matchesSmallAndUp ? (
+          <Typography variant="h3" className={heading}>
+            Good job!
+          </Typography>
+        ) : (
+          <Typography variant="h4" className={heading}>
+            Good job!
+          </Typography>
+        )}
       </Box>
-      <Table className={table}>
-        <TableBody>
-          <TableRow>
-            <TableCell>
-              <Typography variant="h5">New cards learned:</Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h5">{cards_learned}</Typography>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <Typography variant="h5">Cards reviewed:</Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h5">{cards_reviewed}</Typography>
-            </TableCell>
-          </TableRow>
-          <TableRow></TableRow>
-          <TableCell>
-            <Typography variant="h5">Total cards learned:</Typography>
-          </TableCell>
-          <TableCell>
-            <Typography variant="h5">{totalNumCards}</Typography>
-          </TableCell>
-        </TableBody>
-      </Table>
+      <Pie
+        data={{
+          labels: [
+            'New Cards Learned',
+            'Cards reviewed',
+            'Total cards learned',
+          ],
+          datasets: [
+            {
+              data: [cards_learned, cards_reviewed, totalNumCards],
+              backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)',
+              ],
+              hoverOffset: 12,
+            },
+          ],
+        }}
+      />
       <Box className={buttonBox}>
         <Button
           variant="contained"
