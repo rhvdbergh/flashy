@@ -20,14 +20,18 @@ function CSVUploadBox({ setOpenModal, stack_id }) {
     // build a temporary array of cards with the data
     const tempCards = [];
     for (let datum of data) {
-      tempCards.push({ front: datum.data[0], back: datum.data[1] });
+      tempCards.push({
+        front: datum.data[0],
+        back: datum.data[1],
+        batch: datum.data[2],
+      });
     }
     // set the local state
     setCards(tempCards);
     setDisplaySubmit(true);
   };
 
-  const handleOnError = (err, file, inputElem, reason) => {
+  const handleOnError = (err) => {
     console.log(err);
   };
 

@@ -329,7 +329,7 @@ router.post(
 
     // build the sql query
     let query = `
-      INSERT INTO "card" ("front", "back", "stack_id")
+      INSERT INTO "card" ("front", "back", "batch", "stack_id")
       VALUES
     `;
 
@@ -340,16 +340,19 @@ router.post(
 
     // build everything but the last with commas
     for (let i = 0; i < cards.length - 1; i++) {
-      query += `($${counter + 1}, $${counter + 2}, $${1}),`;
+      query += `($${counter + 1}, $${counter + 2}, $${counter + 3},  $${1}),`;
       values.push(cards[i].front);
       values.push(cards[i].back);
-      counter += 2;
+      // if a CSV was uploaded without a batch, we set the batch to 1
+      values.push(cards[i].batch ? cards[1].batch : 1);
+      counter += 3;
     }
 
     // now add the last line with a semicolon
-    query += `($${counter + 1}, $${counter + 2}, $${1});`;
+    query += `($${counter + 1}, $${counter + 2}, $${counter + 3}, $${1});`;
     values.push(cards[cards.length - 1].front);
     values.push(cards[cards.length - 1].back);
+    values.push(cards[cards.length - 1].batch ? cards[1].batch : 1);
 
     // now run the query
     pool

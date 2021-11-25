@@ -60,8 +60,8 @@ function TeacherClassProgress() {
       {/* If the class is empty, display a message instead of the table */}
       {classProgress.length === 0 || classProgress === undefined ? (
         <Box>
-          <Typography variant="h2">
-            There are currently no students in this class.
+          <Typography variant="h3" sx={{ textAlign: 'center' }}>
+            No student has reviewed any cards yet.
           </Typography>
         </Box>
       ) : (
