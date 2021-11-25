@@ -297,13 +297,18 @@ router.post(
 
     // build the sql query
     const query = `
-      INSERT INTO "card" ("front", "back", "stack_id")
-      VALUES ($1, $2, $3)
+      INSERT INTO "card" ("front", "back", "batch", "stack_id")
+      VALUES ($1, $2, $3, $4)
     `;
 
     // run the sql query
     pool
-      .query(query, [req.body.front, req.body.back, req.params.stack_id])
+      .query(query, [
+        req.body.front,
+        req.body.back,
+        req.body.batch,
+        req.params.stack_id,
+      ])
       .then((response) => {
         res.sendStatus(201); // the card was created
       })
