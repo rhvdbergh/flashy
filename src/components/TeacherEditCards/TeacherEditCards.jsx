@@ -128,6 +128,7 @@ function TeacherEditCards() {
             <TableRow>
               <TableCell>Front</TableCell>
               <TableCell>Back</TableCell>
+              <TableCell>Batch</TableCell>
               <TableCell align="center">Delete</TableCell>
             </TableRow>
           </TableHead>
