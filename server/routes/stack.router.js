@@ -5,6 +5,7 @@ const {
   rejectUnauthenticated,
 } = require('../modules/authentication-middleware');
 const { onlyAllowTeacher } = require('../modules/authorization-middleware');
+const { letterSpacing } = require('@mui/system');
 
 // GET /api/stack
 // fetches all the stacks belonging to a logged in teacher
@@ -344,7 +345,11 @@ router.post(
       values.push(cards[i].front);
       values.push(cards[i].back);
       // if a CSV was uploaded without a batch, we set the batch to 1
-      values.push(cards[i].batch ? cards[1].batch : 1);
+      if (cards[i].batch) {
+        values.push(Number(cards[i].batch));
+      } else {
+        values.push(1);
+      }
       counter += 3;
     }
 
@@ -352,16 +357,24 @@ router.post(
     query += `($${counter + 1}, $${counter + 2}, $${counter + 3}, $${1});`;
     values.push(cards[cards.length - 1].front);
     values.push(cards[cards.length - 1].back);
-    values.push(cards[cards.length - 1].batch ? cards[1].batch : 1);
+    // if a CSV was uploaded without a batch, we set the batch to 1
+    if (cards[cards.length - 1].batch !== undefined) {
+      values.push(Number(cards[cards.length - 1].batch));
+    } else {
+      values.push(1);
+    }
 
     // now run the query
     pool
       .query(query, [...values])
       .then((response) => {
-        res.sendStatus(201); // the card was created
+        res.sendStatus(201); // the cards were created
       })
       .catch((err) => {
-        console.log(`There was an error updating the card on the server:`, err);
+        console.log(
+          `There was an error creating the cards on the server:`,
+          err
+        );
         res.sendStatus(500);
       });
   }
