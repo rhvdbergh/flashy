@@ -19,6 +19,8 @@ import {
   MenuItem,
   InputLabel,
   Paper,
+  RadioGroup,
+  Radio,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
@@ -37,7 +39,7 @@ const useStyles = makeStyles(() => ({
     alignSelf: 'center',
   },
   spacing: {
-    margin: '20px',
+    margin: '40px',
   },
 }));
 
@@ -50,6 +52,7 @@ function TeacherEditClass() {
   const [assignedStack, setAssignedStack] = useState('');
   const [learnTime, setLearnTime] = useState(30);
   const [totalTime, setTotalTime] = useState(360);
+  const [releaseAtOnce, setReleaseAtOnce] = useState(true);
 
   // draw in the mui styles
   const { container, textfield, select, checkbox, spacing } = useStyles();
@@ -90,7 +93,22 @@ function TeacherEditClass() {
     setLearnTime(editClass.initial_time);
   }, [editClass]);
 
-  console.log(`this is stacks`, stacks);
+  // handles the radio button change for selecting whether
+  // cards should be released in batches or not
+  const handleReleaseChange = (event) => {
+    console.log(event.target.value);
+    switch (event.target.value) {
+      case 'release_at_once':
+        setReleaseAtOnce(true);
+        break;
+      case 'release_in_batches':
+        setReleaseAtOnce(false);
+        break;
+      default:
+        setReleaseAtOnce(true);
+        break;
+    }
+  };
 
   return (
     <Container className={container}>
@@ -148,6 +166,30 @@ function TeacherEditClass() {
                 </MenuItem>
               ))}
             </Select>
+          </FormControl>
+        </Box>
+      </Paper>
+      {/* Section for batch control */}
+      <Paper elevation={4}>
+        <Box className={spacing}>
+          <FormControl>
+            <RadioGroup
+              aria-label="release"
+              defaultValue="release_at_once"
+              name="batch-release-control"
+              onChange={handleReleaseChange}
+            >
+              <FormControlLabel
+                value="release_at_once"
+                control={<Radio />}
+                label="Release all cards at once."
+              />
+              <FormControlLabel
+                value="release_in_batches"
+                control={<Radio />}
+                label="Release cards in specified batches."
+              />
+            </RadioGroup>
           </FormControl>
         </Box>
       </Paper>
