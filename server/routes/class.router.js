@@ -122,15 +122,32 @@ router.post('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
 // fetches a specific class from the server
 router.get('/:class_id', rejectUnauthenticated, (req, res) => {
   // build the SQL query
+  // we're also returning the number of batches in this stack, so we'll
+  // have to fetch the cards, check the batches, and send this back
+  // as a Set.size
   const query = `
-      SELECT * FROM "class"
-      WHERE id = $1;
+      SELECT "class".class_name, "class".id, "class".user_id, "class".available_to_students, 
+      "class".initial_time, "class".release_at_once, "class".release_from, "class".release_order, 
+      "class".release_to, "class".total_time, "class".stack_id, 
+      ARRAY_AGG("card".batch) AS "num_batches_in_stack" FROM "class"
+      LEFT JOIN "stack" ON "stack".id = "class".stack_id
+      LEFT JOIN "card" ON "card".stack_id = "stack".id
+      WHERE "class".id = $1
+      GROUP BY "class".class_name, "class".id, "class".user_id, "class".available_to_students, 
+      "class".initial_time, "class".release_at_once, "class".release_from, "class".release_order, 
+      "class".release_to, "class".total_time, "class".stack_id;
     `;
 
   pool
     .query(query, [req.params.class_id])
     .then((response) => {
-      res.send(response.rows[0]); // send back the class
+      const cl = response.rows[0];
+      // find all the unique numbers of batches in this stack
+      const tempSet = new Set(cl.num_batches_in_stack);
+      cl.batches_in_stack = [...tempSet];
+      // count the number of batches in the stack
+      cl.num_batches_in_stack = tempSet.size;
+      res.send(cl); // send back the class
     })
     .catch((err) => {
       console.log(
