@@ -8,6 +8,7 @@ const {
   onlyAllowStudent,
   onlyAllowTeacher,
 } = require('../modules/authorization-middleware');
+const releaseCards = require('../modules/releaseCards.js');
 
 // GET /api/student/cards/:class_id
 // returns all the cards in a specific class that the logged in student
@@ -225,7 +226,7 @@ router.post(
         // so we can add it for this specific student in this specific class
         // build an SQL query that grabs all the card ids in this class
         const fetchCardsQuery = `
-          SELECT "card".id AS "card_id" FROM "class"
+          SELECT "card".id AS "card_id", "release_at_once" FROM "class"
           JOIN "stack" ON "class".stack_id = "stack".id
           JOIN "card" ON "card".stack_id = "stack".id
           WHERE "class".id = $1; 
@@ -237,36 +238,45 @@ router.post(
           .then((response) => {
             // we have the ids of the cards for this class
             const cardIds = response.rows;
-            console.log('cardIds', cardIds);
-            // we don't have to sanitize here, since it's embedded in a response
-            // so build a query to insert all the cards
-            let addCardsQuery = `
+            // determine whether these cards should be release all at once
+            // if so, add the cards now
+            // else, run the releaseCards update
+            const releaseAtOnce = response.rows[0].release_at_once;
+            if (releaseAtOnce) {
+              // we don't have to sanitize here, since it's embedded in a response
+              // so build a query to insert all the cards
+              let addCardsQuery = `
               INSERT INTO "student_class_card" ("card_id", "student_class_id")
               VALUES
             `;
-            // add the card ids one by one with a comma
-            // the last id will have a semicolon
-            for (let i = 0; i < cardIds.length - 1; i++) {
-              addCardsQuery += `(${cardIds[i].card_id}, ${student_class_id}), `;
-            }
-            // now add the final row
-            addCardsQuery += `(${
-              cardIds[cardIds.length - 1].card_id
-            }, ${student_class_id});`;
+              // add the card ids one by one with a comma
+              // the last id will have a semicolon
+              for (let i = 0; i < cardIds.length - 1; i++) {
+                addCardsQuery += `(${cardIds[i].card_id}, ${student_class_id}), `;
+              }
+              // now add the final row
+              addCardsQuery += `(${
+                cardIds[cardIds.length - 1].card_id
+              }, ${student_class_id});`;
 
-            // run the query
-            pool
-              .query(addCardsQuery)
-              .then((response) => {
-                res.sendStatus(201); // show that the cards have been added
-              })
-              .catch((err) => {
-                console.log(
-                  `There was an error updating the card familiarity for this student on the server:`,
-                  err
-                );
-                res.sendStatus(500);
-              });
+              // run the query
+              pool
+                .query(addCardsQuery)
+                .then((response) => {
+                  res.sendStatus(201); // show that the cards have been added
+                })
+                .catch((err) => {
+                  console.log(
+                    `There was an error updating the card familiarity for this student on the server:`,
+                    err
+                  );
+                  res.sendStatus(500);
+                });
+            } // end if releaseAtOnce
+            else {
+              releaseCards();
+              res.sendStatus(201);
+            }
           })
           .catch((err) => {
             // catch black 2/3 for query 2

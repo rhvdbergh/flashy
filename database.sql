@@ -114,7 +114,7 @@ ALTER TABLE "stack" ADD CONSTRAINT "stack_fk0" FOREIGN KEY ("user_id") REFERENCE
 ALTER TABLE "student_class_card" ADD CONSTRAINT "student_class_card_fk0" FOREIGN KEY ("student_class_id") REFERENCES "student_class"("id") ON DELETE CASCADE;
 ALTER TABLE "student_class_card" ADD CONSTRAINT "student_class_card_fk1" FOREIGN KEY ("card_id") REFERENCES "card"("id") ON DELETE CASCADE;
 
-ALTER TABLE "batch_release_date" ADD CONSTRAINT "batch_release_date_fk0" FOREIGN KEY ("class_id") REFERENCES "class"("id");
+ALTER TABLE "batch_release_date" ADD CONSTRAINT "batch_release_date_fk0" FOREIGN KEY ("class_id") REFERENCES "class"("id") ON DELETE CASCADE;
 
 -- The above sets up the tables, their foreign keys, and their ON DELETE CASCADEs.
 -- Below we feed in some dummy data for each table
