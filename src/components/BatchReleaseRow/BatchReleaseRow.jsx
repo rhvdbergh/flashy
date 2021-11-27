@@ -1,5 +1,5 @@
 //import mui
-import { Typography, TextField } from '@mui/material';
+import { Typography, TextField, Box } from '@mui/material';
 import DateAdapter from '@mui/lab/AdapterLuxon';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
@@ -15,18 +15,36 @@ function BatchReleaseRow({ batch }) {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'left',
+        alignContent: 'center',
+        ml: '200px',
+        mb: '20px',
+      }}
+    >
       <LocalizationProvider dateAdapter={DateAdapter}>
         <DesktopDatePicker
           label="Date desktop"
           inputFormat="MM/dd/yyyy"
           value={date}
           onChange={handleChange}
-          renderInput={(params) => <TextField {...params} />}
+          renderInput={(params) => <TextField size="small" {...params} />}
         />
       </LocalizationProvider>
-      <Typography variant="body1">Batch {batch}</Typography>{' '}
-    </>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography variant="body1" sx={{ ml: '50px' }}>
+          Batch {batch}
+        </Typography>{' '}
+      </Box>
+    </Box>
   );
 }
 
