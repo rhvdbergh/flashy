@@ -23,6 +23,8 @@ ALTER TABLE "student_class_card" DROP CONSTRAINT IF EXISTS "student_class_card_f
 
 ALTER TABLE "student_class_card" DROP CONSTRAINT IF EXISTS "student_class_card_fk1";
 
+ALTER TABLE "batch_release_date" DROP CONSTRAINT IF EXISTS "batch_release_date_fk0";
+
 DROP TABLE "card";
 DROP TABLE "class";
 DROP TABLE "stack";
@@ -30,3 +32,4 @@ DROP TABLE "student_class";
 DROP TABLE "student_class_card";
 DROP TABLE "student_class_session";
 DROP TABLE "user";
+DROP TABLE "batch_release_date"

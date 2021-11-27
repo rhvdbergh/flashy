@@ -85,6 +85,18 @@ const studentProgress = (state = [], action) => {
   }
 };
 
+// holds the dates on which batches will be released
+const releaseBatchDates = (state = [], action) => {
+  switch (action.type) {
+    case 'SET_RELEASE_BATCHES':
+      return action.payload;
+    case 'LOGOUT':
+      return [];
+    default:
+      return state;
+  }
+};
+
 const classStore = combineReducers({
   classes,
   editClass,
@@ -93,6 +105,7 @@ const classStore = combineReducers({
   enrolledClassesOverdueCardCount,
   classProgress,
   studentProgress,
+  releaseBatchDates,
 });
 
 export default classStore;

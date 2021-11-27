@@ -89,6 +89,16 @@ CREATE TABLE "student_class_card" (
   OIDS=FALSE
 );
 
+CREATE TABLE "batch_release_date" (
+	"id" serial NOT NULL,
+	"class_id" int NOT NULL,
+	"batch_num" int NOT NULL,
+	"release_date" TIMESTAMP NOT NULL DEFAULT NOW(),
+	CONSTRAINT "batch_release_date_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
 ALTER TABLE "class" ADD CONSTRAINT "class_fk0" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE;
 ALTER TABLE "class" ADD CONSTRAINT "class_fk1" FOREIGN KEY ("stack_id") REFERENCES "stack"("id");
 
@@ -103,6 +113,8 @@ ALTER TABLE "stack" ADD CONSTRAINT "stack_fk0" FOREIGN KEY ("user_id") REFERENCE
 
 ALTER TABLE "student_class_card" ADD CONSTRAINT "student_class_card_fk0" FOREIGN KEY ("student_class_id") REFERENCES "student_class"("id") ON DELETE CASCADE;
 ALTER TABLE "student_class_card" ADD CONSTRAINT "student_class_card_fk1" FOREIGN KEY ("card_id") REFERENCES "card"("id") ON DELETE CASCADE;
+
+ALTER TABLE "batch_release_date" ADD CONSTRAINT "batch_release_date_fk0" FOREIGN KEY ("class_id") REFERENCES "class"("id");
 
 -- The above sets up the tables, their foreign keys, and their ON DELETE CASCADEs.
 -- Below we feed in some dummy data for each table
@@ -215,6 +227,9 @@ VALUES (1, 1, 7, '11-01-2021'),
 
 -- ALTER TABLE "student_class_card" DROP CONSTRAINT IF EXISTS "student_class_card_fk1";
 
+-- ALTER TABLE "batch_release_date" DROP CONSTRAINT IF EXISTS "batch_release_date_fk0";
+
+
 -- DROP TABLE "card";
 -- DROP TABLE "class";
 -- DROP TABLE "stack";
@@ -222,3 +237,4 @@ VALUES (1, 1, 7, '11-01-2021'),
 -- DROP TABLE "student_class_card";
 -- DROP TABLE "student_class_session";
 -- DROP TABLE "user";
+-- DROP TABLE "batch_release_date"

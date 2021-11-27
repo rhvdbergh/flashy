@@ -108,11 +108,25 @@ function TeacherEditClass() {
           type: 'UPDATE_CLASS',
           payload: { ...editClass, release_at_once: true },
         });
+        // erase the previously set release batches, if applicable
+        dispatch({
+          type: 'DELETE_RELEASE_BATCHES',
+          payload: class_id,
+        });
         break;
       case 'release_in_batches':
         dispatch({
           type: 'UPDATE_CLASS',
           payload: { ...editClass, release_at_once: false },
+        });
+        // the array here mirrors what batch_release_date will
+        // look like on the server, minus the date
+        dispatch({
+          type: 'CREATE_RELEASE_BATCHES',
+          payload: {
+            class_id: class_id,
+            batches: [...editClass.batches_in_stack],
+          },
         });
         break;
       default:

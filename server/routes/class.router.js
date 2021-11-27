@@ -165,7 +165,6 @@ router.put(
   rejectUnauthenticated,
   onlyAllowTeacher,
   (req, res) => {
-    console.log(`in /api/class/:class_id, req.body=`, req.body);
     // build the sql query
     const query = `
       UPDATE "class"
@@ -249,6 +248,106 @@ router.get(
       .catch((err) => {
         console.log(
           `There was an error updating the class on the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
+// creates entirely new batch release dates for a class
+// POST /api/class/batch_release/:class_id
+router.post(
+  '/batch_release/:class_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the sql query
+    let query = `INSERT INTO "batch_release_date" ("class_id", "batch_num")
+    VALUES
+    `;
+
+    const values = [req.params.class_id];
+    // we start from 2 because the parameter $1 will be the class_id
+    let counter = 2;
+    // build the string except for the last item, which requires a semicolon
+    for (let i = 0; i < req.body.length - 1; i++) {
+      query += `($1, $${counter}),`;
+      values.push(req.body[i]);
+      counter++;
+    }
+
+    // now add the last line with a semicolon
+    query += `($1, $${counter});`;
+    values.push(req.body[req.body.length - 1]);
+
+    // run the query
+    pool
+      .query(query, [...values])
+      .then((response) => {
+        res.sendStatus(201); // the batch release dates were created
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error creating the batch release dates on the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
+// fetches the release batch dates for a specific class from the db
+// GET /api/class/batch_release/:class_id
+router.get(
+  '/batch_release/:class_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the sql query
+    const query = `
+  SELECT * FROM "batch_release_date"
+  WHERE "class_id" = $1;
+  `;
+
+    // run the query
+    pool
+      .query(query, [req.params.class_id])
+      .then((response) => {
+        res.send(response.rows);
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error fetching the batch release dates from the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
+// deletes all the batch release dates for a specific class from the batch_release_date table
+// /api/class/batch_release/:class_id
+router.delete(
+  '/batch_release/:class_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the query
+    const query = `
+    DELETE FROM "batch_release_date"
+    WHERE "class_id" = $1;
+  `;
+
+    // run the query
+    pool
+      .query(query, [req.params.class_id])
+      .then((response) => {
+        res.sendStatus(204); // signal that the batch release dates were deleted
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error deleting the batch release dates from the server:`,
           err
         );
         res.sendStatus(500);

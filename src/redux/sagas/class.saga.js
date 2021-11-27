@@ -145,6 +145,53 @@ function* fetchStudentProgress(action) {
   }
 }
 
+// creates entirely new batch release dates for a class
+function* createReleaseBatches(action) {
+  try {
+    // the expected payload here is includes a key with the class id
+    yield axios.post(
+      `/api/class/batch_release/${action.payload.class_id}`,
+      action.payload.batches
+    );
+    // update the redux store by calling a saga
+    yield put({
+      type: 'FETCH_RELEASE_BATCHES',
+      payload: action.payload.class_id,
+    });
+  } catch (err) {
+    console.log(
+      `There was an error in the redux saga creating batch release dates for the class:`,
+      err
+    );
+  }
+}
+
+// fetches the release dates for specific batches in a stack in a class
+function* fetchReleaseBatchDates(action) {
+  try {
+    // the expected payload here is the student_class_id
+    const response = yield axios.get(
+      `/api/class/batch_release/${action.payload}`
+    );
+    // update the redux store
+    yield put({ type: 'SET_RELEASE_BATCHES', payload: response.data });
+  } catch (err) {
+    console.log(`There was an error fetching the batches in this class:`, err);
+  }
+}
+
+// deletes the release dates for specific batches in a stack in a class
+function* deleteReleaseBatchDates(action) {
+  try {
+    // the expected payload here is the student_class_id
+    yield axios.delete(`/api/class/batch_release/${action.payload}`);
+    // update the redux store with an empty array
+    yield put({ type: 'SET_RELEASE_BATCHES', payload: [] });
+  } catch (err) {
+    console.log(`There was an error fetching the batches in this class:`, err);
+  }
+}
+
 function* classSaga() {
   yield takeLatest('FETCH_CLASSES', fetchClasses);
   yield takeLatest('DELETE_CLASS', deleteClass);
@@ -156,6 +203,9 @@ function* classSaga() {
   yield takeLatest('FETCH_ENROLLED_CLASSES', fetchEnrolledClasses);
   yield takeLatest('FETCH_CLASS_PROGRESS', fetchClassProgress);
   yield takeLatest('FETCH_STUDENT_PROGRESS', fetchStudentProgress);
+  yield takeLatest('CREATE_RELEASE_BATCHES', createReleaseBatches);
+  yield takeLatest('FETCH_RELEASE_BATCHES', fetchReleaseBatchDates);
+  yield takeLatest('DELETE_RELEASE_BATCHES', deleteReleaseBatchDates);
 }
 
 export default classSaga;
