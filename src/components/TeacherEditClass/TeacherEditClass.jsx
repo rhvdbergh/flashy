@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
+// import custom components
+import BatchReleaseRow from '../BatchReleaseRow/BatchReleaseRow';
+
 //import mui
 import {
   Box,
@@ -91,6 +94,7 @@ function TeacherEditClass() {
     setAssignedStack(editClass.stack_id);
     setTotalTime(editClass.total_time);
     setLearnTime(editClass.initial_time);
+    setReleaseAtOnce(editClass.release_at_once);
   }, [editClass]);
 
   // handles the radio button change for selecting whether
@@ -182,16 +186,27 @@ function TeacherEditClass() {
               <FormControlLabel
                 value="release_at_once"
                 control={<Radio />}
+                checked={releaseAtOnce ? true : false}
                 label="Release all cards at once."
               />
               <FormControlLabel
                 value="release_in_batches"
                 control={<Radio />}
+                checked={!releaseAtOnce ? true : false}
                 label="Release cards in specified batches."
               />
             </RadioGroup>
           </FormControl>
         </Box>
+        {!releaseAtOnce && (
+          <Box>
+            <FormControl>
+              {editClass.batches_in_stack.map((batch, index) => {
+                return <BatchReleaseRow key={index} batch={batch} />;
+              })}
+            </FormControl>
+          </Box>
+        )}
       </Paper>
       {/* Section for timer settings */}
       <Paper elevation={4}>
