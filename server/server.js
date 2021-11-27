@@ -44,5 +44,10 @@ app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 });
 
+// on server startup, run releaseCards once
+// this is in case the server went down: immediately release overdue cards
+// to students
+releaseCards();
+
 // run node-cron every day at 2am to release batches of cards to classes if necessary
 const update = cron.schedule('* 2 * * *', releaseCards);
