@@ -163,10 +163,14 @@ function TeacherEditClass() {
             <Select
               labelId="select-card-stack"
               label="Select Card Stack"
-              value={assignedStack}
+              value={editClass.stack_id}
               className={select}
               onChange={(event) => {
                 setAssignedStack(event.target.value);
+                dispatch({
+                  type: 'UPDATE_CLASS',
+                  payload: { ...editClass, stack_id: event.target.value },
+                });
               }}
               onBlur={() => {
                 dispatch({
