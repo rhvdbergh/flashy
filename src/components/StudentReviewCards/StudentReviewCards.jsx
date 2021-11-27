@@ -162,12 +162,16 @@ function StudentReviewCards() {
     // change the nav bar heading
     switch (currentStage) {
       case 'new':
-        dispatch({ type: 'SET_NAV_TITLE', payload: 'Learn Cards' });
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Learn' });
         break;
       case 'seen':
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Review' });
+        break;
       case 'shortTerm':
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Final Review' });
+        break;
       case 'review':
-        dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Cards' });
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'Review' });
         break;
       case 'complete':
         dispatch({ type: 'SET_NAV_TITLE', payload: 'Congratulations!' });
@@ -423,10 +427,18 @@ function StudentReviewCards() {
           {/* The sx needs to be set in the card, it is 20vh */}
           <Box>
             <Box sx={{ pb: '15px' }}>
-              <CardBox cardText={currentCard.front} isRevealed={true} />
+              <CardBox
+                cardText={currentCard.front}
+                isRevealed={true}
+                currentStage={currentStage}
+              />
             </Box>
             <Box>
-              <CardBox cardText={currentCard.back} isRevealed={isRevealed} />
+              <CardBox
+                cardText={currentCard.back}
+                isRevealed={isRevealed}
+                currentStage={currentStage}
+              />
             </Box>
           </Box>
           {/* This is the third section */}
