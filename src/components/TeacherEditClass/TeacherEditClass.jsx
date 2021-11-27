@@ -163,7 +163,7 @@ function TeacherEditClass() {
             <Select
               labelId="select-card-stack"
               label="Select Card Stack"
-              value={assignedStack}
+              value={editClass.stack_id}
               className={select}
               onChange={(event) => {
                 setAssignedStack(event.target.value);
