@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
+const cron = require('node-cron');
+// module to handle releases of cards according to batches
+const releaseCards = require('./modules/releaseCards.js');
 
 const app = express();
 
@@ -40,3 +43,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 });
+
+// run node-cron every day at 2am to release batches of cards to classes if necessary
+const update = cron.schedule('* 2 * * *', releaseCards);
