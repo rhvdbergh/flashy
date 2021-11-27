@@ -245,6 +245,7 @@ function* createSessionInfo(action) {
   }
 }
 
+// batch uploads cards through csv
 function* createCards(action) {
   try {
     // the expected payload is an object with the stack_id and cards in an array

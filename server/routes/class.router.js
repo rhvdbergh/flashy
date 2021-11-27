@@ -122,15 +122,32 @@ router.post('/', rejectUnauthenticated, onlyAllowTeacher, (req, res) => {
 // fetches a specific class from the server
 router.get('/:class_id', rejectUnauthenticated, (req, res) => {
   // build the SQL query
+  // we're also returning the number of batches in this stack, so we'll
+  // have to fetch the cards, check the batches, and send this back
+  // as a Set.size
   const query = `
-      SELECT * FROM "class"
-      WHERE id = $1;
+      SELECT "class".class_name, "class".id, "class".user_id, "class".available_to_students, 
+      "class".initial_time, "class".release_at_once, "class".release_from, "class".release_order, 
+      "class".release_to, "class".total_time, "class".stack_id, 
+      ARRAY_AGG("card".batch) AS "num_batches_in_stack" FROM "class"
+      LEFT JOIN "stack" ON "stack".id = "class".stack_id
+      LEFT JOIN "card" ON "card".stack_id = "stack".id
+      WHERE "class".id = $1
+      GROUP BY "class".class_name, "class".id, "class".user_id, "class".available_to_students, 
+      "class".initial_time, "class".release_at_once, "class".release_from, "class".release_order, 
+      "class".release_to, "class".total_time, "class".stack_id;
     `;
 
   pool
     .query(query, [req.params.class_id])
     .then((response) => {
-      res.send(response.rows[0]); // send back the class
+      const cl = response.rows[0];
+      // find all the unique numbers of batches in this stack
+      const tempSet = new Set(cl.num_batches_in_stack);
+      cl.batches_in_stack = [...tempSet];
+      // count the number of batches in the stack
+      cl.num_batches_in_stack = tempSet.size;
+      res.send(cl); // send back the class
     })
     .catch((err) => {
       console.log(
@@ -148,11 +165,12 @@ router.put(
   rejectUnauthenticated,
   onlyAllowTeacher,
   (req, res) => {
-    console.log(`in /api/class/:class_id, req.body=`, req.body);
     // build the sql query
     const query = `
       UPDATE "class"
-      SET "class_name" = $3, "stack_id" = $4, "available_to_students" = $5, "total_time" = $6, "initial_time" = $7
+      SET "class_name" = $3, "stack_id" = $4, 
+      "available_to_students" = $5, "total_time" = $6, 
+      "initial_time" = $7, release_at_once = $8
       WHERE "id" = $1 AND "user_id" = $2;
     `;
 
@@ -166,6 +184,7 @@ router.put(
         req.body.available_to_students,
         req.body.total_time,
         req.body.initial_time,
+        req.body.release_at_once,
       ])
       .then((response) => {
         res.sendStatus(201); // the class was updated
@@ -229,6 +248,138 @@ router.get(
       .catch((err) => {
         console.log(
           `There was an error updating the class on the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
+// creates entirely new batch release dates for a class
+// POST /api/class/batch_release/:class_id
+router.post(
+  '/batch_release/:class_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the sql query
+    let query = `INSERT INTO "batch_release_date" ("class_id", "batch_num")
+    VALUES
+    `;
+
+    const values = [req.params.class_id];
+    // we start from 2 because the parameter $1 will be the class_id
+    let counter = 2;
+    // build the string except for the last item, which requires a semicolon
+    for (let i = 0; i < req.body.length - 1; i++) {
+      query += `($1, $${counter}),`;
+      values.push(req.body[i]);
+      counter++;
+    }
+
+    // now add the last line with a semicolon
+    query += `($1, $${counter});`;
+    values.push(req.body[req.body.length - 1]);
+
+    // run the query
+    pool
+      .query(query, [...values])
+      .then((response) => {
+        res.sendStatus(201); // the batch release dates were created
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error creating the batch release dates on the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
+// fetches the release batch dates for a specific class from the db
+// GET /api/class/batch_release/:class_id
+router.get(
+  '/batch_release/:class_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the sql query
+    const query = `
+  SELECT * FROM "batch_release_date"
+  WHERE "class_id" = $1;
+  `;
+
+    // run the query
+    pool
+      .query(query, [req.params.class_id])
+      .then((response) => {
+        res.send(response.rows);
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error fetching the batch release dates from the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
+// deletes all the batch release dates for a specific class from the batch_release_date table
+// /api/class/batch_release/:class_id
+router.delete(
+  '/batch_release/:class_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the query
+    const query = `
+    DELETE FROM "batch_release_date"
+    WHERE "class_id" = $1;
+  `;
+
+    // run the query
+    pool
+      .query(query, [req.params.class_id])
+      .then((response) => {
+        res.sendStatus(204); // signal that the batch release dates were deleted
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error deleting the batch release dates from the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
+// updates a specific release date for a batch on the server
+// PUT /api/class/batch_release/:batch_release_date_id
+router.put(
+  '/batch_release/:batch_release_date_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the sql query
+    const query = `
+    UPDATE "batch_release_date"
+    SET release_date = $1
+    WHERE "id" = $2;
+  `;
+
+    console.log(`thi sis req.boyd`, req.body);
+
+    // run the sql query
+    pool
+      .query(query, [req.body.newDate, req.params.batch_release_date_id])
+      .then((response) => {
+        res.sendStatus(204); // signal that the batch release date was updated
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error updating the batch release date on the server:`,
           err
         );
         res.sendStatus(500);

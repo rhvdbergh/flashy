@@ -5,6 +5,7 @@ const {
   rejectUnauthenticated,
 } = require('../modules/authentication-middleware');
 const { onlyAllowTeacher } = require('../modules/authorization-middleware');
+const { letterSpacing } = require('@mui/system');
 
 // GET /api/stack
 // fetches all the stacks belonging to a logged in teacher
@@ -296,13 +297,18 @@ router.post(
 
     // build the sql query
     const query = `
-      INSERT INTO "card" ("front", "back", "stack_id")
-      VALUES ($1, $2, $3)
+      INSERT INTO "card" ("front", "back", "batch", "stack_id")
+      VALUES ($1, $2, $3, $4)
     `;
 
     // run the sql query
     pool
-      .query(query, [req.body.front, req.body.back, req.params.stack_id])
+      .query(query, [
+        req.body.front,
+        req.body.back,
+        req.body.batch,
+        req.params.stack_id,
+      ])
       .then((response) => {
         res.sendStatus(201); // the card was created
       })
@@ -329,7 +335,7 @@ router.post(
 
     // build the sql query
     let query = `
-      INSERT INTO "card" ("front", "back", "stack_id")
+      INSERT INTO "card" ("front", "back", "batch", "stack_id")
       VALUES
     `;
 
@@ -340,25 +346,40 @@ router.post(
 
     // build everything but the last with commas
     for (let i = 0; i < cards.length - 1; i++) {
-      query += `($${counter + 1}, $${counter + 2}, $${1}),`;
+      query += `($${counter + 1}, $${counter + 2}, $${counter + 3},  $${1}),`;
       values.push(cards[i].front);
       values.push(cards[i].back);
-      counter += 2;
+      // if a CSV was uploaded without a batch, we set the batch to 1
+      if (cards[i].batch) {
+        values.push(Number(cards[i].batch));
+      } else {
+        values.push(1);
+      }
+      counter += 3;
     }
 
     // now add the last line with a semicolon
-    query += `($${counter + 1}, $${counter + 2}, $${1});`;
+    query += `($${counter + 1}, $${counter + 2}, $${counter + 3}, $${1});`;
     values.push(cards[cards.length - 1].front);
     values.push(cards[cards.length - 1].back);
+    // if a CSV was uploaded without a batch, we set the batch to 1
+    if (cards[cards.length - 1].batch !== undefined) {
+      values.push(Number(cards[cards.length - 1].batch));
+    } else {
+      values.push(1);
+    }
 
     // now run the query
     pool
       .query(query, [...values])
       .then((response) => {
-        res.sendStatus(201); // the card was created
+        res.sendStatus(201); // the cards were created
       })
       .catch((err) => {
-        console.log(`There was an error updating the card on the server:`, err);
+        console.log(
+          `There was an error creating the cards on the server:`,
+          err
+        );
         res.sendStatus(500);
       });
   }

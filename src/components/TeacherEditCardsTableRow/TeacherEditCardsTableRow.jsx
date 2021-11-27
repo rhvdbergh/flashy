@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 // import mui
 import { TableCell, TableRow, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { batch } from 'react-redux';
 
 function TeacherEditCardsTableRow({ card, stack_id }) {
   // set up the redux dispatch
@@ -14,6 +15,7 @@ function TeacherEditCardsTableRow({ card, stack_id }) {
   // set up local state for each cell
   const [front, setFront] = useState(card.front);
   const [back, setBack] = useState(card.back);
+  const [batch, setBatch] = useState(card.batch);
 
   // we're monitoring cards so we can trigger the front and back to be
   // empty again
@@ -29,6 +31,7 @@ function TeacherEditCardsTableRow({ card, stack_id }) {
     if (card.id === -1) {
       setFront('');
       setBack('');
+      setBatch('');
     }
   }, [cards]);
 
@@ -40,6 +43,7 @@ function TeacherEditCardsTableRow({ card, stack_id }) {
         ...card,
         front: front,
         back: back,
+        batch: batch,
         stack_id: stack_id,
       },
     });
@@ -48,13 +52,14 @@ function TeacherEditCardsTableRow({ card, stack_id }) {
   // create a new card
   const createCard = () => {
     // we only create a new card once both boxes have been filled out
-    if (front !== '' && back !== '') {
+    if (front !== '' && back !== '' && batch !== '') {
       dispatch({
         type: 'CREATE_CARD',
         payload: {
           ...card,
           front: front,
           back: back,
+          batch: batch,
           stack_id: stack_id,
         },
       });
@@ -75,7 +80,7 @@ function TeacherEditCardsTableRow({ card, stack_id }) {
           onBlur={() => {
             // check if this is an already existing card or not
             // also, only update if both boxes are filled out
-            card.id !== -1 && front !== '' && back !== ''
+            card.id !== -1 && front !== '' && back !== '' && batch !== ''
               ? updateCard()
               : createCard();
           }}
@@ -92,7 +97,24 @@ function TeacherEditCardsTableRow({ card, stack_id }) {
           onBlur={() => {
             // check if this is an already existing card or not
             // also, only update if both boxes are filled out
-            card.id !== -1 && front !== '' && back !== ''
+            card.id !== -1 && front !== '' && back !== '' && batch !== ''
+              ? updateCard()
+              : createCard();
+          }}
+        />
+      </TableCell>
+      <TableCell>
+        <TextField
+          type="text"
+          size="small"
+          value={batch}
+          onChange={(event) => {
+            setBatch(event.target.value);
+          }}
+          onBlur={() => {
+            // check if this is an already existing card or not
+            // also, only update if both boxes are filled out
+            card.id !== -1 && front !== '' && back !== '' && batch !== ''
               ? updateCard()
               : createCard();
           }}
