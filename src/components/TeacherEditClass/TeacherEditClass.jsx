@@ -257,6 +257,7 @@ function TeacherEditClass() {
                     <BatchReleaseRow
                       key={index}
                       batch={batch}
+                      class_id={class_id}
                       releaseBatchDates={releaseBatchDates}
                     />
                   );

@@ -192,6 +192,27 @@ function* deleteReleaseBatchDates(action) {
   }
 }
 
+// updates the release date a for specific batch in a stack in a class
+function* updateReleaseBatchDate(action) {
+  try {
+    // the expected payload here is the student_class_id
+    yield axios.put(
+      `/api/class/batch_release/${action.payload.batch_release_date_id}`,
+      action.payload
+    );
+    // update the redux store with an empty array
+    yield put({
+      type: 'FETCH_RELEASE_BATCHES',
+      payload: action.payload.class_id,
+    });
+  } catch (err) {
+    console.log(
+      `There was an error updating the batch release date in this class:`,
+      err
+    );
+  }
+}
+
 function* classSaga() {
   yield takeLatest('FETCH_CLASSES', fetchClasses);
   yield takeLatest('DELETE_CLASS', deleteClass);
@@ -206,6 +227,7 @@ function* classSaga() {
   yield takeLatest('CREATE_RELEASE_BATCHES', createReleaseBatches);
   yield takeLatest('FETCH_RELEASE_BATCHES', fetchReleaseBatchDates);
   yield takeLatest('DELETE_RELEASE_BATCHES', deleteReleaseBatchDates);
+  yield takeLatest('UPDATE_RELEASE_BATCH', updateReleaseBatchDate);
 }
 
 export default classSaga;

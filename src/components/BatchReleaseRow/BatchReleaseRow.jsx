@@ -4,14 +4,21 @@ import DateAdapter from '@mui/lab/AdapterLuxon';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { useState } from 'react';
-import { letterSpacing } from '@mui/system';
+import { useDispatch } from 'react-redux';
 
-function BatchReleaseRow({ batch, releaseBatchDates }) {
+function BatchReleaseRow({ batch, releaseBatchDates, class_id }) {
+  // set up the redux dispatch
+  const dispatch = useDispatch();
+
   // set local state for the date
   // we're using the date for this batch number in the releaseBatchDates array
   // there will be only one match, so we can use index 0 and grab that release date
   const [date, setDate] = useState(
     releaseBatchDates.filter((b) => b.batch_num === batch)[0].release_date
+  );
+  // grab this batch's id in the
+  const [batch_release_date_id, setBatch_release_date_id] = useState(
+    releaseBatchDates.filter((b) => b.batch_num === batch)[0].id
   );
 
   console.log(`releaseBatchDates`, releaseBatchDates, '; batch number', batch);
@@ -23,6 +30,11 @@ function BatchReleaseRow({ batch, releaseBatchDates }) {
   const handleChange = (newDate) => {
     console.log('things changed', newDate);
     setDate(newDate);
+    // also change the date on the db
+    dispatch({
+      type: 'UPDATE_RELEASE_BATCH',
+      payload: { batch_release_date_id, newDate, class_id },
+    });
   };
 
   return (

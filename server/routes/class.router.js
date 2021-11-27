@@ -355,4 +355,36 @@ router.delete(
   }
 );
 
+// updates a specific release date for a batch on the server
+// PUT /api/class/batch_release/:batch_release_date_id
+router.put(
+  '/batch_release/:batch_release_date_id',
+  rejectUnauthenticated,
+  onlyAllowTeacher,
+  (req, res) => {
+    // build the sql query
+    const query = `
+    UPDATE "batch_release_date"
+    SET release_date = $1
+    WHERE "id" = $2;
+  `;
+
+    console.log(`thi sis req.boyd`, req.body);
+
+    // run the sql query
+    pool
+      .query(query, [req.body.newDate, req.params.batch_release_date_id])
+      .then((response) => {
+        res.sendStatus(204); // signal that the batch release date was updated
+      })
+      .catch((err) => {
+        console.log(
+          `There was an error updating the batch release date on the server:`,
+          err
+        );
+        res.sendStatus(500);
+      });
+  }
+);
+
 module.exports = router;
