@@ -103,13 +103,22 @@ function TeacherEditClass() {
     console.log(event.target.value);
     switch (event.target.value) {
       case 'release_at_once':
-        setReleaseAtOnce(true);
+        dispatch({
+          type: 'UPDATE_CLASS',
+          payload: { ...editClass, release_at_once: true },
+        });
         break;
       case 'release_in_batches':
-        setReleaseAtOnce(false);
+        dispatch({
+          type: 'UPDATE_CLASS',
+          payload: { ...editClass, release_at_once: false },
+        });
         break;
       default:
-        setReleaseAtOnce(true);
+        dispatch({
+          type: 'UPDATE_CLASS',
+          payload: { ...editClass, release_at_once: true },
+        });
         break;
     }
   };
@@ -198,7 +207,7 @@ function TeacherEditClass() {
             </RadioGroup>
           </FormControl>
         </Box>
-        {!releaseAtOnce && (
+        {!releaseAtOnce && editClass.batches_in_stack && (
           <Box>
             <FormControl>
               {editClass.batches_in_stack.map((batch, index) => {
