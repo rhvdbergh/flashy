@@ -26,6 +26,7 @@ import {
   Radio,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { EventNoteTwoTone } from '@mui/icons-material';
 
 // set up the mui styles
 const useStyles = makeStyles(() => ({
@@ -52,7 +53,7 @@ function TeacherEditClass() {
 
   // set up local state to track inputs
   const [clName, setClName] = useState('');
-  const [assignedStack, setAssignedStack] = useState('');
+  const [assignedStack, setAssignedStack] = useState(null);
   const [learnTime, setLearnTime] = useState(30);
   const [totalTime, setTotalTime] = useState(360);
   const [releaseAtOnce, setReleaseAtOnce] = useState(true);
@@ -164,7 +165,9 @@ function TeacherEditClass() {
               label="Select Card Stack"
               value={assignedStack}
               className={select}
-              onChange={(event) => setAssignedStack(event.target.value)}
+              onChange={(event) => {
+                setAssignedStack(event.target.value);
+              }}
               onBlur={() => {
                 dispatch({
                   type: 'UPDATE_CLASS',
@@ -195,19 +198,25 @@ function TeacherEditClass() {
               <FormControlLabel
                 value="release_at_once"
                 control={<Radio />}
-                checked={releaseAtOnce ? true : false}
+                checked={
+                  assignedStack === null ? true : releaseAtOnce ? true : false
+                }
+                disabled={assignedStack === null ? true : false}
                 label="Release all cards at once."
               />
               <FormControlLabel
                 value="release_in_batches"
                 control={<Radio />}
-                checked={!releaseAtOnce ? true : false}
+                checked={
+                  assignedStack === null ? false : !releaseAtOnce ? true : false
+                }
+                disabled={assignedStack === null ? true : false}
                 label="Release cards in specified batches."
               />
             </RadioGroup>
           </FormControl>
         </Box>
-        {!releaseAtOnce && editClass.batches_in_stack && (
+        {!releaseAtOnce && editClass.batches_in_stack && assignedStack && (
           <Box>
             <FormControl>
               {editClass.batches_in_stack.map((batch, index) => {
