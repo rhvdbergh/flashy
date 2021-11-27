@@ -26,7 +26,6 @@ import {
   Radio,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { EventNoteTwoTone } from '@mui/icons-material';
 
 // set up the mui styles
 const useStyles = makeStyles(() => ({
@@ -68,8 +67,12 @@ function TeacherEditClass() {
   const editClass = useSelector((store) => store.classStore.editClass);
   // get the stacks belonging to this teacher from the redux store
   const stacks = useSelector((store) => store.stackStore.stacks);
+  // get the release batch dates from the redux store
+  const releaseBatchDates = useSelector(
+    (store) => store.classStore.releaseBatchDates
+  );
 
-  // on page load, set nav bar title
+  // on page load, set nav bar title and do the following
   useEffect(() => {
     // set the nav bar title
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Editing Class' });
@@ -79,6 +82,8 @@ function TeacherEditClass() {
     dispatch({ type: 'FETCH_CLASS', payload: class_id });
     // get all the cards in this stack
     dispatch({ type: 'FETCH_STACKS' });
+    // get all the batch release dates, if there are any
+    dispatch({ type: 'FETCH_RELEASE_BATCHES', payload: class_id });
   }, []);
 
   // every time the class name changes, do a dispatch to set the nav title
@@ -241,15 +246,24 @@ function TeacherEditClass() {
             </RadioGroup>
           </FormControl>
         </Box>
-        {!releaseAtOnce && editClass.batches_in_stack && assignedStack && (
-          <Box>
-            <FormControl>
-              {editClass.batches_in_stack.map((batch, index) => {
-                return <BatchReleaseRow key={index} batch={batch} />;
-              })}
-            </FormControl>
-          </Box>
-        )}
+        {!releaseAtOnce &&
+          editClass.batches_in_stack &&
+          assignedStack &&
+          releaseBatchDates.length > 0 && (
+            <Box>
+              <FormControl>
+                {editClass.batches_in_stack.map((batch, index) => {
+                  return (
+                    <BatchReleaseRow
+                      key={index}
+                      batch={batch}
+                      releaseBatchDates={releaseBatchDates}
+                    />
+                  );
+                })}
+              </FormControl>
+            </Box>
+          )}
       </Paper>
       {/* Section for timer settings */}
       <Paper elevation={4}>
