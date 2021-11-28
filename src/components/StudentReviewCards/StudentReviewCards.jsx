@@ -4,7 +4,7 @@
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 // confetti for the end effect
 import Confetti from 'react-confetti';
@@ -18,7 +18,6 @@ import FinishedPage from '../FinishedPage/FinishedPage';
 
 // import mui
 import { Box, Container } from '@mui/material';
-import { letterSpacing } from '@mui/system';
 
 function StudentReviewCards() {
   // set up the redux dispatch
@@ -43,7 +42,7 @@ function StudentReviewCards() {
   const [isRevealed, setIsRevealed] = useState(false);
   // keeps track of what stage the screen is in
   // options are review, new, seen, shortTerm, complete
-  const [currentStage, setCurrentStage] = useState('review');
+  const [currentStage, setCurrentStage] = useState('');
   // timers; these are just the initial default values, but the
   // class values get loaded
   const [totalTime, setTotalTime] = useState(1000);
@@ -125,6 +124,11 @@ function StudentReviewCards() {
       setCurrentCard(pickRandomCardFrom(newCards));
     } else if (currentStage === 'seen' && cardsSeen.length > 0) {
       setCurrentCard(pickRandomCardFrom(cardsSeen));
+    } else if (currentStage === 'shortTerm' && cardsShortTerm.length > 0) {
+      setCurrentCard(pickRandomCardFrom(cardsShortTerm));
+    } else {
+      // // this means we're through all the cards!
+      // setCurrentStage('complete');
     }
   }, [newCards, cardsToReview, cardsSeen, cardsShortTerm]);
 
@@ -149,7 +153,7 @@ function StudentReviewCards() {
       // set this in the redux store
       // also set the number of new cards learned in this session
       dispatch({
-        // grabing the student_class_id from the first card in cards
+        // grabbing the student_class_id from the first card in cards
         type: 'CREATE_SESSION_INFO',
         payload: {
           cards_reviewed: totalNumCardsReviewedInSession,
@@ -165,7 +169,7 @@ function StudentReviewCards() {
         dispatch({ type: 'SET_NAV_TITLE', payload: 'Learn' });
         break;
       case 'seen':
-        dispatch({ type: 'SET_NAV_TITLE', payload: 'Review' });
+        dispatch({ type: 'SET_NAV_TITLE', payload: 'First Review' });
         break;
       case 'shortTerm':
         dispatch({ type: 'SET_NAV_TITLE', payload: 'Final Review' });
@@ -186,7 +190,7 @@ function StudentReviewCards() {
     }
     // else pick a random card
     // this will find a random index between 0 and the array length,
-    // not including the number of the length (so 0 - length-1)
+    // not including the number of the length (so 0 to length-1)
     const index = Math.floor(Math.random() * cardsArray.length);
     setCurrentCardIndex(index);
     return cardsArray[index];
@@ -469,7 +473,7 @@ function StudentReviewCards() {
           </Box>
         </>
       ) : (
-        <FinishedPage />
+        <FinishedPage class_id={class_id} />
       )}
       {currentStage === 'complete' && <Confetti />}
     </Container>
