@@ -88,7 +88,7 @@ function StudentReviewStats() {
   );
 
   // get the mui styles
-  const { container, main, buttonBox, button, table, heading } = useStyles();
+  const { container, main, buttonBox, button, heading } = useStyles();
 
   // get the old card numbers from the redux store
   const { cards_learned, cards_reviewed } = useSelector(

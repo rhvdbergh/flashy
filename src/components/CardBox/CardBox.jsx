@@ -6,10 +6,10 @@ function CardBox({ cardText, isRevealed, currentStage }) {
   let bgcol = '#ffecb3'; // the default color
   switch (currentStage) {
     case 'new':
-      bgcol = '#ffecb3';
+      bgcol = '#fff59d';
       break;
     case 'seen':
-      bgcol = '#fff59d';
+      bgcol = '#f48fb1';
       break;
     case 'shortTerm':
       bgcol = '#03a9f4';

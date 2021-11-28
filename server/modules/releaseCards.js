@@ -1,8 +1,6 @@
 const pool = require('./pool');
 
 module.exports = () => {
-  console.log(`hello`);
-
   // get all the cards that should be updated along with their classes
   // and the students where they should be updated
   // this returns everything
@@ -18,7 +16,6 @@ module.exports = () => {
   pool
     .query(cardsQuery)
     .then((response) => {
-      console.log('response is', response.rows);
       const entries = response.rows;
       // for each card identified above, and for each student in
       // student_class, add this card with a familiarity of 0

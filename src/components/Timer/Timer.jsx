@@ -36,7 +36,7 @@ function Timer({
             <LinearProgress
               variant="determinate"
               value={100 - (learnTime / initialLearnTime) * 100}
-              sx={{ height: '4vh', borderRadius: '10px' }}
+              sx={{ height: '4vh', borderRadius: '10px', color: '#304ffe' }}
             />
           </Box>
         </>
