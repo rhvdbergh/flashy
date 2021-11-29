@@ -235,7 +235,7 @@ router.post(
         // run the query
         pool
           .query(fetchCardsQuery, [req.params.class_id])
-          .then((response) => {
+          .then(async (response) => {
             // we have the ids of the cards for this class
             const cardIds = response.rows;
             // determine whether these cards should be release all at once
@@ -274,7 +274,7 @@ router.post(
                 });
             } // end if releaseAtOnce
             else {
-              releaseCards();
+              await releaseCards();
               res.sendStatus(201);
             }
           })
