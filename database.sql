@@ -121,14 +121,19 @@ ALTER TABLE "batch_release_date" ADD CONSTRAINT "batch_release_date_fk0" FOREIGN
 -- This data is for testing purposes, hence the unimaginative names :)
 
 INSERT INTO "user" (username, password, first_name, last_name, role)
-VALUES ('student1', '$2a$10$nW737QZb2uSev6dJy6Wk8u2VZCgtVxpZa8c.6D/J6Q7jWlz8bgd06', 'student1', 'student1', 'student'),
-('student2', '$2a$10$9sSDRXPhbq.ZcTdULB3jB.8k4j2UxT31YCt.f3odHfHA/jM.6j4De', 'student2', 'student2', 'student'),
-('student3', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'student3', 'student3', 'student'),
-('teacher1', '$2a$10$U1gdTJCEbf0fUQI83BtL..FZV8v1jT4bVLsNAKWCtxyjfeLWGwyAS', 'teacher1', 'teacher1', 'teacher'),
-('teacher2', '$2a$10$aHciqCl3B6re32prqgr2Huo4hvgr8C.mBqfTyRZM7rxzSQ.IHW/Na', 'teacher2', 'teacher2', 'teacher');
+VALUES ('Homer', '$2a$10$nW737QZb2uSev6dJy6Wk8u2VZCgtVxpZa8c.6D/J6Q7jWlz8bgd06', 'Homer', 'Wordsmith', 'student'),
+('beesknees', '$2a$10$9sSDRXPhbq.ZcTdULB3jB.8k4j2UxT31YCt.f3odHfHA/jM.6j4De', 'Melissa', 'Bicker', 'student'),
+('Dave', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Dawie', 'Gouws', 'student'),
+('Lucian', '$2a$10$U1gdTJCEbf0fUQI83BtL..FZV8v1jT4bVLsNAKWCtxyjfeLWGwyAS', 'Rolihlahla', 'Mlambo', 'teacher'),
+('teacher2', '$2a$10$aHciqCl3B6re32prqgr2Huo4hvgr8C.mBqfTyRZM7rxzSQ.IHW/Na', 'teacher2', 'teacher2', 'teacher'),
+('sarah', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Sarah', 'Peterson', 'student'),
+('robert', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Robert', 'VanderToorn', 'student'),
+('johnny', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Ivan', 'Ivanof', 'student'),
+('suzie', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Susanna', 'Metzger', 'student'),
+('thabo', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Thabo', 'Mlambo', 'student');
 
 INSERT INTO "stack" (stack_name, user_id) 
-VALUES ('stack1_belonging_to_teacher1', 4),
+VALUES ('HEB310', 4),
 ('stack2_belonging_to_teacher2', 5);
 
 INSERT INTO "card" (front, back, batch, stack_id)
@@ -153,21 +158,40 @@ VALUES ('card1_front', 'card1_back', 1, 1),
 ('card19_front', 'card19_back', 3, 2);
 
 INSERT INTO "class" (class_name, user_id, available_to_students, stack_id) 
-VALUES ('class1_belonging_to_teacher1', 4, false, NULL),
-('class2_belonging_to_teacher1', 4, true, 1),
-('class3_belonging_to_teacher2', 5, false, NULL),
-('class4_belonging_to_teacher2', 5, true, 2);
+VALUES ('Greek 210', 4, false, NULL),
+('Hebrew 310', 4, true, 1),
+('Latin 110', 5, false, NULL),
+('Latin 120', 5, true, 2);
 
 INSERT INTO "student_class" (user_id, class_id) 
 VALUES (1, 2), -- class2_belonging_to_teacher1
-(1, 4), -- class4_belonging_to_teacher2
-(2, 2), -- class2_belonging_to_teacher1
-(3, 4); -- class4_belonging_to_teacher2
+ (2, 2), -- class2_belonging_to_teacher1
+ (3, 2), -- class2_belonging_to_teacher1
+ (6, 2), -- class2_belonging_to_teacher1
+ (7, 2), -- class2_belonging_to_teacher1
+ (8, 2), -- class2_belonging_to_teacher1
+ (9, 2); -- class2_belonging_to_teacher1
 
 INSERT INTO "student_class_session" (cards_learned, cards_reviewed, student_class_id)
-VALUES (2, 3, 1),
-(3, 6, 2),
-(8, 1, 3);
+VALUES (12, 3, 1),
+(9, 6, 2),
+(12, 4, 2),
+(19, 12, 2),
+(21, 14, 2),
+(17, 5, 3),
+(12, 9, 3),
+(18, 11, 4),
+(12, 9, 4),
+(16, 3, 4),
+(13, 12, 5),
+(8, 1, 6),
+(18, 10, 6),
+(14, 13, 6),
+(5, 15, 7),
+(9, 13, 7),
+(7, 14, 7),
+(12, 1, 7);
+
 
 -- cards with default dates, created with default now()
 INSERT INTO "student_class_card" (familiarity, student_class_id, card_id)
