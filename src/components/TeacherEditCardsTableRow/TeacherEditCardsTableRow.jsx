@@ -71,6 +71,7 @@ function TeacherEditCardsTableRow({ card, stack_id }) {
       <TableCell>
         <TextField
           ref={textFieldElement}
+          sx={{ width: '95%' }}
           type="text"
           size="small"
           value={front}
@@ -88,6 +89,7 @@ function TeacherEditCardsTableRow({ card, stack_id }) {
       </TableCell>
       <TableCell>
         <TextField
+          sx={{ width: '95%' }}
           type="text"
           size="small"
           value={back}
@@ -105,6 +107,7 @@ function TeacherEditCardsTableRow({ card, stack_id }) {
       </TableCell>
       <TableCell>
         <TextField
+          sx={{ width: '50px' }}
           type="text"
           size="small"
           value={batch}
