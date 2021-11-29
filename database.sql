@@ -121,10 +121,10 @@ ALTER TABLE "batch_release_date" ADD CONSTRAINT "batch_release_date_fk0" FOREIGN
 -- This data is for testing purposes, hence the unimaginative names :)
 
 INSERT INTO "user" (username, password, first_name, last_name, role)
-VALUES ('Homer', '$2a$10$nW737QZb2uSev6dJy6Wk8u2VZCgtVxpZa8c.6D/J6Q7jWlz8bgd06', 'Homer', 'Wordsmith', 'student'),
+VALUES ('homer', '$2a$10$nW737QZb2uSev6dJy6Wk8u2VZCgtVxpZa8c.6D/J6Q7jWlz8bgd06', 'Homer', 'Wordsmith', 'student'),
 ('beesknees', '$2a$10$9sSDRXPhbq.ZcTdULB3jB.8k4j2UxT31YCt.f3odHfHA/jM.6j4De', 'Melissa', 'Bicker', 'student'),
-('Dave', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Dawie', 'Gouws', 'student'),
-('Lucian', '$2a$10$U1gdTJCEbf0fUQI83BtL..FZV8v1jT4bVLsNAKWCtxyjfeLWGwyAS', 'Rolihlahla', 'Mlambo', 'teacher'),
+('dave', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Dawie', 'Gouws', 'student'),
+('lucian', '$2a$10$U1gdTJCEbf0fUQI83BtL..FZV8v1jT4bVLsNAKWCtxyjfeLWGwyAS', 'Rolihlahla', 'Mlambo', 'teacher'),
 ('teacher2', '$2a$10$aHciqCl3B6re32prqgr2Huo4hvgr8C.mBqfTyRZM7rxzSQ.IHW/Na', 'teacher2', 'teacher2', 'teacher'),
 ('sarah', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Sarah', 'Peterson', 'student'),
 ('robert', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Robert', 'VanderToorn', 'student'),
@@ -227,7 +227,6 @@ VALUES (0, 1, 1), -- card1 in class2 with teacher 1
 -- some cards with older dates, so they should be reviewed
 INSERT INTO "student_class_card" (familiarity, student_class_id, card_id, time_reviewed)
 VALUES (1, 1, 7, '11-01-2021'),
-(2, 1, 9, '11-01-2021'),
 (2, 4, 9, '11-01-2021'),
 (1, 4, 15, '11-01-2021'),
 (1, 4, 16, '11-01-2021'),
