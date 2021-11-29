@@ -31,6 +31,7 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles(() => ({
   container: {
     marginTop: '150px',
+    paddingBottom: '30px',
   },
   textfield: {
     width: '250px',
