@@ -166,11 +166,11 @@ VALUES ('ignavus', 'lazy', 1, 1),
 ('sed', 'but', 3, 2),
 ('etiam', 'also', 3, 2);
 
-INSERT INTO "class" (class_name, user_id, available_to_students, stack_id) 
-VALUES ('Greek 210', 4, false, NULL),
-('Latin 101', 4, true, 1),
-('Latin 110', 5, false, NULL),
-('Hebrew 120', 5, true, 2);
+INSERT INTO "class" (class_name, user_id, available_to_students, stack_id, initial_time, total_time) 
+VALUES ('Greek 210', 4, false, NULL, 30, 360),
+('Latin 101', 4, true, 1, 10, 60),
+('Latin 110', 5, false, NULL, 30, 360),
+('Hebrew 120', 5, true, 2, 30, 360);
 
 INSERT INTO "student_class" (user_id, class_id) 
 VALUES (1, 2), -- class2_belonging_to_teacher1
@@ -182,7 +182,8 @@ VALUES (1, 2), -- class2_belonging_to_teacher1
  (9, 2); -- class2_belonging_to_teacher1
 
 INSERT INTO "student_class_session" (cards_learned, cards_reviewed, student_class_id)
-VALUES (12, 0, 1),
+VALUES (4, 0, 1),
+(4, 4, 1),
 (9, 6, 2),
 (12, 4, 2),
 (19, 12, 2),
@@ -206,22 +207,36 @@ VALUES (12, 0, 1),
 INSERT INTO "student_class_card" (familiarity, student_class_id, card_id)
 VALUES (0, 1, 1), -- card1 in class2 with teacher 1
 (0, 1, 2), -- card2 in class2 with teacher 1 for student 1
-(0, 1, 3), -- card3 in class2 with teacher 1 for student 1
-(0, 1, 4), -- card4 in class2 with teacher 1 for student 1
+(1, 1, 3), -- card3 in class2 with teacher 1 for student 1
+(1, 1, 4), -- card4 in class2 with teacher 1 for student 1
 (1, 1, 5), -- card5 in class2 with teacher 1 for student 1
 (1, 1, 6), -- card6 in class2 with teacher 1 for student 1
+(2, 1, 9),
 (2, 1, 8),
 (0, 2, 11), -- card11 in class4 with teacher 2 for student 1
 (0, 2, 12),
+(2, 2, 13),
+(2, 2, 13),
+(2, 2, 13),
+(2, 2, 13),
+(2, 2, 13),
+(2, 2, 13),
 (2, 2, 13),
 (2, 2, 14),
 (1, 3, 5), -- card5 in class2 with teacher 1 for student 2
 (1, 3, 6),
 (1, 3, 7),
+(1, 3, 7),
+(1, 3, 7),
 (1, 3, 8),
 (0, 3, 9),
+(0, 3, 9),
+(0, 3, 9),
+(0, 3, 9),
+(0, 4, 12), -- card12 in class4 with teacher 2 for student 3
 (0, 4, 12), -- card12 in class4 with teacher 2 for student 3
 (0, 4, 13),
+(1, 4, 14),
 (1, 4, 14);
 
 -- some cards with older dates, so they should be reviewed
@@ -230,8 +245,8 @@ VALUES (1, 1, 7, '11-01-2021'),
 (2, 4, 9, '11-01-2021'),
 (1, 4, 15, '11-01-2021'),
 (1, 4, 16, '11-01-2021'),
+(1, 4, 16, '11-01-2021'),
 (2, 4, 17, '11-01-2021'),
-(2, 1, 9, '11-01-2021'),
 (3, 1, 10, '11-01-2021');
 
 -- WARNING!!!
