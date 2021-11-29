@@ -17,7 +17,8 @@ import FeedbackButtons from '../FeedbackButtons/FeedbackButtons';
 import FinishedPage from '../FinishedPage/FinishedPage';
 
 // import mui
-import { Box, Container } from '@mui/material';
+import { Box, Container, fabClasses } from '@mui/material';
+import { FormatListNumberedTwoTone } from '@mui/icons-material';
 
 function StudentReviewCards() {
   // set up the redux dispatch
@@ -61,7 +62,7 @@ function StudentReviewCards() {
     //set nav bar title
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Cards' });
     // ensure that the back button is displayd on this page
-    dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
+    dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: false });
     // fetch the cards to review for this student in this class
     dispatch({ type: 'FETCH_CARDS_TO_REVIEW', payload: class_id });
     // fetch the class so we can set the times
