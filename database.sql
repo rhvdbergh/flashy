@@ -133,7 +133,7 @@ VALUES ('Homer', '$2a$10$nW737QZb2uSev6dJy6Wk8u2VZCgtVxpZa8c.6D/J6Q7jWlz8bgd06',
 ('thabo', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Thabo', 'Mlambo', 'student');
 
 INSERT INTO "stack" (stack_name, user_id) 
-VALUES ('HEB310', 4),
+VALUES ('LAT101', 4),
 ('stack2_belonging_to_teacher2', 5);
 
 INSERT INTO "card" (front, back, batch, stack_id)
@@ -159,9 +159,9 @@ VALUES ('card1_front', 'card1_back', 1, 1),
 
 INSERT INTO "class" (class_name, user_id, available_to_students, stack_id) 
 VALUES ('Greek 210', 4, false, NULL),
-('Hebrew 310', 4, true, 1),
+('Latin 101', 4, true, 1),
 ('Latin 110', 5, false, NULL),
-('Latin 120', 5, true, 2);
+('Hebrew 120', 5, true, 2);
 
 INSERT INTO "student_class" (user_id, class_id) 
 VALUES (1, 2), -- class2_belonging_to_teacher1
