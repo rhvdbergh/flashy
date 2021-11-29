@@ -18,16 +18,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import json2mq from 'json2mq';
 
 // import mui
-import {
-  Box,
-  Button,
-  Container,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Container, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useHistory } from 'react-router-dom';
 
@@ -100,7 +91,7 @@ function StudentReviewStats() {
   useEffect(() => {
     dispatch({ type: 'SET_NAV_TITLE', payload: 'Review Stats' });
     // ensure that the back button is displayd on this page
-    dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: true });
+    dispatch({ type: 'SET_DISPLAY_BACK_BUTTON', payload: false });
     // fetch the number of all the cards in this class already made available to the student
     dispatch({ type: 'FETCH_TOTAL_NUM_CARDS', payload: class_id });
   }, []);
