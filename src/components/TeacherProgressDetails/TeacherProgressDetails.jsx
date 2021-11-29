@@ -9,9 +9,7 @@ import { useParams } from 'react-router-dom';
 //import mui
 import {
   Box,
-  Button,
   Container,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -19,21 +17,14 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TextField,
   Typography,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Select,
-  MenuItem,
-  InputLabel,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 // set up the mui styles
 const useStyles = makeStyles(() => ({
   container: {
-    marginTop: '100px',
+    marginTop: '130px',
   },
 }));
 
@@ -67,12 +58,11 @@ function TeacherProgressDetails() {
     <Container className={container}>
       <Box>
         <Typography variant="h4">
-          Details for Student:{' '}
-          {studentProgress.length > 0 && studentProgress[0].first_name}{' '}
+          Student: {studentProgress.length > 0 && studentProgress[0].first_name}{' '}
           {studentProgress.length > 0 && studentProgress[0].last_name}
         </Typography>
       </Box>
-      <Box>
+      <Box sx={{ mt: '50px', mb: '30px' }}>
         <Typography variant="h5">Completed Attempts:</Typography>
       </Box>
       <TableContainer component={Paper} className={table}>
