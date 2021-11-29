@@ -255,6 +255,7 @@ function StudentReviewCards() {
         },
       });
       removeCardFromReview();
+      setIsRevealed(false);
     } else if (currentStage === 'seen') {
       moveToShortTermBox();
       removeCardFromSeen();
