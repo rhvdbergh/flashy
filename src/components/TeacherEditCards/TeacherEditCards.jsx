@@ -19,6 +19,7 @@ import {
   TableRow,
   Paper,
   TextField,
+  Typography,
   Modal,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
@@ -119,7 +120,7 @@ function TeacherEditCards() {
           sx={{ height: '56px' }}
           onClick={() => setOpenModal(true)}
         >
-          Upload CSV
+          <Typography variant="h6">Upload CSV</Typography>
         </Button>
       </Box>
       <TableContainer component={Paper} className={table}>

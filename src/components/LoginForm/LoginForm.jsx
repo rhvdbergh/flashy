@@ -80,7 +80,7 @@ function LoginForm() {
           onChange={(event) => setPassword(event.target.value)}
         />
         <Button type="submit" name="submit" value="Log In" variant="contained">
-          Login
+          <Typography variant="h6">Login</Typography>
         </Button>
         <Typography variant="body1"> ... or click below to register</Typography>
         <Button
@@ -90,7 +90,7 @@ function LoginForm() {
             history.push('/registration');
           }}
         >
-          Register
+          <Typography variant="h6">Register</Typography>
         </Button>
       </form>
     </FormControl>
