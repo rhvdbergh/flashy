@@ -45,7 +45,15 @@ function CSVUploadBox({ setOpenModal, stack_id }) {
   console.log(`this is cards`, cards);
 
   return (
-    <Paper sx={{ height: '480px', width: '550px', padding: '50px' }}>
+    <Paper
+      sx={{
+        height: '480px',
+        width: '550px',
+        padding: '50px',
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    >
       <Box sx={{ height: '300px', width: '450px' }}>
         <CSVReader
           onFileLoad={handleFileLoad}
@@ -74,7 +82,7 @@ function CSVUploadBox({ setOpenModal, stack_id }) {
               setDisplaySubmit(false);
             }}
           >
-            Cancel
+            <Typography variant="h6">Cancel</Typography>
           </Button>
           {/* Show different buttons depending on whether a file has been uploaded */}
           {displaySubmit ? (
@@ -91,11 +99,11 @@ function CSVUploadBox({ setOpenModal, stack_id }) {
                 setCards([]);
               }}
             >
-              Submit
+              <Typography variant="h6">Submit</Typography>
             </Button>
           ) : (
             <Button variant="contained" disabled>
-              Submit
+              <Typography variant="h6">Submit</Typography>
             </Button>
           )}
         </Box>

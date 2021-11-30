@@ -16,13 +16,7 @@ import {
   Select,
   InputLabel,
   MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  Typography,
   Badge,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
@@ -187,7 +181,7 @@ function StudentDashboard() {
               className={button}
               onClick={() => history.push(`/class/stats/${cl.class_id}`)}
             >
-              {cl.class_name}
+              <Typography variant="h6">{cl.class_name}</Typography>
             </Button>
           </Badge>
         ))}

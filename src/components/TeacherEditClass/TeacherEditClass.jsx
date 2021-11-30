@@ -23,6 +23,7 @@ import {
   InputLabel,
   Paper,
   RadioGroup,
+  Typography,
   Radio,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
@@ -340,7 +341,7 @@ function TeacherEditClass() {
                 });
               }}
             >
-              Reset to Default
+              <Typography variant="h6">Reset to Default</Typography>
             </Button>
           </Box>
         </Box>

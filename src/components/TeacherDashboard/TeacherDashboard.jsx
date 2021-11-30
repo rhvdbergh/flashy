@@ -19,6 +19,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
   Paper,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
@@ -75,7 +76,7 @@ function TeacherDashboard() {
             dispatch({ type: 'CREATE_CLASS', payload: { history: history } })
           }
         >
-          Add Class
+          <Typography variant="h6">Add Class</Typography>
         </Button>
         <TableContainer component={Paper} className={table}>
           <Table aria-label="Classes">
@@ -105,7 +106,7 @@ function TeacherDashboard() {
             dispatch({ type: 'CREATE_STACK', payload: { history: history } })
           }
         >
-          Add Stack
+          <Typography variant="h6">Add Stack</Typography>
         </Button>
         <TableContainer component={Paper} className={table}>
           <Table aria-label="Stacks">
