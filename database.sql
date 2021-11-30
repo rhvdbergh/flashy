@@ -124,7 +124,7 @@ INSERT INTO "user" (username, password, first_name, last_name, role)
 VALUES ('homer', '$2a$10$nW737QZb2uSev6dJy6Wk8u2VZCgtVxpZa8c.6D/J6Q7jWlz8bgd06', 'Homer', 'Wordsmith', 'student'),
 ('beesknees', '$2a$10$9sSDRXPhbq.ZcTdULB3jB.8k4j2UxT31YCt.f3odHfHA/jM.6j4De', 'Melissa', 'Bicker', 'student'),
 ('dave', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Dawie', 'Gouws', 'student'),
-('lucian', '$2a$10$U1gdTJCEbf0fUQI83BtL..FZV8v1jT4bVLsNAKWCtxyjfeLWGwyAS', 'Aristotle', 'Jones', 'teacher'),
+('aristotle', '$2a$10$U1gdTJCEbf0fUQI83BtL..FZV8v1jT4bVLsNAKWCtxyjfeLWGwyAS', 'Aristotle', 'Jones', 'teacher'),
 ('teacher2', '$2a$10$aHciqCl3B6re32prqgr2Huo4hvgr8C.mBqfTyRZM7rxzSQ.IHW/Na', 'Rolihlahla', 'Mlambo', 'teacher'),
 ('sarah', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Sarah', 'Peterson', 'student'),
 ('robert', '$2a$10$PMwJPYP9GDj5lKXzOfNUSuKMQVnPKL2vH4TeC7KHFLj5tHTxlOyMi', 'Robert', 'VanderToorn', 'student'),
@@ -182,9 +182,7 @@ VALUES (1, 2), -- class2_belonging_to_teacher1
  (9, 2); -- class2_belonging_to_teacher1
 
 INSERT INTO "student_class_session" (cards_learned, cards_reviewed, student_class_id)
-VALUES (4, 0, 1),
-(4, 4, 1),
-(9, 6, 2),
+VALUES (9, 6, 2),
 (12, 4, 2),
 (19, 12, 2),
 (21, 14, 2),
@@ -202,14 +200,19 @@ VALUES (4, 0, 1),
 (7, 14, 7),
 (12, 1, 7);
 
+-- older dates for some sessions for student 1
+INSERT INTO "student_class_session" (cards_learned, cards_reviewed, student_class_id, timestamp)
+VALUES (4, 0, 1, '11-25-2021'),
+(4, 4, 1, '11-27-2021');
 
 -- cards with default dates, created with default now()
 INSERT INTO "student_class_card" (familiarity, student_class_id, card_id)
 VALUES (0, 1, 1), -- card1 in class2 with teacher 1
-(0, 1, 2), -- card2 in class2 with teacher 1 for student 1
+(1, 1, 2), -- card2 in class2 with teacher 1 for student 1
 (1, 1, 3), -- card3 in class2 with teacher 1 for student 1
 (1, 1, 4), -- card4 in class2 with teacher 1 for student 1
 (1, 1, 5), -- card5 in class2 with teacher 1 for student 1
+(1, 1, 6), -- card6 in class2 with teacher 1 for student 1
 (1, 1, 6), -- card6 in class2 with teacher 1 for student 1
 (2, 1, 9),
 (2, 1, 8),
@@ -246,8 +249,7 @@ VALUES (1, 1, 7, '11-01-2021'),
 (1, 4, 15, '11-01-2021'),
 (1, 4, 16, '11-01-2021'),
 (1, 4, 16, '11-01-2021'),
-(2, 4, 17, '11-01-2021'),
-(3, 1, 10, '11-01-2021');
+(2, 4, 17, '11-01-2021');
 
 -- WARNING!!!
 -- THIS SQL BELOW WILL DROP ALL THE TABLES! 
