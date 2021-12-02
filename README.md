@@ -14,7 +14,9 @@ A deployed version of the app can be found [here](https://shrouded-bayou-74485.h
 
 The scope document for this project, in Google Docs format, is available [here](https://docs.google.com/document/d/1qhgVAW9iBsIN5H6W28pClkwe0-kvPkaiO67Ugk0Gow4/edit?usp=sharing).
 
-### Pedagogical notes
+The app uses a [PostgreSQL](https://www.postgresql.org/) database to on the back end, [Express](https://expressjs.com/) / [Node.js](https://nodejs.org/en/) as a server, and [React](https://reactjs.org/), [Redux](https://redux.js.org/), and [Redux-Saga](https://redux-saga.js.org/) on the front end. Styling is provided by [Material-UI](https://mui.com/).
+
+## Pedagogical notes
 
 At the core of this app is a [spaced repetition flash card management system (based on the Leitner system)](https://en.wikipedia.org/wiki/Flashcard#Spaced_repetition) that can also be utilized using real cards. The app tracks these cards for the student, significantly reducing the management load and barrier to entry. The following introduction provides a visual representation and explanation of how this management process functions.
 
@@ -32,6 +34,59 @@ After reviewing any older cards that need to be reviewed from the “review in x
 
 ## Screenshots
 
+![media/login.png](media/login.png)
+_Login._
+
+![media/student_dashboard.png](media/student_dashboard.png)
+
+_Student Dashboard. Badges show how many cards should be learned and / or reviewed._
+
+![media/student_stats.png](media/student_stats.png)
+
+_Students view their stats before and after reviewing cards._
+
+![media/student_review.png](media/student_review.png)
+
+_Students first review any older cards that are due for review._
+
+![media/student_learn.png](media/student_learn.png)
+
+_Then students learn any new cards by viewing both sides of the card, until the timer runs out (or there are no new cards to review)._
+
+![media/student_finished.png](media/student_finished.png)
+_Students celebrate having finished each review session._
+
+![media/teacher_dashboard.png](media/teacher_dashboard.png)
+_Teacher Dashboard. Here teachers can manage and add classes and stacks of cards._
+
+![media/teacher_edit_stack.png](media/teacher_edit_stack.png)
+_Teachers can edit stacks of cards or upload cards via CSV._
+
+![media/teacher_editclass.png](media/teacher_editclass.png)
+_Teachers can edit classes by setting specific stacks, card batch release dates, and how long student sessions should be._
+
+![media/teacher_class_progress.png](media/teacher_class_progress.png)
+_Teachers can view the class progress._
+
+![media/teacher_student_progress.png](media/teacher_student_progress.png)
+
+_Teachers can also view the progress of individuals, including the number of sessions they have participated in._
+
+## Installation
+
+1. After cloning this repository, set up a PostgreSQL database called `flashy` on port 5432. You might want to use [Postico](https://eggerapps.at/postico/) as a GUI to help this setup process.
+2. Use the commands in the `database.sql` file in the root directory of the project to set up tables in the database with some dummy data.
+3. Run `npm install` to install dependencies in this project.
+4. In the root directory of the project, set up a file called `.env` and in this file add only the following lines, where the text in quotation marks should appear without quotation marks, but be the desired server session secret:
+
+```
+SERVER_SESSION_SECRET="my_super_secret_text"
+```
+
+5. Run `npm server start` to start the server, which will run on port 5000.
+6. Run `npm client start` to start the client, which will run on port 3000.
+7. Running the client should open up a browser window to `localhost:3000` where you can view and use the app. You can also manually type in this address in your browser.
+
 ## Prerequisites
 
 Before you get started, make sure you have the following software installed on your computer:
@@ -40,105 +95,23 @@ Before you get started, make sure you have the following software installed on y
 - [PostrgeSQL](https://www.postgresql.org/)
 - [Nodemon](https://nodemon.io/)
 
-## Create database and table
+## Built With
 
-Create a new database called `prime_app` and create a `user` table:
+1. [Node.js](https://nodejs.org/en/)
+2. [Express](https://expressjs.com/)
+3. [React](https://reactjs.org/)
+4. [Redux](https://redux.js.org/)
+5. [Redux-Saga](https://redux-saga.js.org/)
+6. [PostgreSQL](https://www.postgresql.org/)
+7. [Material-UI](https://mui.com/)
+8. [axios](https://www.npmjs.com/package/axios)
+9. [react-papaparse](https://www.npmjs.com/package/react-papaparse)
+10. [react-confetti](https://www.npmjs.com/package/react-confetti)
+11. [node-cron](https://www.npmjs.com/package/node-cron)
+12. [dotenv](https://www.npmjs.com/package/dotenv)
+13. HTML
+14. CSS
 
-```SQL
-CREATE TABLE "user" (
-    "id" SERIAL PRIMARY KEY,
-    "username" VARCHAR (80) UNIQUE NOT NULL,
-    "password" VARCHAR (1000) NOT NULL
-);
-```
+## Acknowledgement
 
-If you would like to name your database something else, you will need to change `prime_app` to the name of your new database name in `server/modules/pool.js`
-
-## Development Setup Instructions
-
-- Run `npm install`
-- Create a `.env` file at the root of the project and paste this line into the file:
-  ```
-  SERVER_SESSION_SECRET=superDuperSecret
-  ```
-  While you're in your new `.env` file, take the time to replace `superDuperSecret` with some long random string like `25POUbVtx6RKVNWszd9ERB9Bb6` to keep your application secure. Here's a site that can help you: [https://passwordsgenerator.net/](https://passwordsgenerator.net/). If you don't do this step, create a secret with less than eight characters, or leave it as `superDuperSecret`, you will get a warning.
-- Start postgres if not running already by using `brew services start postgresql`
-- Run `npm run server`
-- Run `npm run client`
-- Navigate to `localhost:3000`
-
-## Debugging
-
-To debug, you will need to run the client-side separately from the server. Start the client by running the command `npm run client`. Start the debugging server by selecting the Debug button.
-
-![VSCode Toolbar](documentation/images/vscode-toolbar.png)
-
-Then make sure `Launch Program` is selected from the dropdown, then click the green play arrow.
-
-![VSCode Debug Bar](documentation/images/vscode-debug-bar.png)
-
-## Testing Routes with Postman
-
-To use Postman with this repo, you will need to set up requests in Postman to register a user and login a user at a minimum.
-
-Keep in mind that once you using the login route, Postman will manage your session cookie for you just like a browser, ensuring it is sent with each subsequent request. If you delete the `localhost` cookie in Postman, it will effectively log you out.
-
-1. Start the server - `npm run server`
-2. Import the sample routes JSON file [v2](./PostmanPrimeSoloRoutesv2.json) by clicking `Import` in Postman. Select the file.
-3. Click `Collections` and `Send` the following three calls in order:
-   1. `POST /api/user/register` registers a new user, see body to change username/password
-   2. `POST /api/user/login` will login a user, see body to change username/password
-   3. `GET /api/user` will get user information, by default it's not very much
-
-After running the login route above, you can try any other route you've created that requires a logged in user!
-
-## Production Build
-
-Before pushing to Heroku, run `npm run build` in terminal. This will create a build folder that contains the code Heroku will be pointed at. You can test this build by typing `npm start`. Keep in mind that `npm start` will let you preview the production build but will **not** auto update.
-
-- Start postgres if not running already by using `brew services start postgresql`
-- Run `npm start`
-- Navigate to `localhost:5000`
-
-## Lay of the Land
-
-There are a few videos linked below that show a walkthrough the client and sever setup to help acclimatize to the boilerplate. Please take some time to watch the videos in order to get a better understanding of what the boilerplate is like.
-
-- [Initial Set](https://vimeo.com/453297271)
-- [Server Walkthrough](https://vimeo.com/453297212)
-- [Client Walkthrough](https://vimeo.com/453297124)
-
-Directory Structure:
-
-- `src/` contains the React application
-- `public/` contains static assets for the client-side
-- `build/` after you build the project, contains the transpiled code from `src/` and `public/` that will be viewed on the production site
-- `server/` contains the Express App
-
-This code is also heavily commented. We recommend reading through the comments, getting a lay of the land, and becoming comfortable with how the code works before you start making too many changes. If you're wondering where to start, consider reading through component file comments in the following order:
-
-- src/components
-  - App/App
-  - Footer/Footer
-  - Nav/Nav
-  - AboutPage/AboutPage
-  - InfoPage/InfoPage
-  - UserPage/UserPage
-  - LoginPage/LoginPage
-  - RegisterPage/RegisterPage
-  - LogOutButton/LogOutButton
-  - ProtectedRoute/ProtectedRoute
-
-## Deployment
-
-1. Create a new Heroku project
-1. Link the Heroku project to the project GitHub Repo
-1. Create an Heroku Postgres database
-1. Connect to the Heroku Postgres database from Postico
-1. Create the necessary tables
-1. Add an environment variable for `SERVER_SESSION_SECRET` with a nice random string for security
-1. In the deploy section, select manual deploy
-
-## Update Documentation
-
-Customize this ReadMe and the code comments in this project to read less like a starter repo and more like a project. Here is an example: https://gist.github.com/PurpleBooth/109311bb0361f32d87a2
+Thanks to [Prime Digital Academy](www.primeacademy.io) who equipped and helped me to make this application a reality. Special thanks to my instructors, Dane Smith and Liz Kerber, and the Solinas cohort—thanks for the cameraderie, the technical discussions, and the caring way in which you helped guide this project to fruition.
