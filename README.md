@@ -1,13 +1,36 @@
+# Flashy: A teacher-focused flash card app
 
-# EDA Project
-This version uses React, Redux, Express, Passport, and PostgreSQL (a full list of dependencies can be found in `package.json`).
+## Description
 
-We **STRONGLY** recommend following these instructions carefully. It's a lot, and will take some time to set up, but your life will be much easier this way in the long run.
+_Duration: Two Weeks Challenge_
 
-## Use the Template for This Repository (Don't Clone)
+Flashy is a teacher-focused flash card app intended for language study. Teachers assign stacks of flash cards to students and are then able to track each student’s progress and participation rate. Teachers can upload CSV files of cards (with front, back, and optionally a batch number in the CSV file) instead of typing out all the cards in the app. (Although that is an option too, along with editing any cards that were already created). The app makes use of Unicode and supports right-to-left text, so languages like Hebrew will display correctly on the digital cards.
 
-- Don't Fork or Clone. Instead, click the `Use this Template` button, and make a copy to your personal account.
+Students receive feedback on their progress and reminders when they need to review cards. Cards get sorted based on the student’s familiarity with each card; once cards are marked “known” they will be reviewed periodically, but at intervals increasing in length. (For instance, cards get reviewed after 1 day, then 3 days, then 7 days, etc.).
 
+Teachers are expected to interact with this application on desktop, while students are mostly expected to interact with the application on mobile.
+
+A deployed version of the app can be found [here](https://shrouded-bayou-74485.herokuapp.com/).
+
+The scope document for this project, in Google Docs format, is available [here](https://docs.google.com/document/d/1qhgVAW9iBsIN5H6W28pClkwe0-kvPkaiO67Ugk0Gow4/edit?usp=sharing).
+
+### Pedagogical notes
+
+At the core of this app is a [spaced repetition flash card management system (based on the Leitner system)](https://en.wikipedia.org/wiki/Flashcard#Spaced_repetition) that can also be utilized using real cards. The app tracks these cards for the student, significantly reducing the management load and barrier to entry. The following introduction provides a visual representation and explanation of how this management process functions.
+
+The student has a stack of cards, each containing a front (containing, e.g., a word) and back (containing a translation of the given word) and several boxes (or piles) labeled “not learned, seen, short term, review in 1 day, review in 3 days, review in n days.” At the start, all of the cards are in the “not learned” box:
+![media/box_unseen.png](media/box_unseen.png)
+The student then proceeds to review several cards by looking at the back and the front. The student places those cards in a “seen” pile:
+![media/box_seen.png](media/box_seen.png)
+Immediately after, the student reviews all of those cards, deciding whether they are “known” or not. Cards that are known are moved to the “short term” box, while cards that are not known are moved to the short term box. After this, the student starts the process of reviewing not learned cards again and then reviewing them and placing them in either the “not learned” box or the “short term” box, until a set amount of time has elapsed:
+![media/box_shortterm.png](media/box_shortterm.png)
+Once a set amount of time has elapsed (the end of the session), the student does a final review of all the cards in the “short term” box. Again, the student decides whether the cards are known or not; if known, they are moved to the “review in 1 day” box, otherwise they are placed back in the “not learned” box:
+![media/box_review1day.png](media/box_review1day.png)
+After one day, the student first reviews the cards in the “review in 1 day” box. The process remains the same; known words move to the “review in 3 days” box, while unknown cards are placed back in the “not learned” box:
+![media/box_review3days.png](media/box_review3days.png)
+After reviewing any older cards that need to be reviewed from the “review in x days” boxes, the student repeats the whole process with words in the “not learned” box for a set amount of time. Words that are reviewed in the “review in 3 days” (and spaced periods after that) either gets moved to the next box or placed in the “not learned” box.
+
+## Screenshots
 
 ## Prerequisites
 
